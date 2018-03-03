@@ -1,0 +1,13 @@
+
+CC = gcc -Wall -Wextra -ansi
+
+all: graph_test
+
+# Equivalent avec des raccourcis
+
+graph_test: main.o graph_matrix.o
+	$(CC) $^ -o $@
+
+clean:
+	rm *.o
+	rm graph_test
