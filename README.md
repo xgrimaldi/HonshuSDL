@@ -11,7 +11,7 @@ I) Ajouter le projet sur votre ordinateur (LINUX !!):
         - Copier le lien du projet puis faites dans le bash
         git clone leliencopié
         
-        ex: http://pedago-etu.ensiie.fr/xavier.grimaldi/Les_Tuileurs_Projet.git
+        ex: git clone http://pedago-etu.ensiie.fr/xavier.grimaldi/Les_Tuileurs_Projet.git
         
     4) Il vous sera demandé de rentrer votre identifiant GIT et votre mot de passe après.
         ex: xavier.grimaldi (pour moi)
