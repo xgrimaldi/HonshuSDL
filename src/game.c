@@ -1,37 +1,7 @@
-/*
-* PROJET INFO - LES TUILEURS
- */
-
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <time.h>
-
-
-#define n 20
-#define MAXTUILES 100
-
-#define L "LAC"
-#define P "PLAINE"
-#define F "FORET"
-#define V "VILLE"
-#define U "USINE"
-#define R "RESSOURCE"
-
-/*
- * Exemple de structure
- */
-
-typedef struct {	
-	int id;
-	char orientation;
-	char X_1;
-	char X_2;
-	char X_3;
-	char X_4;
-	char X_5;
-	char X_6;
-} Tuile;
+#include "game.h"
 
 char ***alloc_array(int x, int y) {
     char ***a = calloc(x, sizeof(char **));
@@ -42,6 +12,7 @@ char ***alloc_array(int x, int y) {
 }
 
 void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles){
+	printf("\n\t\t Tuiles paramètrées\n");
 	for(int i=0;i<nbTuiles;i++){
 		printf("\n ID:%d \n",gameTuiles[i].id);
 		printf("|%c | %c | \n",gameTuiles[i].X_1,gameTuiles[i].X_2);
@@ -51,6 +22,7 @@ void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles){
 }
 
 void printPlateau(char*** plateau,int taille){
+	printf("\n\t\t Plateau de jeu \n");
 	for (int i=0;i<taille;i++){
 		for(int j=0;j<taille;j++){
 			printf(" %s ",plateau[i][j]);
@@ -58,6 +30,12 @@ void printPlateau(char*** plateau,int taille){
 		printf("\n");
 	}
 }
+
+/*
+void resetTuiles(Tuile gameTuiles[MAXTUILES]){
+
+}
+*/
 
 int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
 	//******************************
@@ -102,52 +80,12 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
 			// Changement de l'orientation
 			gameTuiles[id_tuile].orientation='V';
 		}
-			printf("Un nombre de %d a été généré\n",nbTuiles);
+			printf("Un nombre de %d tuiles a été généré.\n",nbTuiles);
 			return nbTuiles;
 	}
 	else{
 	       	// On affiche un message d'erreur si on veut
-	       	printf("Fichier vide");
+	       	printf("Fichier vide ou inconnu\n");
 	       	return 0;
 	}
-}
-
-int main(int argc, char *argv[]) {
-
-	// Déclaration des variables
-	Tuile gameTuiles[MAXTUILES];
-	char ***gamePlateau;
-	int choix;
-	int nb_tuiles;
-	// Génération des tuiles par fichier
-	if(argc >=1){
-		nb_tuiles=LoadTuiles(argv[1],gameTuiles);
-	}
-
-	// Création du plateau de jeu de taille n*n
-	gamePlateau = alloc_array(n, n);
-
-	for (int i=0;i<n;i++){
-		for(int j=0;j<n;j++){
-			gamePlateau[i][j]="0";
-		}
-	}
-
-	printf("Que voulez-vous faire ?\n");
- 	printf("1 - Voir les tuiles disponibles\n");
-	printf("2 - Voir le tableau de jeu\n");
-	scanf("%d",&choix);
-	switch(choix){
-		case 1:
-			printTuiles(gameTuiles,nb_tuiles);
-			break;
-		case 2:
-			// Affichage du plateau
-			printf("\n\t\t Affichage du plateau de jeu\n");
-			printPlateau(gamePlateau,n);
-			break;
-	}
-
-
-	return 0;
 }
