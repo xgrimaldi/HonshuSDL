@@ -38,6 +38,25 @@ ex: xavier.grimaldi (pour moi)
 ex: puis mon mdp
 ```
 
+## Obtenir les dernières mise à jour
+
+* Se rendre à la base du dossier projet sur votre ordinateur
+* Exécuter la commande suivante dans le bash:
+
+```
+git pull
+```
+
+## Ajouter du contenu au projet
+* Se rendre à la base du dossier projet sur votre ordinateur
+* Exécuter la commande suivante dans le bash:
+
+```
+git add .
+git commit -m "Message de votre choix ex: Mise à jour honshu V3"
+git push
+```
+
 ## Compiler les fichiers à l'aide du makefile
 
 * Makefile à alimenter en fonction des avancement du projet
