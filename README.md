@@ -79,6 +79,25 @@ make
 * Les fichiers .c .h sont présents dans le fichier "src"
 * Les fichiers .o sont présents dans le fichier "obj"
 
+## Installer doxygen
+
+* Ouvrir un terminal BASH
+* Télécharger doxygen:
+
+```
+sudo apt-get install doxygen
+```
+
+* Pour mettre à jour le doxygen, faire un cd dans le dossier doxygen du projet
+* Puis executer la commande
+
+```
+doxygen Doxyfile
+```
+
+* Le Doxyfile comprend tous les paramètres du doxygen dont: l'input et l'output directory
+
+
 ## Installer la libraire CUnit pour effectuer les tests
 
 * Ouvrir un terminal BASH
