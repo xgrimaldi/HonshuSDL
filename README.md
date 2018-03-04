@@ -1,6 +1,6 @@
 # PROJET INFO 1A - HONSHU
 
-## Lancement du programme honshu V2
+### Lancement du programme honshu V2
 
 * Ouvrir le bash et faites un cd dans le dossier "bin"
 * Exécuté le fichier "honshu" (1er paramètre pour donner le fichier Tuiles)
@@ -15,7 +15,7 @@ ou
 
 * Choix des programmes à éxécuter
 
-## Ajouter le projet sur votre ordinateur (LINUX !!)
+### Ajouter le projet sur votre ordinateur (LINUX !!)
 
 * Ouvrir un terminal BASH
 * Faites un cd dans le dossier de votre choix, dans le terminal:
@@ -38,7 +38,7 @@ ex: xavier.grimaldi (pour moi)
 ex: puis mon mdp
 ```
 
-## Obtenir les dernières mise à jour
+### Obtenir les dernières mise à jour
 
 * Se rendre à la base du dossier projet sur votre ordinateur
 * Exécuter la commande suivante dans le bash:
@@ -47,7 +47,7 @@ ex: puis mon mdp
 git pull
 ```
 
-## Ajouter du contenu au projet
+### Ajouter du contenu au projet
 * Se rendre à la base du dossier projet sur votre ordinateur
 * Exécuter la commande suivante dans le bash:
 
