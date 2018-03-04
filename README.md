@@ -1,6 +1,6 @@
 # PROJET INFO 1A - HONSHU
 
-## Lancementu du programme honshu V1
+## Lancement du programme honshu V1
 
 * Ouvrir le bash et faites un cd dans le dossier "bin"
 * Exécuté le fichier "honshu" (1er paramètre pour donner le fichier Tuiles)
