@@ -1,0 +1,153 @@
+\hypertarget{game_8h}{}\section{/home/sphinx06/\+Documents/\+E\+N\+S\+I\+I\+E/\+P\+R\+O\+J\+ET I\+N\+F\+O/src/game.h File Reference}
+\label{game_8h}\index{/home/sphinx06/\+Documents/\+E\+N\+S\+I\+I\+E/\+P\+R\+O\+J\+E\+T I\+N\+F\+O/src/game.\+h@{/home/sphinx06/\+Documents/\+E\+N\+S\+I\+I\+E/\+P\+R\+O\+J\+E\+T I\+N\+F\+O/src/game.\+h}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structTuile}{Tuile}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{game_8h_ad5228cd48403ef9d8b632f5c7c124720}\label{game_8h_ad5228cd48403ef9d8b632f5c7c124720}} 
+\#define {\bfseries n}~20
+\item 
+\mbox{\Hypertarget{game_8h_a4bcc747a6955c07cc50461611b2c3146}\label{game_8h_a4bcc747a6955c07cc50461611b2c3146}} 
+\#define {\bfseries M\+A\+X\+T\+U\+I\+L\+ES}~100
+\item 
+\mbox{\Hypertarget{game_8h_aa73214aa5f2f94f63d90bb4e3d99fe53}\label{game_8h_aa73214aa5f2f94f63d90bb4e3d99fe53}} 
+\#define {\bfseries L}~\char`\"{}L\+AC\char`\"{}
+\item 
+\mbox{\Hypertarget{game_8h_a2748566f4c443ee77aa831e63dbb5ebe}\label{game_8h_a2748566f4c443ee77aa831e63dbb5ebe}} 
+\#define {\bfseries P}~\char`\"{}P\+L\+A\+I\+NE\char`\"{}
+\item 
+\mbox{\Hypertarget{game_8h_a42257a545daf5b7933d6e8f96adc74f2}\label{game_8h_a42257a545daf5b7933d6e8f96adc74f2}} 
+\#define {\bfseries F}~\char`\"{}F\+O\+R\+ET\char`\"{}
+\item 
+\mbox{\Hypertarget{game_8h_af40a326b23c68a27cebe60f16634a2cb}\label{game_8h_af40a326b23c68a27cebe60f16634a2cb}} 
+\#define {\bfseries V}~\char`\"{}V\+I\+L\+LE\char`\"{}
+\item 
+\mbox{\Hypertarget{game_8h_affc9cbf86b78292bdb405361761c47f5}\label{game_8h_affc9cbf86b78292bdb405361761c47f5}} 
+\#define {\bfseries U}~\char`\"{}U\+S\+I\+NE\char`\"{}
+\item 
+\mbox{\Hypertarget{game_8h_a5c71a5e59a53413cd6c270266d63b031}\label{game_8h_a5c71a5e59a53413cd6c270266d63b031}} 
+\#define {\bfseries R}~\char`\"{}R\+E\+S\+S\+O\+U\+R\+CE\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structTuile}{Tuile} \hyperlink{game_8h_a5ba7a501820c6980db313d7b1b2d34b4}{Tuile}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{game_8h_a6d0031896f4537442f54dc86aecd10dd}{Load\+Tuiles} (char $\ast$filepath, \hyperlink{structTuile}{Tuile} game\+Tuiles\mbox{[}M\+A\+X\+T\+U\+I\+L\+ES\mbox{]})
+\begin{DoxyCompactList}\small\item\em Importe un fichier de tuile. \end{DoxyCompactList}\item 
+void \hyperlink{game_8h_a52eb3535acad02f8cccf0ff54f3d5462}{print\+Plateau} (char $\ast$$\ast$$\ast$plateau, int taille)
+\begin{DoxyCompactList}\small\item\em Affiche le plateau de jeu {\itshape g}. \end{DoxyCompactList}\item 
+void \hyperlink{game_8h_a89d184f7c4ecce750b1c9de886121780}{print\+Tuiles} (\hyperlink{structTuile}{Tuile} game\+Tuiles\mbox{[}M\+A\+X\+T\+U\+I\+L\+ES\mbox{]}, int nb\+Tuiles)
+\begin{DoxyCompactList}\small\item\em Affiche les tuiles paramètrées. \end{DoxyCompactList}\item 
+char $\ast$$\ast$$\ast$ \hyperlink{game_8h_af72e706bb80afd445801fbc18f991edd}{alloc\+\_\+array} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Alloue un triple pointeur de char de taille {\itshape x} $\ast$ {\itshape y}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Création des paramètres H\+O\+N\+S\+HU. 5 fonctions sont définies\+:
+\begin{DoxyItemize}
+\item {\bfseries Load\+Tuiles} Importe un fichier de tuile en paramètre du jeu.
+\item {\bfseries print\+Tuiles} permet d\textquotesingle{}afficher les tuiles paramètréss.
+\item {\bfseries print\+Plateau} permet d\textquotesingle{}afficher le plateau de jeu actuel.
+\item {\bfseries alloc\+\_\+array} permet d\textquotesingle{}allouer un triple pointeur de char. 
+\end{DoxyItemize}
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{game_8h_a5ba7a501820c6980db313d7b1b2d34b4}\label{game_8h_a5ba7a501820c6980db313d7b1b2d34b4}} 
+\index{game.\+h@{game.\+h}!Tuile@{Tuile}}
+\index{Tuile@{Tuile}!game.\+h@{game.\+h}}
+\subsubsection{\texorpdfstring{Tuile}{Tuile}}
+{\footnotesize\ttfamily \hyperlink{structTuile}{Tuile}}
+
+Type représentant une tuile 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{game_8h_af72e706bb80afd445801fbc18f991edd}\label{game_8h_af72e706bb80afd445801fbc18f991edd}} 
+\index{game.\+h@{game.\+h}!alloc\+\_\+array@{alloc\+\_\+array}}
+\index{alloc\+\_\+array@{alloc\+\_\+array}!game.\+h@{game.\+h}}
+\subsubsection{\texorpdfstring{alloc\+\_\+array()}{alloc\_array()}}
+{\footnotesize\ttfamily char$\ast$$\ast$$\ast$ alloc\+\_\+array (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+
+
+Alloue un triple pointeur de char de taille {\itshape x} $\ast$ {\itshape y}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & La taille du premier pointeur (char$\ast$$\ast$) \\
+\hline
+{\em y} & La taille du deuxième pointeur (char$\ast$) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Un char$\ast$$\ast$$\ast$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{game_8h_a6d0031896f4537442f54dc86aecd10dd}\label{game_8h_a6d0031896f4537442f54dc86aecd10dd}} 
+\index{game.\+h@{game.\+h}!Load\+Tuiles@{Load\+Tuiles}}
+\index{Load\+Tuiles@{Load\+Tuiles}!game.\+h@{game.\+h}}
+\subsubsection{\texorpdfstring{Load\+Tuiles()}{LoadTuiles()}}
+{\footnotesize\ttfamily int Load\+Tuiles (\begin{DoxyParamCaption}\item[{char $\ast$}]{filepath,  }\item[{\hyperlink{structTuile}{Tuile}}]{game\+Tuiles\mbox{[}\+M\+A\+X\+T\+U\+I\+L\+E\+S\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Importe un fichier de tuile. 
+
+Récupère le fichier et importe les tuiles dans le tableau de tuiles et renvoie le nombre de tuiles crées.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & Chemin du fichier. \\
+\hline
+{\em game\+Tuiles} & Tableau de tuiles. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+le nombre de tuiles crée. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{game_8h_a52eb3535acad02f8cccf0ff54f3d5462}\label{game_8h_a52eb3535acad02f8cccf0ff54f3d5462}} 
+\index{game.\+h@{game.\+h}!print\+Plateau@{print\+Plateau}}
+\index{print\+Plateau@{print\+Plateau}!game.\+h@{game.\+h}}
+\subsubsection{\texorpdfstring{print\+Plateau()}{printPlateau()}}
+{\footnotesize\ttfamily void print\+Plateau (\begin{DoxyParamCaption}\item[{char $\ast$$\ast$$\ast$}]{plateau,  }\item[{int}]{taille }\end{DoxyParamCaption})}
+
+
+
+Affiche le plateau de jeu {\itshape g}. 
+
+\begin{DoxyAttention}{Attention}
+Au début du programme, un plateau vide est crée (composé que de \char`\"{}0\char`\"{}) 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em plateau} & Un plateau de jeu (triple pointeurs). \\
+\hline
+{\em taille} & la taille du plateau (taille$\ast$taille). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{game_8h_a89d184f7c4ecce750b1c9de886121780}\label{game_8h_a89d184f7c4ecce750b1c9de886121780}} 
+\index{game.\+h@{game.\+h}!print\+Tuiles@{print\+Tuiles}}
+\index{print\+Tuiles@{print\+Tuiles}!game.\+h@{game.\+h}}
+\subsubsection{\texorpdfstring{print\+Tuiles()}{printTuiles()}}
+{\footnotesize\ttfamily void print\+Tuiles (\begin{DoxyParamCaption}\item[{\hyperlink{structTuile}{Tuile}}]{game\+Tuiles\mbox{[}\+M\+A\+X\+T\+U\+I\+L\+E\+S\mbox{]},  }\item[{int}]{nb\+Tuiles }\end{DoxyParamCaption})}
+
+
+
+Affiche les tuiles paramètrées. 
+
+\begin{DoxyAttention}{Attention}
+Si aucune tuiles, message d\textquotesingle{}erreur affiché. 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em game\+Tuiles} & Le tableau de tuiles. \\
+\hline
+{\em nb\+Tuiles} & Le nombre de tuiles \\
+\hline
+\end{DoxyParams}
