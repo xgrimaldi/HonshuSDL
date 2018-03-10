@@ -38,6 +38,21 @@ typedef struct Tuile {
 } Tuile;
 
 /**
+* \typedef Game
+* Type représentant une partie
+*/
+typedef struct Game {
+	char*** plateau;
+	Tuile* tuiles;
+	int nbTuiles;
+	int taille;
+} Game;
+
+
+void HonshuScreen();
+void clearScreen();
+
+/**
 * \brief Importe un fichier de tuile 
 *
 * Récupère le fichier et importe les tuiles dans le tableau de tuiles et renvoie le nombre de tuiles crées.
@@ -47,6 +62,22 @@ typedef struct Tuile {
 * \return le nombre de tuiles crée.
 */
 int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]);
+
+/**
+* \brief Initialise le plateau de jeu
+*
+*/
+void initPlateau(char*** gamePlateau);
+
+/**
+* \brief Initialise une partie
+*/
+void startGame(Game game);
+
+/**
+* \brief Initialise une partie
+*/
+Game initGame();
 
 /**
 * \brief Affiche le plateau de jeu \a g

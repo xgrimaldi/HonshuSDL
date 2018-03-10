@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "game.h"
 
+// ######################################
+//	PARTIE ALLOCATION/LIBERATION MEMOIRE
+// ######################################
 char ***alloc_array(int x, int y) {
     char ***a = calloc(x, sizeof(char **));
     for(int i = 0; i != x; i++) {
@@ -10,6 +14,10 @@ char ***alloc_array(int x, int y) {
     }
     return a;
 }
+
+// ######################################
+//	PARTIE AFFICHAGE
+// ######################################
 
 void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles){
 	printf("\n\t\t Tuiles paramètrées\n");
@@ -31,11 +39,17 @@ void printPlateau(char*** plateau,int taille){
 	}
 }
 
-/*
-void resetTuiles(Tuile gameTuiles[MAXTUILES]){
+// ######################################
+//	PARTIE INITIALISATION
+// ######################################
 
+void initPlateau(char*** gamePlateau){
+	for (int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			gamePlateau[i][j]="0";
+		}
+	}
 }
-*/
 
 int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
 	//******************************
@@ -88,4 +102,124 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
 	       	printf("Fichier vide ou inconnu\n");
 	       	return 0;
 	}
+}
+
+// ######################################
+//	PARTIE JEU
+// ######################################
+
+Game initGame(){
+	// Nettoyage de l'écran
+	clearScreen();
+
+	//*********************************
+	// Déclaration des variables
+	//*********************************
+	Game test;	
+	char ***gamePlateau;	
+	Tuile *gameTuiles = malloc(MAXTUILES * sizeof(Tuile));
+	int nb_tuiles=0;
+	int choix=0;
+	//**********************************
+	// Chargement des paramètres par défauts
+	//**********************************
+	while (nb_tuiles==0){
+		printf("Quelles tuiles voulez-vous utilisez ?\n");
+		printf("1 - Des tuiles générées aléatoirement \n");
+		printf("2 - Des tuiles générées à partir d'un fichier \n");
+		scanf("%d",&choix);
+		switch(choix){
+			case 1:{
+				printf("A développer");
+				break;
+			}
+			case 2:{ 
+				char filepath[1024]={};
+				printf("Quel est le chemin du fichier de Tuiles ? ...\n");
+				scanf("%s",filepath);
+				// Chargement d'un fichier de tuiles
+				//resetTuiles(gameTuiles);
+				if(filepath!=NULL){
+					nb_tuiles=LoadTuiles(filepath,gameTuiles);
+				}
+				break;
+			}
+		}
+	}
+
+	// Création du plateau de jeu de taille n*n
+	gamePlateau = alloc_array(n, n);
+	for (int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			gamePlateau[i][j]="0";
+		}
+	}
+
+	// Attribution du jeu 
+	test.plateau = gamePlateau;
+	test.tuiles = gameTuiles;
+	test.nbTuiles=nb_tuiles;
+	test.taille=n;
+
+	return test;
+}
+
+void startGame(Game game){
+	//**********************************
+	// Lancement du jeu 
+	//**********************************
+	int stop = 0;
+	int choix=0;
+	while(stop == 0){
+
+		printf("\nQue voulez-vous faire ?\n");
+		printf("0 - Quitter la partie\n");
+	 	printf("1 - Voir les tuiles paramètrés\n");
+	 	printf("2 - Voir le plateau de jeu\n");
+		scanf("%d",&choix);
+		switch(choix){
+			case 1:{
+				// Affichage des tuiles disponibles 
+				if(game.nbTuiles > 0)
+					printTuiles(game.tuiles,game.nbTuiles);
+				else
+					printf("Aucune tuile: Vérifier le paramètrage ! \n");
+				break;
+			}
+			case 2:{
+				clearScreen();
+				// Affichage du plateau
+				printPlateau(game.plateau,n);
+				break;
+			}
+			case 0:{
+				stop = 1;
+				break;
+			}
+		}
+	}
+}
+// ######################################
+//	PARTIE DIVERS
+// ######################################
+
+void HonshuScreen(){
+	printf(" \n");
+	printf("	 __    __    ______   .__   __.      _______. __    __   __    __  \n");
+	printf("	|  |  |  |  /  __  \\  |  \\ |  |     /       ||  |  |  | |  |  |  | \n");
+	printf("	|  |__|  | |  |  |  | |   \\|  |    |   (----`|  |__|  | |  |  |  | \n");
+	printf("	|   __   | |  |  |  | |  . `  |     \\   \\    |   __   | |  |  |  | \n");
+	printf("	|  |  |  | |  `--'  | |  |\\   | .----)   |   |  |  |  | |  `--'  | \n");
+	printf("	|__|  |__|  \\______/  |__| \\__| |_______/    |__|  |__|  \\______/  \n");
+	printf("\n");
+}
+
+void clearScreen() {
+    #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+        system("clear");
+    #endif
+
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #endif
 }
