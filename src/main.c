@@ -21,9 +21,9 @@ int main() {
 		clearScreen();
 		HonshuScreen();
 		
-		printf("\nQue voulez-vous faire ?\n");
-		printf("0 - Quitter le programme\n");
-		printf("1 - Lancement d'une partie\n");
+		LOG_BOLDRED("\n\t\t\t\tMenu de sélection\n");
+		printf("\t\t\t0 - Quitter le programme\n");
+		printf("\t\t\t1 - Lancement d'une partie\n");
 		scanf("%d",&choix);
 		switch(choix){
 			case 1:{

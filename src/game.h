@@ -12,6 +12,10 @@
 #define U "USINE"
 #define R "RESSOURCE"
 
+#define Color_Red "\033[1m\033[31m" // Color Start
+#define Color_end "\033[0m" // To flush out prev settings
+#define LOG_BOLDRED(X) printf("%s %s %s",Color_Red,X,Color_end)
+
 /**
 * \file game.h
 * 
@@ -42,7 +46,7 @@ typedef struct Tuile {
 * Type représentant une partie
 */
 typedef struct Game {
-	char*** plateau;
+	int** plateau;
 	Tuile* tuiles;
 	int nbTuiles;
 	int taille;
@@ -51,6 +55,8 @@ typedef struct Game {
 
 void HonshuScreen();
 void clearScreen();
+void initPlacementTuileRandom(Game partie);
+int randomMinMax(int a,int b);
 
 /**
 * \brief Importe un fichier de tuile 
@@ -67,7 +73,7 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]);
 * \brief Initialise le plateau de jeu
 *
 */
-void initPlateau(char*** gamePlateau);
+void initPlateau(int** gamePlateau);
 
 /**
 * \brief Initialise une partie
@@ -85,7 +91,7 @@ Game initGame();
 * \param plateau Un plateau de jeu (triple pointeurs).
 * \param taille la taille du plateau (taille*taille).
 */
-void printPlateau(char*** plateau,int taille);
+void printPlateau(int** plateau,int taille);
 
 /**
 * \brief Affiche les tuiles paramètrées
@@ -99,11 +105,12 @@ void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles);
 /**
 * \brief Alloue un triple pointeur de char de taille \a x  * \a y
 *
-* \param x La taille du premier pointeur (char**)
-* \param y La taille du deuxième pointeur (char*) 
-* \return Un char***
+* \param x La taille du premier pointeur (int**)
+* \param y La taille du deuxième pointeur (int*) 
+* \return Un int **
 */
-char ***alloc_array(int x, int y);
+int **alloc_int_array(int x, int y);
+
 
 /**
 * \brief Place une tuile \a t à la position \a x , \a y du jeu pointé par \a game
