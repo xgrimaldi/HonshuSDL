@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['initgame',['initGame',['../game_8h.html#a72f469f6ac4e2dc25da37b8fc425d32b',1,'game.c']]],
-  ['initplateau',['initPlateau',['../game_8h.html#ac7405317d84610062170bbffee006901',1,'game.c']]]
+  ['honshuscreen',['HonshuScreen',['../game_8h.html#aa04c963dd7ad64758a95d579306f38f9',1,'game.c']]]
 ];

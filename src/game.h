@@ -53,9 +53,40 @@ typedef struct Game {
 } Game;
 
 
+/**
+* \brief Affiche le logo Honshu
+*
+* Print du logo Honshu en ASCII ART
+*
+*/
 void HonshuScreen();
+
+/**
+* \brief Clear l'écran
+*
+* Clear l'écran terminal/bash
+*
+*/
 void clearScreen();
+
+/**
+* \brief Génére la tuile aléatoirement
+*
+* Positionne une tuile au hasard au milieu du plateau
+*
+* \param partie variable représentant une partie (structure Game).
+*/
 void initPlacementTuileRandom(Game partie);
+
+/**
+* \brief Génére un nombre aléatoire borné
+*
+* Créer un nombre pris au aléatoirement entre deux bornes \a a et \a b
+*
+* \param a MIN.
+* \param b MAX.
+* \return le nombre random.
+*/
 int randomMinMax(int a,int b);
 
 /**
