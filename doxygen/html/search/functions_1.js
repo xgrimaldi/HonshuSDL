@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loadtuiles',['LoadTuiles',['../game_8h.html#a6d0031896f4537442f54dc86aecd10dd',1,'game.c']]]
+  ['canplacetuile',['canPlaceTuile',['../game_8h.html#a2a5ad717ba34a928c1d467b0eb23f184',1,'game.c']]]
 ];

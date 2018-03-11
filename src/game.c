@@ -164,12 +164,129 @@ Game initGame(){
 	return test;
 }
 
+int placeTuile(Game* game, Tuile tuile, int x, int y){
+	switch(tuile.orientation){
+
+		case 'N':{ 
+			if(canPlaceTuile(*game, tuile, x, y)){
+				game -> plateau[x][y][0] = tuile.X_1;
+				game -> plateau[x][y+1][0] = tuile.X_2;
+				game -> plateau[x+1][y][0] = tuile.X_3;
+				game -> plateau[x+1][y+1][0] = tuile.X_4;
+				game -> plateau[x+2][y][0] = tuile.X_5;
+				game -> plateau[x+2][y+2][0] = tuile.X_6;
+			}
+			else{
+				printf("Impossible de placer cette tuile ici\n");
+				return EXIT_FAILURE;
+			}
+		}
+
+		case 'E':{
+			if(canPlaceTuile(*game, tuile, x, y)){
+				game -> plateau[x][y][0] = tuile.X_5;
+				game -> plateau[x][y+1][0] = tuile.X_3;
+				game -> plateau[x][y+2][0] = tuile.X_1;
+				game -> plateau[x+1][y][0] = tuile.X_6;
+				game -> plateau[x+1][y+1][0] = tuile.X_4;
+				game -> plateau[x+1][y+2][0] = tuile.X_2;
+			}
+			else{
+				printf("Impossible de placer cette tuile ici\n");
+				return EXIT_FAILURE;
+			}
+		}
+
+		case 'S':{
+			if(canPlaceTuile(*game, tuile, x, y)){
+				game -> plateau[x][y][0] = tuile.X_6;
+				game -> plateau[x][y+1][0] = tuile.X_5;
+				game -> plateau[x+1][y][0] = tuile.X_4;
+				game -> plateau[x+1][y+1][0] = tuile.X_3;
+				game -> plateau[x+2][y][0] = tuile.X_2;
+				game -> plateau[x+2][y+2][0] = tuile.X_1;
+			}
+			else{
+				printf("Impossible de placer cette tuile ici\n");
+				return EXIT_FAILURE;
+			}
+		}
+
+		case 'W':{
+			if(canPlaceTuile(*game, tuile, x, y)){
+				game -> plateau[x][y][0] = tuile.X_2;
+				game -> plateau[x][y+1][0] = tuile.X_4;
+				game -> plateau[x][y+2][0] = tuile.X_6;
+				game -> plateau[x+1][y][0] = tuile.X_1;
+				game -> plateau[x+1][y+1][0] = tuile.X_3;
+				game -> plateau[x+1][y+2][0] = tuile.X_5;
+			}
+			else{
+				printf("Impossible de placer cette tuile ici\n");
+				return EXIT_FAILURE;
+			}
+		}
+
+		default:{
+			printf("Erreur d'orientation de 	la tuile (Utiliser 'N', 'E', 'S' ou 'W' uniquement)\n");
+			return EXIT_FAILURE;
+		}
+	}
+
+	return EXIT_SUCCESS;
+}
+
+int inPlateau(int x, int y){
+	if(!(0 <= x <n) || !(0 <= y <n)){
+		return 0;
+	}
+	else return 1;
+}
+
+int canPlaceTuile(Game game, Tuile tuile, int x, int y){ //Reste a traiter le cas de recouvrement complet d'une autre tuile (interdit)
+	int recouvreUneTuile = 0;
+	if(tuile.orientation =='N' || tuile.orientation == 'S'){
+		
+		if (game.plateau[x][y] != "0") recouvreUneTuile = 1;
+		else if(game.plateau[x][y+1][0] != "0") recouvreUneTuile = 1;
+		else if(game.plateau[x+1][y][0] != "0") recouvreUneTuile = 1;
+		else if(game.plateau[x+1][y+1][0] != "0") recouvreUneTuile = 1;
+		else if(game.plateau[x+2][y][0] != "0") recouvreUneTuile = 1;
+		else if(game.plateau[x+2][y+1][0] != "0") recouvreUneTuile = 1;
+
+		if (!(inPlateau(x, y)) || game.plateau[x][y][0] == 'L') return 0;
+		if (!(inPlateau(x, y+1)) || game.plateau[x][y+1][0] == 'L') return 0;
+		if (!(inPlateau(x+1, y)) || game.plateau[x+1][y][0] == 'L') return 0;
+		if (!(inPlateau(x+1, y+1)) || game.plateau[x+1][y+1][0] == 'L') return 0;
+		if (!(inPlateau(x+2, y)) || game.plateau[x+2][y][0] == 'L') return 0;
+		if (!(inPlateau(x+2, y+1)) || game.plateau[x+2][y+1][0] == 'L') return 0;
+	}
+
+	else{
+		if (game.plateau[x][y] !="0") recouvreUneTuile = 1;
+		else if(game.plateau[x][y+1][0] !="0") recouvreUneTuile = 1;
+		else if(game.plateau[x][y+2][0] !="0") recouvreUneTuile = 1;
+		else if(game.plateau[x+1][y][0] !="0") recouvreUneTuile = 1;
+		else if(game.plateau[x+1][y+1][0] !="0") recouvreUneTuile = 1;
+		else if(game.plateau[x+1][y+2][0] !="0") recouvreUneTuile = 1;
+
+		if (!(inPlateau(x, y)) || game.plateau[x][y][0] == 'L') return 0;
+		if (!(inPlateau(x, y+1)) || game.plateau[x][y+1][0] == 'L') return 0;
+		if (!(inPlateau(x, y+2)) || game.plateau[x][y+2][0] == 'L') return 0;
+		if (!(inPlateau(x+1, y)) || game.plateau[x+1][y][0] == 'L') return 0;
+		if (!(inPlateau(x+1, y+1)) || game.plateau[x+1][y+1][0] == 'L') return 0;
+		if (!(inPlateau(x+1, y+2)) || game.plateau[x+1][y+2][0] == 'L') return 0;
+	}
+
+	return recouvreUneTuile;
+}
+
 void startGame(Game game){
 	//**********************************
 	// Lancement du jeu 
 	//**********************************
 	int stop = 0;
-	int choix=0;
+	int choix = 0;
 	while(stop == 0){
 
 		printf("\nQue voulez-vous faire ?\n");

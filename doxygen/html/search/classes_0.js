@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tuile',['Tuile',['../structTuile.html',1,'']]]
+  ['game',['Game',['../structGame.html',1,'']]]
 ];
