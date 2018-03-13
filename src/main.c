@@ -1,6 +1,6 @@
 /*
 * PROJET INFO - LES TUILEURS
- */
+*/
 
 #include <stdlib.h>
 #include <stdio.h>

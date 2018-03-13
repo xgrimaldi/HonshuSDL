@@ -144,22 +144,22 @@ int **alloc_int_array(int x, int y);
 
 
 /**
-* \brief Place une tuile \a t à la position \a x , \a y du jeu pointé par \a game
+* \brief Place la tuile d'id \a id à la position \a x , \a y du jeu pointé par \a game
 * \param game Pointeur vers le tableau de jeu (Game*)
-* \param t La tuile a placer (Tuile)
+* \param id l'identifiant de la tuile a placer (int)
 * \param x l'abcisse de la position ou placer la tuile (int)
 * \param y l'ordonnée de la position ou placer la tuile (int)
 * \return 0 si l'exécution s'est bien passée, 1 sinon
 */
-int placeTuile(Game* game, Tuile t, int x, int y);
+int placeTuile(Game* game, int id, int x, int y);
 
 /**
-* \brief Vérifie que le placement de la tuile \a t est autorisé à la position \a x , \a y du jeu \a game
+* \brief Vérifie que le placement de la tuile d'id\a id est autorisé à la position \a x , \a y du jeu \a game
 * \param le tableau de jeu (Game)
-* \param t La tuile a placer (Tuile)
+* \param id L'identifiant de la tuile a placer (int)
 * \param x l'abcisse de la position ou placer la tuile (int)
 * \param y l'ordonnée de la position ou placer la tuile (int)
 * \return 1 si le placement est autorisé, 0 sinon
 */
-int canPlaceTuile(Game game, Tuile t, int x,int y); //Pas entièrement implémentée
+int canPlaceTuile(Game game, int id, int x,int y); //Pas entièrement implémentée
 #endif
