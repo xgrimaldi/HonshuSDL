@@ -81,10 +81,10 @@ void initPlacementTuileRandom(Game partie);
 /**
 * \brief Génére un nombre aléatoire borné
 *
-* Créer un nombre pris au aléatoirement entre deux bornes \a a et \a b
+* Créer un nombre pris aléatoirement entre deux bornes \a a et \a b compris
 *
-* \param a MIN.
-* \param b MAX.
+* \param a MIN (int)
+* \param b MAX (int)
 * \return le nombre random.
 */
 int randomMinMax(int a,int b);
@@ -155,6 +155,9 @@ int placeTuile(Game* game, int id, int x, int y);
 
 /**
 * \brief Vérifie que le placement de la tuile d'id\a id est autorisé à la position \a x , \a y du jeu \a game
+*
+* La position a renseigner est celle du coin le plus en haut à gauche de la tuile, après rotation.
+*
 * \param le tableau de jeu (Game)
 * \param id L'identifiant de la tuile a placer (int)
 * \param x l'abcisse de la position ou placer la tuile (int)
@@ -162,4 +165,11 @@ int placeTuile(Game* game, int id, int x, int y);
 * \return 1 si le placement est autorisé, 0 sinon
 */
 int canPlaceTuile(Game game, int id, int x,int y); //Pas entièrement implémentée
+
+/**
+* \brief Génère \a nb_Tuile tuile(s) aléatoirement
+* \param nb_Tuile > 0 nombre de tuile à générer (int)
+* \return un tableau de \a nb_Tuile tuile(s)
+*/
+Tuile* randomTuile(int nb_Tuile);
 #endif

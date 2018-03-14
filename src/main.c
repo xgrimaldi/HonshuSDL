@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
 #include "game.h"
 
 int main() {
@@ -12,6 +14,7 @@ int main() {
 	// Déclaration des variables
 	//*********************************
 	int choix=0;
+	srand(time(NULL)); 
 
 	//**********************************
 	// Lancement du jeu 
@@ -24,7 +27,7 @@ int main() {
 		LOG_BOLDRED("\n\t\t\t\tMenu de sélection\n");
 		printf("\t\t\t0 - Quitter le programme\n");
 		printf("\t\t\t1 - Lancement d'une partie\n");
-		scanf("%d",&choix);
+		scanf("%d", &choix);
 		switch(choix){
 			case 1:{
 				Game newgame = initGame();

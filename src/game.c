@@ -76,6 +76,7 @@ void initPlacementTuileRandom(Game partie){
 	int pos_ligne = (partie.taille/2);
 	int pos_col = (partie.taille/2);
 	char placement[6]= {partie.tuiles[choix].X_1,partie.tuiles[choix].X_2,partie.tuiles[choix].X_3,partie.tuiles[choix].X_4,partie.tuiles[choix].X_5,partie.tuiles[choix].X_6};
+	partie.tuiles[choix].orientation = 'N';
 
 	int ind=0;
 	for (int i=pos_ligne; i<pos_ligne+3 ;i++){
@@ -84,6 +85,22 @@ void initPlacementTuileRandom(Game partie){
 			ind++;
 		}
 	}
+}
+
+Tuile* randomTuile(int nb){
+	int i;
+	char cases[6] = "LPFVUR";
+	Tuile* tabTuile = malloc(nb*sizeof(Tuile));
+	for(i = 0; i < nb; i++){
+		tabTuile[i].id = i;
+		tabTuile[i].X_1 = cases[randomMinMax(0, 5)];
+		tabTuile[i].X_2 = cases[randomMinMax(0, 5)];
+		tabTuile[i].X_3 = cases[randomMinMax(0, 5)];
+		tabTuile[i].X_4 = cases[randomMinMax(0, 5)];
+		tabTuile[i].X_5 = cases[randomMinMax(0, 5)];
+		tabTuile[i].X_6 = cases[randomMinMax(0, 5)];
+	}
+	return tabTuile;
 }
 
 int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
@@ -278,7 +295,16 @@ Game initGame(){
 		scanf("%d",&choix);
 		switch(choix){
 			case 1:{
-				printf("A développer");
+				printf("Combien de tuiles voulez vous générer ? ");
+				scanf("%d", &nb_tuiles);
+				if(nb_tuiles <= 0){
+					printf("Veuillez saisir un nombre entre 1 et %d\n", MAXTUILES);
+					printf("\n");
+					nb_tuiles = 0;
+				}
+				else{
+					gameTuiles = randomTuile(nb_tuiles);
+				}
 				break;
 			}
 			case 2:{ 
@@ -302,8 +328,8 @@ Game initGame(){
 	// Attribution du jeu 
 	test.plateau = gamePlateau;
 	test.tuiles = gameTuiles;
-	test.nbTuiles=nb_tuiles;
-	test.taille=n;
+	test.nbTuiles = nb_tuiles;
+	test.taille = n;
 
 	//Placement de la premiere tuile
 	initPlacementTuileRandom(test);
@@ -413,7 +439,6 @@ void startGame(Game game){
 // ######################################
 
 int randomMinMax(int a,int b){
-	srand(time(NULL));
 	int r = (rand() % (b - a + 1)) + a;
 	return r;
 }
