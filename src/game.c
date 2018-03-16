@@ -102,7 +102,6 @@ void initPlateau(int** gamePlateau){
 	}
 }
 
-
 void initPlacementTuileRandom(Game* partie){
 	int choix = randomMinMax(0,partie->nbTuiles);
 	int pos_ligne = (partie->taille/2);
@@ -297,6 +296,10 @@ int canPlaceTuile(Game game, int id, int x, int y){ //Reste a traiter le cas de 
 	if(!recouvreUneTuile) printf("Aucune tuile n'est recouverte !\n");
 
 	return recouvreUneTuile;
+}
+
+char printCase(Game game, int x, int y){
+	return (char)game.plateau[x][y];
 }
 
 // ######################################
