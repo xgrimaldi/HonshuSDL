@@ -24,17 +24,29 @@ int **alloc_int_array(int x, int y) {
 void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles){
 	printf("\n\t\t Tuiles paramètrées\n");
 	for(int i=0;i<nbTuiles;i++){
-		printf("\n ID:%d \n",gameTuiles[i].id);
-		printf("| %c | %c | \n",gameTuiles[i].X_1,gameTuiles[i].X_2);
-		printf("| %c | %c | \n",gameTuiles[i].X_3,gameTuiles[i].X_4);
-		printf("| %c | %c | \n",gameTuiles[i].X_5,gameTuiles[i].X_6);		
+		printf("\n %s ID:%d%s \n",Color_Bold_White,gameTuiles[i].id,Color_end);
+		printf("| ");
+		printIntToCharColor(gameTuiles[i].X_1);
+		printf(" | ");
+		printIntToCharColor(gameTuiles[i].X_2);
+		printf(" |\n");
+		printf("| ");
+		printIntToCharColor(gameTuiles[i].X_3);
+		printf(" | ");
+		printIntToCharColor(gameTuiles[i].X_4);
+		printf(" |\n");
+		printf("| ");
+		printIntToCharColor(gameTuiles[i].X_5);
+		printf(" | ");
+		printIntToCharColor(gameTuiles[i].X_6);
+		printf(" |\n");
 	}
 }
 
 void printPlateau(int** plateau,int taille){
 	int nlig=0;
 	int i=0;
-	printf("\n\t\t Plateau de jeu \n \t");
+	printf("\n\t\t Plateau de jeu \n \t ");
 	
 	for (int ncol=65;ncol<65+taille;ncol++){
 		printf("   \033[1m%c\033[0m   ",ncol);
@@ -51,14 +63,33 @@ void printPlateau(int** plateau,int taille){
 		for(int j=0;j<taille;j++){
 			if(plateau[i][j]==0)
 				printf("   -   ");
-			else
-				printf("   %c   ",plateau[i][j]);
+			else{
+				printf("   ");
+				printIntToCharColor(plateau[i][j]);
+				printf("   ");
+			}
 		}	
 		printf("\n");
 		nlig++;
 	}
 }
 
+void printIntToCharColor(int car){
+	if (car=='L')
+		printf("%s%c%s",Color_Bold_Blue,car,Color_end);
+	else if (car=='P')
+		printf("%s%c%s",Color_Bold_Green,car,Color_end);
+	else if (car=='F')
+		printf("%s%c%s",Color_Bold_Green,car,Color_end);
+	else if (car=='V')
+		printf("%s%c%s",Color_Bold_Magenta,car,Color_end);
+	else if (car=='U')
+		printf("%s%c%s",Color_Bold_Yellow,car,Color_end);
+	else if (car=='R')
+		printf("%s%c%s",Color_Bold_Red,car,Color_end);
+	else
+		printf("%s%c%s",Color_Bold_White,car,Color_end);
+}
 // ######################################
 //	PARTIE INITIALISATION
 // ######################################
@@ -71,17 +102,17 @@ void initPlateau(int** gamePlateau){
 	}
 }
 
-void initPlacementTuileRandom(Game partie){
-	int choix = randomMinMax(0,partie.nbTuiles);
-	int pos_ligne = (partie.taille/2);
-	int pos_col = (partie.taille/2);
-	char placement[6]= {partie.tuiles[choix].X_1,partie.tuiles[choix].X_2,partie.tuiles[choix].X_3,partie.tuiles[choix].X_4,partie.tuiles[choix].X_5,partie.tuiles[choix].X_6};
-	partie.tuiles[choix].orientation = 'N';
+
+void initPlacementTuileRandom(Game* partie){
+	int choix = randomMinMax(0,partie->nbTuiles);
+	int pos_ligne = (partie->taille/2);
+	int pos_col = (partie->taille/2);
+	char placement[6]= {partie->tuiles[choix].X_1,partie->tuiles[choix].X_2,partie->tuiles[choix].X_3,partie->tuiles[choix].X_4,partie->tuiles[choix].X_5,partie->tuiles[choix].X_6};
 
 	int ind=0;
 	for (int i=pos_ligne; i<pos_ligne+3 ;i++){
 		for (int j=pos_col; j<pos_col+2 ;j++){
-			partie.plateau[i][j] = placement[ind];
+			partie->plateau[i][j] = placement[ind];
 			ind++;
 		}
 	}
@@ -272,18 +303,23 @@ int canPlaceTuile(Game game, int id, int x, int y){ //Reste a traiter le cas de 
 //	PARTIE JEU
 // ######################################
 
-Game initGame(){
+void startGame(){
 	// Nettoyage de l'écran
 	clearScreen();
 
 	//*********************************
 	// Déclaration des variables
-	//*********************************
-	Game test;	
+	//************************ws*********
+	Game* game=malloc(sizeof(Game));	
 	int **gamePlateau;	
 	Tuile *gameTuiles = malloc(MAXTUILES * sizeof(Tuile));
 	int nb_tuiles=0;
-	int choix=0;
+	int choix=0; 
+	int id_Tuile = -1;
+	int x = -1;
+	char y = '^';
+	char orientation = 'A';
+	int accepte = 0;
 	//**********************************
 	// Chargement des paramètres par défauts
 	//**********************************
@@ -303,6 +339,7 @@ Game initGame(){
 					nb_tuiles = 0;
 				}
 				else{
+					clearScreen();
 					gameTuiles = randomTuile(nb_tuiles);
 				}
 				break;
@@ -314,6 +351,7 @@ Game initGame(){
 				// Chargement d'un fichier de tuiles
 				//resetTuiles(gameTuiles);
 				if(filepath!=NULL){
+					clearScreen();
 					nb_tuiles=LoadTuiles(filepath,gameTuiles);
 				}
 				break;
@@ -326,32 +364,20 @@ Game initGame(){
 	initPlateau(gamePlateau);
 
 	// Attribution du jeu 
-	test.plateau = gamePlateau;
-	test.tuiles = gameTuiles;
-	test.nbTuiles = nb_tuiles;
-	test.taille = n;
+	game->plateau=gamePlateau;
+	game->tuiles = gameTuiles;
+	game->nbTuiles=nb_tuiles;
+	game->taille=n;
 
 	//Placement de la premiere tuile
-	initPlacementTuileRandom(test);
-
-	return test;
-}
+	initPlacementTuileRandom(game);
 
 
-void startGame(Game game){
 	//**********************************
 	// Lancement du jeu 
 	//**********************************
-	
 	int stop = 0;
-	int choix = 0;
- 
-	int id_Tuile = -1;
-	int x = -1;
-	char y = '^';
-	char orientation = 'A';
-	int accepte = 0;
-
+	choix=0;
 	while(stop == 0){
 
 		printf("\nQue voulez-vous faire ?\n");
@@ -363,23 +389,23 @@ void startGame(Game game){
 		switch(choix){
 			case 1:{
 				// Affichage des tuiles disponibles 
-				if(game.nbTuiles > 0)
-					printTuiles(game.tuiles,game.nbTuiles);
+				if(game->nbTuiles > 0)
+					printTuiles(game->tuiles,game->nbTuiles);
 				else
-					printf("Aucune tuile : Vérifier le paramètrage ! \n");
+					printf("Aucune tuile: Vérifier le paramètrage ! \n");
 				break;
 			}
 			case 2:{
 				clearScreen();
 				// Affichage du plateau
-				printPlateau(game.plateau,n);
+				printPlateau(game->plateau,n);
 				break;
 			}
 			case 3:{
 				while(accepte == 0){ //ID
 					printf("Quelle tuile voulez vous placer ? : ");
 					scanf("%d", &id_Tuile);
-					if(id_Tuile < 0 || id_Tuile > game.nbTuiles) printf("ID incorrect ! Saisir un ID entre 0 et %d\n", game.nbTuiles);
+					if(id_Tuile < 0 || id_Tuile > game->nbTuiles) printf("ID incorrect ! Saisir un ID entre 0 et %d\n", game->nbTuiles);
 					else accepte = 1;
 				}
 				accepte =  0;
@@ -414,10 +440,10 @@ void startGame(Game game){
 							orientation -= 32; //On la convertit en minuscule
 						}
 						accepte = 1;
-						game.tuiles[id_Tuile].orientation = orientation;
+						game->tuiles[id_Tuile].orientation = orientation;
 					}
 				}
-				if(!placeTuile(&game, id_Tuile, x, (int) y)){
+				if(!placeTuile(game, id_Tuile, x, (int) y)){
 					printf("Placement réalisé\n");
 				}
 				else{
@@ -427,13 +453,18 @@ void startGame(Game game){
 				break;
 			}
 			case 0:{
+				for(int i=0;i<game->taille;i++){
+					free(game->plateau[i]);
+				}
+				free(game->plateau);;
+				free(game->tuiles);
+				free(game);
 				stop = 1;
 				break;
 			}
 		}
 	}
 }
-
 // ######################################
 //	PARTIE DIVERS
 // ######################################

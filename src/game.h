@@ -12,9 +12,14 @@
 #define U "USINE"
 #define R "RESSOURCE"
 
-#define Color_Red "\033[1m\033[31m" // Color Start
+#define Color_Bold_Red "\033[1m\033[31m"
+#define Color_Bold_Green "\033[1m\033[32m" 
+#define Color_Bold_Yellow  "\033[1m\033[33m" 
+#define Color_Bold_Blue "\033[1m\033[34m" 
+#define Color_Bold_Magenta "\033[1m\033[35m"
+#define Color_Bold_White "\033[1m\033[37m" 
 #define Color_end "\033[0m" // To flush out prev settings
-#define LOG_BOLDRED(X) printf("%s %s %s",Color_Red,X,Color_end)
+#define LOG_BOLDRED(X) printf("%s %s %s",Color_Bold_Red,X,Color_end)
 
 /**
 * \file game.h
@@ -76,15 +81,15 @@ void clearScreen();
 *
 * \param partie variable représentant une partie (structure Game).
 */
-void initPlacementTuileRandom(Game partie);
+void initPlacementTuileRandom(Game* partie);
 
 /**
 * \brief Génére un nombre aléatoire borné
 *
-* Créer un nombre pris aléatoirement entre deux bornes \a a et \a b compris
+* Créer un nombre pris au aléatoirement entre deux bornes \a a et \a b
 *
-* \param a MIN (int)
-* \param b MAX (int)
+* \param a MIN.
+* \param b MAX.
 * \return le nombre random.
 */
 int randomMinMax(int a,int b);
@@ -109,7 +114,7 @@ void initPlateau(int** gamePlateau);
 /**
 * \brief Initialise une partie
 */
-void startGame(Game game);
+void startGame();
 
 /**
 * \brief Initialise une partie
@@ -132,6 +137,11 @@ void printPlateau(int** plateau,int taille);
 */
 void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles);
 
+/**
+* \brief Affiche les int en caractères en couleur
+* \param car Entier correspondant à la valeur ASCII d'un caractère
+*/
+void printIntToCharColor(int car);
 
 /**
 * \brief Alloue un triple pointeur de char de taille \a x  * \a y

@@ -30,8 +30,7 @@ int main() {
 		scanf("%d", &choix);
 		switch(choix){
 			case 1:{
-				Game newgame = initGame();
-				startGame(newgame);
+				startGame();
 				break;
 			}
 			case 0:{
