@@ -159,9 +159,10 @@ int **alloc_int_array(int x, int y);
 * \param id l'identifiant de la tuile a placer (int)
 * \param x l'abcisse de la position ou placer la tuile (int)
 * \param y l'ordonnée de la position ou placer la tuile (int)
+* \param previous un tableau permetant de sauvegarder le dernier plateau de jeu (int**)
 * \return 0 si l'exécution s'est bien passée, 1 sinon
 */
-int placeTuile(Game* game, int id, int x, int y);
+int placeTuile(Game* game, int id, int x, int y, int ** previous);
 
 /**
 * \brief Vérifie que le placement de la tuile d'id\a id est autorisé à la position \a x , \a y du jeu \a game
@@ -182,4 +183,27 @@ int canPlaceTuile(Game game, int id, int x,int y); //Pas entièrement implément
 * \return un tableau de \a nb_Tuile tuile(s)
 */
 Tuile* randomTuile(int nb_Tuile);
+
+/**
+* \brief sauvgarde le plateau de jeux actuel case par case dans un tableau 
+* \param game un pointeur vers le tableau de jeu (Game)
+* \param previous un tableau de la meme taille que le plateau de jeu (int**)
+* \return un tableau de sauvgarde du dernier plateau de jeu (int**)
+*/
+int** saveGame(Game* game, int** previous);
+/**
+* \brief modifie les case d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre
+* \param game le tableau de jeu (Game)
+* \param previous un tableau de la meme taille que le plateau de jeu (int**)
+* \return un plateau de jeu dont les plateau a été modifié (int**)
+*/
+Game* getPrevious (Game* game ,int** previous);
+/**
+* \brief variefie qu'un tableau ne contient que des 0
+* \param previous un tableau de la meme taille que le plateau de jeu (int**)
+* \param taille un entier représantant la taille du tableau (int)
+* \return 0 si toutes les cases du table ne contiennent que des 0 et 1 si une des case de ce tableau contient autre chose que des 0
+*/
+int matchEmpty (int** previous, int taile);
+
 #endif

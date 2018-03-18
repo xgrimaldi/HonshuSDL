@@ -190,13 +190,14 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
 //	PARTIE JEU
 // ######################################
 
-int placeTuile(Game* game, int id, int x, int y){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
+int placeTuile(Game* game, int id, int x, int y, int** previous){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
 	Tuile tuile = game -> tuiles[id];
 
 	if(!canPlaceTuile(*game, id, x, y)){
 		printf("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
 		return EXIT_FAILURE;
 	}
+	previous=saveGame(game,previous);
 
 	switch(game -> tuiles[id].orientation){
 
@@ -323,6 +324,9 @@ void startGame(){
 	char y = '^';
 	char orientation = 'A';
 	int accepte = 0;
+	int ** previous = alloc_int_array(n,n);
+	initPlateau(previous);
+	int dep = 0;
 	//**********************************
 	// Chargement des paramètres par défauts
 	//**********************************
@@ -388,6 +392,7 @@ void startGame(){
 	 	printf("1 - Voir les tuiles paramètrés\n");
 	 	printf("2 - Voir le plateau de jeu\n");
 	 	printf("3 - Poser une tuile\n");
+	 	printf("4 - Voulez-vous annuler votre choix\n");
 		scanf("%d",&choix);
 		switch(choix){
 			case 1:{
@@ -446,8 +451,9 @@ void startGame(){
 						game->tuiles[id_Tuile].orientation = orientation;
 					}
 				}
-				if(!placeTuile(game, id_Tuile, x, (int) y)){
+				if(!placeTuile(game, id_Tuile, x, (int) y, previous)){
 					printf("Placement réalisé\n");
+					dep=1;
 				}
 				else{
 					printf("Placement refusé\n"	);
@@ -455,11 +461,26 @@ void startGame(){
 				accepte = 0;
 				break;
 			}
+
+			case 4:{
+				if (matchEmpty(previous, n)){
+					if (dep==1) {
+					game=getPrevious(game, previous);
+					printf("Vous avez récupérer le tableau précedent\n");
+					dep=0;
+				}
+				else printf("Le dernier placement a déja été annulé, veuillez effectuer une nouvelle pose de tuiles avant d'annuler\n");
+			}
+			else printf("le tableau représente la siuation initiale du jeu , vous ne pouvez pas annuler");
+				break;
+			}
 			case 0:{
 				for(int i=0;i<game->taille;i++){
 					free(game->plateau[i]);
+					free(previous[i]);
 				}
-				free(game->plateau);;
+				free(previous);
+				free(game->plateau);
 				free(game->tuiles);
 				free(game);
 				stop = 1;
@@ -475,6 +496,35 @@ void startGame(){
 int randomMinMax(int a,int b){
 	int r = (rand() % (b - a + 1)) + a;
 	return r;
+}
+
+int** saveGame(Game* game, int** previous){
+	int i,j;
+	for (i=0; i<(game->taille); i++)
+		for (j=0; j<(game->taille); j++)
+			previous[i][j]=game->plateau[i][j];
+	return previous;
+}
+
+Game* getPrevious (Game* game ,int** previous){
+	int i,j;
+	for (i=0; i<(game->taille); i++){
+		for (j=0; j<(game->taille); j++){
+			game->plateau[i][j]=previous[i][j];
+		}
+	}
+	return game;
+}
+
+int matchEmpty (int** previous, int taille){
+	int i,j;
+	for (i=0; i<taille; i++){
+		for (j=0; j<taille; j++){
+			if (previous [i][j]!=0)
+				return EXIT_FAILURE;
+		}
+	}
+	return EXIT_SUCCESS;
 }
 
 void HonshuScreen(){

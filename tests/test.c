@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "CUnit/CUnit.h"
 #include "CUnit/Basic.h"
+#include <CUnit/CUnit.h>
 #include "../src/game.h"
 
 /* Pointer to the file used by the tests. */
@@ -46,7 +48,6 @@ void test_Load_Tuiles(void)
   Tuile gameTuiles[MAXTUILES];
   CU_ASSERT_EQUAL(LoadTuiles("../bin/Tuiles",gameTuiles), 21);
 }
-
 
 /* The main() function for setting up and running the tests.
  * Returns a CUE_SUCCESS on successful running, another
