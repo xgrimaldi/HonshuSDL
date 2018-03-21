@@ -53,8 +53,9 @@ typedef struct Tuile {
 typedef struct Game {
 	int** plateau;
 	Tuile* tuiles;
-	int nbTuiles;
-	int taille;
+        int nbTuiles;
+        int nbTuilesPose;
+        int taille;
 } Game;
 
 
@@ -192,12 +193,13 @@ Tuile* randomTuile(int nb_Tuile);
 */
 int** saveGame(Game* game, int** previous);
 /**
-* \brief modifie les case d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre
+* \brief modifie les cases d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre
 * \param game le tableau de jeu (Game)
 * \param previous un tableau de la meme taille que le plateau de jeu (int**)
-* \return un plateau de jeu dont les plateau a été modifié (int**)
+* \param id_tuile_removed L'id de la dernière tuile ajoutée (int)
+* \return 1 si tout s'est bien passé (int)
 */
-Game* getPrevious (Game* game ,int** previous);
+int getPrevious (Game* game ,int** previous,int id_tuile_removed);
 /**
 * \brief variefie qu'un tableau ne contient que des 0
 * \param previous un tableau de la meme taille que le plateau de jeu (int**)

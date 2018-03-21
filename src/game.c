@@ -103,10 +103,12 @@ void initPlateau(int** gamePlateau){
 }
 
 void initPlacementTuileRandom(Game* partie){
-	int choix = randomMinMax(0,partie->nbTuiles);
+	int choix = randomMinMax(0,partie->nbTuiles-1);
 	int pos_ligne = (partie->taille/2);
 	int pos_col = (partie->taille/2);
 	char placement[6]= {partie->tuiles[choix].X_1,partie->tuiles[choix].X_2,partie->tuiles[choix].X_3,partie->tuiles[choix].X_4,partie->tuiles[choix].X_5,partie->tuiles[choix].X_6};
+	
+	partie->tuiles[choix].orientation='N';
 
 	int ind=0;
 	for (int i=pos_ligne; i<pos_ligne+3 ;i++){
@@ -122,6 +124,7 @@ Tuile* randomTuile(int nb){
 	char cases[6] = "LPFVUR";
 	Tuile* tabTuile = malloc(nb*sizeof(Tuile));
 	for(i = 0; i < nb; i++){
+	        tabTuile[i].orientation='V';
 		tabTuile[i].id = i;
 		tabTuile[i].X_1 = cases[randomMinMax(0, 5)];
 		tabTuile[i].X_2 = cases[randomMinMax(0, 5)];
@@ -321,9 +324,10 @@ void startGame(){
 	int nb_tuiles=0;
 	int choix=0; 
 	int id_Tuile = -1;
+	int id_Tuile_prec = -1;
 	int x = -1;
 	char y = '^';
-	char orientation = 'A';
+	char orientation = 'V';
 	int accepte = 0;
 	int ** previous = alloc_int_array(n,n);
 	initPlateau(previous);
@@ -375,6 +379,7 @@ void startGame(){
 	game->plateau=gamePlateau;
 	game->tuiles = gameTuiles;
 	game->nbTuiles=nb_tuiles;
+	game->nbTuilesPose=1;
 	game->taille=n;
 
 	//Placement de la premiere tuile
@@ -394,6 +399,10 @@ void startGame(){
 	 	printf("2 - Voir le plateau de jeu\n");
 	 	printf("3 - Poser une tuile\n");
 	 	printf("4 - Voulez-vous annuler votre choix\n");
+		if (game->nbTuilesPose==game->nbTuiles){
+		  printf("5 - Terminer la partie\n");
+		}
+		
 		scanf("%d",&choix);
 		switch(choix){
 			case 1:{
@@ -411,53 +420,65 @@ void startGame(){
 				break;
 			}
 			case 3:{
-				while(accepte == 0){ //ID
-					printf("Quelle tuile voulez vous placer ? : ");
-					scanf("%d", &id_Tuile);
-					if(id_Tuile < 0 || id_Tuile > game->nbTuiles) printf("ID incorrect ! Saisir un ID entre 0 et %d\n", game->nbTuiles);
-					else accepte = 1;
-				}
-				accepte =  0;
-				while(accepte == 0 ){ //ordonée
+				 
+			  printf("Quelle tuile voulez vous placer ? : ");
+	       			scanf("%d", &id_Tuile);
+		       		if(id_Tuile < 0 || id_Tuile >= game->nbTuiles) printf("ID incorrect ! Saisir un ID entre 0 et %d\n", game->nbTuiles-1);//Si Id incorrect alors retour aux choix
+				
+	       			else if (game->tuiles[id_Tuile].orientation != 'V') printf("ID indisponible ! La tuile %d est déjà placée.\n",id_Tuile);//si la tuile est déjà placé, on retourne aux choix					
+
+				//sinon, on peut continuer
+				else {
+				
+        			  while(accepte == 0 ){ //ordonée
 					printf("À quelle ordonée voulez vous placer la tuile %d : ", id_Tuile);
 					scanf("%d", &x);
 					if(x < 0 || x >= n) printf("Ordonée incorrect ! Saisir un nombre entre 0 et %d\n", n);
 					else accepte = 1;
-				}
-				accepte = 0;
-				while(accepte == 0){ //abcisse
-					printf("À quelle abcisse voulez vous placer la tuile %d : ", id_Tuile);
-					scanf(" %c", &y);
-					if(!(y >= 97 && y < 97+n) && !(y >= 65 && y < 65+n)) printf("Abcisse incorrect ! Saisir une lettre entre A et %c\n", (char)(65+n-1)); // On est contraint de supposer n <= 26
-					else {
-						accepte = 1;
-						if(y >= 97 && y < 97+n){ //ici y est une minuscule
-							y -= 97;
-						}
-						else y -= 65;
-					}
-				}
-				accepte = 0;
-				while(accepte == 0){ //orientation
-					printf("Quelle orientation pour la tuile %d : ", id_Tuile);
-					scanf(" %c", &orientation);
-					if( orientation != 'N' && orientation != 'n' && orientation != 'E' && orientation != 'e' && orientation != 'S' && orientation != 's' && orientation != 'W' && orientation != 'w'){
-						printf("Orientation inconnue (saisir 'N', 'E', 'S' ou 'W')\n"); // On est contraint de supposer n <= 26
-					}
-					else {
-						if(orientation > 90){ //Si orientation est écrit en minuscule{
-							orientation -= 32; //On la convertit en minuscule
-						}
-						accepte = 1;
-						game->tuiles[id_Tuile].orientation = orientation;
-					}
-				}
-				if(!placeTuile(game, id_Tuile, x, (int) y, previous)){
-					printf("Placement réalisé\n");
-					dep=1;
-				}
-				else{
-					printf("Placement refusé\n"	);
+				  }
+				  accepte = 0;
+
+				  while(accepte == 0){ //abcisse
+				    printf("À quelle abcisse voulez vous placer la tuile %d : ", id_Tuile);
+				    scanf(" %c", &y);
+				    if(!(y >= 97 && y < 97+n) && !(y >= 65 && y < 65+n)) printf("Abcisse incorrect ! Saisir une lettre entre A et %c\n", (char)(65+n-1)); // On est contraint de supposer n <= 26
+				    else {
+				      accepte = 1;
+				      if(y >= 97 && y < 97+n){ //ici y est une minuscule
+					y -= 97;
+				      }
+				      else y -= 65;
+				    }
+				  }
+				  accepte = 0;
+				  
+				  while(accepte == 0){ //orientation
+				    printf("Quelle orientation pour la tuile %d : ", id_Tuile);
+				    scanf(" %c", &orientation);
+				    if( orientation != 'N' && orientation != 'n' && orientation != 'E' && orientation != 'e' && orientation != 'S' && orientation != 's' && orientation != 'W' && orientation != 'w'){
+				      printf("Orientation inconnue (saisir 'N', 'E', 'S' ou 'W')\n"); // On est contraint de supposer n <= 26
+				    }
+				    else {
+				      if(orientation > 90){ //Si orientation est écrit en minuscule{
+					orientation -= 32; //On la convertit en minuscule
+				      }
+				      accepte = 1;
+				      game->tuiles[id_Tuile].orientation = orientation;
+				    }
+				  }
+				  
+				  if(!placeTuile(game, id_Tuile, x, (int) y, previous)){
+				    id_Tuile_prec=id_Tuile;
+				    printf("Placement réalisé\n");
+				    game->nbTuilesPose++;
+				    dep=1;
+				  }
+				  
+				  else{
+				    printf("Placement refusé\n"	);
+				    game->tuiles[id_Tuile].orientation='V';
+				  }
+				  
 				}
 				accepte = 0;
 				break;
@@ -466,8 +487,9 @@ void startGame(){
 			case 4:{
 				if (matchEmpty(previous, n)){
 					if (dep==1) {
-						game=getPrevious(game, previous);
+					  getPrevious(game, previous,id_Tuile_prec);
 						printf("Vous avez récupérer le tableau précedent\n");
+						game->nbTuilesPose--;
 						dep=0;
 					}
 					else printf("Le dernier placement a déja été annulé, veuillez effectuer une nouvelle pose de tuiles avant d'annuler\n");
@@ -477,6 +499,21 @@ void startGame(){
 				
 				break;
 			}
+
+
+			 case 5:{
+			  
+			  if (game->nbTuilesPose==game->nbTuiles){
+			    
+			    clearScreen();
+			    printf("Vous avez marqué 42 points !");
+			  
+			    //Comptage des points à faire
+			    stop=1;
+			  }
+			  break;
+		        }
+			   
 			case 0:{
 				for(int i=0;i<game->taille;i++){
 					free(game->plateau[i]);
@@ -509,14 +546,15 @@ int** saveGame(Game* game, int** previous){
 	return previous;
 }
 
-Game* getPrevious (Game* game ,int** previous){
+int getPrevious (Game* game ,int** previous,int id_tuile_removed){
 	int i,j;
+	game->tuiles[id_tuile_removed].orientation='V';
 	for (i=0; i<(game->taille); i++){
 		for (j=0; j<(game->taille); j++){
 			game->plateau[i][j]=previous[i][j];
 		}
 	}
-	return game;
+	return 1;
 }
 
 int matchEmpty (int** previous, int taille){
