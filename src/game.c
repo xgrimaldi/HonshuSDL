@@ -176,8 +176,9 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
 			// Changement de l'orientation
 			gameTuiles[id_tuile].orientation='V';
 		}
-			printf("Un nombre de %d tuiles a été généré.\n",nbTuiles);
-			return nbTuiles;
+		fclose(fichier);
+		printf("Un nombre de %d tuiles a été généré.\n",nbTuiles);
+		return nbTuiles;
 	}
 	else{
 	       	// On affiche un message d'erreur si on veut
@@ -465,13 +466,15 @@ void startGame(){
 			case 4:{
 				if (matchEmpty(previous, n)){
 					if (dep==1) {
-					game=getPrevious(game, previous);
-					printf("Vous avez récupérer le tableau précedent\n");
-					dep=0;
+						game=getPrevious(game, previous);
+						printf("Vous avez récupérer le tableau précedent\n");
+						dep=0;
+					}
+					else printf("Le dernier placement a déja été annulé, veuillez effectuer une nouvelle pose de tuiles avant d'annuler\n");
 				}
-				else printf("Le dernier placement a déja été annulé, veuillez effectuer une nouvelle pose de tuiles avant d'annuler\n");
-			}
-			else printf("le tableau représente la siuation initiale du jeu , vous ne pouvez pas annuler");
+				else
+					printf("le tableau représente la siuation initiale du jeu , vous ne pouvez pas annuler");
+				
 				break;
 			}
 			case 0:{
