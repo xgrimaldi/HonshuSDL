@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['initgame',['initGame',['../game_8h.html#a72f469f6ac4e2dc25da37b8fc425d32b',1,'game.c']]],
-  ['initplacementtuilerandom',['initPlacementTuileRandom',['../game_8h.html#ac0b5659cf0a2dced27ccf1c9e804a9e6',1,'game.c']]],
-  ['initplateau',['initPlateau',['../game_8h.html#abe20da6f7de8a08a2fb265b7136cf533',1,'game.c']]]
+  ['initplacementtuile',['initPlacementTuile',['../game_8h.html#a49be6987859227dc208a808d0f432fce',1,'game.c']]],
+  ['initplacementtuilerandom',['initPlacementTuileRandom',['../game_8h.html#a5dc629e7b272de361e53b04106d5b500',1,'game.c']]],
+  ['initplateau',['initPlateau',['../game_8h.html#a08304262f49004c69c1d8c659294f410',1,'game.c']]]
 ];

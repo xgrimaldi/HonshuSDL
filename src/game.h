@@ -2,7 +2,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define n 20
 #define MAXTUILES 100
 
 #define L "LAC"
@@ -53,9 +52,9 @@ typedef struct Tuile {
 typedef struct Game {
 	int** plateau;
 	Tuile* tuiles;
-        int nbTuiles;
-        int nbTuilesPose;
-        int taille;
+    int nbTuiles;
+    int nbTuilesPose;
+    int taille;
 } Game;
 
 
@@ -76,13 +75,30 @@ void HonshuScreen();
 void clearScreen();
 
 /**
-* \brief Génére la tuile aléatoirement
+* \brief GPositionne une tuike aléatoirement
 *
 * Positionne une tuile au hasard au milieu du plateau
 *
 * \param partie variable représentant une partie (structure Game).
 */
 void initPlacementTuileRandom(Game* partie);
+
+/**
+* \brief Positionne la tuile souhaitée
+*
+* Positionne une tuile au hasard au milieu du plateau
+*
+* \param partie variable représentant une partie (structure Game).
+*\param numTuile vnuméro de la tuile à placer
+*/
+void initPlacementTuile(Game* partie,int numTuile);
+
+/**
+* \brief Copie une tuile dans une autre
+*
+* \param tuileACopier tuile qui doit être copié
+*/
+Tuile copyTuile(Tuile tuileACopier);
 
 /**
 * \brief Génére un nombre aléatoire borné
@@ -107,20 +123,28 @@ int randomMinMax(int a,int b);
 int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]);
 
 /**
+* \brief Importe un fichier de tuile 
+*
+* Récupère le fichier et importe les tuiles dans le tableau de tuiles et renvoie le nombre de tuiles crées.
+*
+* \param filepath Chemin du fichier.
+* \param gameTuiles Tableau de tuiles.
+* \return le nombre de tuiles crée.
+*/
+int LoadGame(char* filepath,Game* game);
+
+/**
 * \brief Initialise le plateau de jeu
 *
 */
-void initPlateau(int** gamePlateau);
+void initPlateau(int** gamePlateau,int taille);
 
 /**
 * \brief Initialise une partie
+*
+*\param typeGame Désigne le type de partie à lancer
 */
-void startGame();
-
-/**
-* \brief Initialise une partie
-*/
-Game initGame();
+int startGame(int typeGame);
 
 /**
 * \brief Affiche le plateau de jeu \a g
@@ -170,13 +194,25 @@ int placeTuile(Game* game, int id, int x, int y, int ** previous);
 *
 * La position a renseigner est celle du coin le plus en haut à gauche de la tuile, après rotation.
 *
-* \param le tableau de jeu (Game)
+* \param game représente le structure de jeu (Game)
 * \param id L'identifiant de la tuile a placer (int)
 * \param x l'abcisse de la position ou placer la tuile (int)
 * \param y l'ordonnée de la position ou placer la tuile (int)
 * \return 1 si le placement est autorisé, 0 sinon
 */
 int canPlaceTuile(Game game, int id, int x,int y); //Pas entièrement implémentée
+
+/**
+* \brief Vérifie que la position x y est dans le plateau de jeu
+*
+* La position a renseigner est celle du coin le plus en haut à gauche de la tuile, après rotation.
+*
+* \param x l'abcisse de la position ou placer la tuile (int)
+* \param y l'ordonnée de la position ou placer la tuile (int)
+* \param taille Taille du plateau de jeu
+* \return 1 si le placement est autorisé, 0 sinon
+*/
+int inPlateau(int x, int y,int taille);
 
 /**
 * \brief Génère \a nb_Tuile tuile(s) aléatoirement

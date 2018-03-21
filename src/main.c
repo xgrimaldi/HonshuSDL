@@ -25,12 +25,17 @@ int main() {
 		HonshuScreen();
 		
 		LOG_BOLDRED("\n\t\t\t\tMenu de sélection\n");
+		printf("\t\t\t1 - Créer une partie personnalisée\n");
+		printf("\t\t\t2 - Charger une partie d'un fichier\n");
 		printf("\t\t\t0 - Quitter le programme\n");
-		printf("\t\t\t1 - Lancement d'une partie\n");
 		scanf("%d", &choix);
 		switch(choix){
 			case 1:{
-				startGame();
+				startGame(choix);
+				break;
+			}
+			case 2:{
+				startGame(choix);
 				break;
 			}
 			case 0:{

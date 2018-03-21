@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Les Tuileurs - HONSHU: /home/sphinx06/Documents/ENSIIE/PROJET INFO/src/game.h File Reference</title>
+<title>Les Tuileurs - HONSHU: /home/sphinx06/Documents/ENSIIE/Les_Tuileurs_Honshu/src/game.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -107,14 +107,29 @@ Macros</h2></td></tr>
 <tr class="memitem:a5c71a5e59a53413cd6c270266d63b031"><td class="memItemLeft" align="right" valign="top"><a id="a5c71a5e59a53413cd6c270266d63b031"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>R</b>&#160;&#160;&#160;&quot;RESSOURCE&quot;</td></tr>
 <tr class="separator:a5c71a5e59a53413cd6c270266d63b031"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a886f7f9b949a5afe58932d31e1747073"><td class="memItemLeft" align="right" valign="top"><a id="a886f7f9b949a5afe58932d31e1747073"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_Red</b>&#160;&#160;&#160;&quot;\033[1m\033[31m&quot;</td></tr>
-<tr class="separator:a886f7f9b949a5afe58932d31e1747073"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a617609307f5329b3c5479aa4f1755837"><td class="memItemLeft" align="right" valign="top"><a id="a617609307f5329b3c5479aa4f1755837"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_Bold_Red</b>&#160;&#160;&#160;&quot;\033[1m\033[31m&quot;</td></tr>
+<tr class="separator:a617609307f5329b3c5479aa4f1755837"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7e01bb6079bd714aa175ab3fe969e01"><td class="memItemLeft" align="right" valign="top"><a id="aa7e01bb6079bd714aa175ab3fe969e01"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_Bold_Green</b>&#160;&#160;&#160;&quot;\033[1m\033[32m&quot;</td></tr>
+<tr class="separator:aa7e01bb6079bd714aa175ab3fe969e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa02bf35846e96c6b3ad3b41cbf56b6be"><td class="memItemLeft" align="right" valign="top"><a id="aa02bf35846e96c6b3ad3b41cbf56b6be"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_Bold_Yellow</b>&#160;&#160;&#160;&quot;\033[1m\033[33m&quot;</td></tr>
+<tr class="separator:aa02bf35846e96c6b3ad3b41cbf56b6be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba08f3456f764d58459227da0ba1cf6c"><td class="memItemLeft" align="right" valign="top"><a id="aba08f3456f764d58459227da0ba1cf6c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_Bold_Blue</b>&#160;&#160;&#160;&quot;\033[1m\033[34m&quot;</td></tr>
+<tr class="separator:aba08f3456f764d58459227da0ba1cf6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a296ed422b506fe2befc7e85c0d180f5c"><td class="memItemLeft" align="right" valign="top"><a id="a296ed422b506fe2befc7e85c0d180f5c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_Bold_Magenta</b>&#160;&#160;&#160;&quot;\033[1m\033[35m&quot;</td></tr>
+<tr class="separator:a296ed422b506fe2befc7e85c0d180f5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cd37a4d591a11a5388c244af0aaa29c"><td class="memItemLeft" align="right" valign="top"><a id="a9cd37a4d591a11a5388c244af0aaa29c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_Bold_White</b>&#160;&#160;&#160;&quot;\033[1m\033[37m&quot;</td></tr>
+<tr class="separator:a9cd37a4d591a11a5388c244af0aaa29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2df25e037f2523b0560d55411d3698ea"><td class="memItemLeft" align="right" valign="top"><a id="a2df25e037f2523b0560d55411d3698ea"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>Color_end</b>&#160;&#160;&#160;&quot;\033[0m&quot;</td></tr>
 <tr class="separator:a2df25e037f2523b0560d55411d3698ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27c344d6518eacdd35455d78d62876ac"><td class="memItemLeft" align="right" valign="top"><a id="a27c344d6518eacdd35455d78d62876ac"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_BOLDRED</b>(X)&#160;&#160;&#160;printf(&quot;%s %s %s&quot;,Color_Red,X,Color_end)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_BOLDRED</b>(X)&#160;&#160;&#160;printf(&quot;%s %s %s&quot;,Color_Bold_Red,X,Color_end)</td></tr>
 <tr class="separator:a27c344d6518eacdd35455d78d62876ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -132,42 +147,61 @@ Functions</h2></td></tr>
 <tr class="memitem:a9d7e8af417b6d543da691e9c0e2f6f9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a9d7e8af417b6d543da691e9c0e2f6f9f">clearScreen</a> ()</td></tr>
 <tr class="memdesc:a9d7e8af417b6d543da691e9c0e2f6f9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear l'écran.  <a href="#a9d7e8af417b6d543da691e9c0e2f6f9f">More...</a><br /></td></tr>
 <tr class="separator:a9d7e8af417b6d543da691e9c0e2f6f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0b5659cf0a2dced27ccf1c9e804a9e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#ac0b5659cf0a2dced27ccf1c9e804a9e6">initPlacementTuileRandom</a> (<a class="el" href="structGame.html">Game</a> partie)</td></tr>
-<tr class="memdesc:ac0b5659cf0a2dced27ccf1c9e804a9e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Génére la tuile aléatoirement.  <a href="#ac0b5659cf0a2dced27ccf1c9e804a9e6">More...</a><br /></td></tr>
-<tr class="separator:ac0b5659cf0a2dced27ccf1c9e804a9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dc629e7b272de361e53b04106d5b500"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a5dc629e7b272de361e53b04106d5b500">initPlacementTuileRandom</a> (<a class="el" href="structGame.html">Game</a> *partie)</td></tr>
+<tr class="memdesc:a5dc629e7b272de361e53b04106d5b500"><td class="mdescLeft">&#160;</td><td class="mdescRight">GPositionne une tuike aléatoirement.  <a href="#a5dc629e7b272de361e53b04106d5b500">More...</a><br /></td></tr>
+<tr class="separator:a5dc629e7b272de361e53b04106d5b500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49be6987859227dc208a808d0f432fce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a49be6987859227dc208a808d0f432fce">initPlacementTuile</a> (<a class="el" href="structGame.html">Game</a> *partie, int numTuile)</td></tr>
+<tr class="memdesc:a49be6987859227dc208a808d0f432fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Positionne la tuile souhaitée.  <a href="#a49be6987859227dc208a808d0f432fce">More...</a><br /></td></tr>
+<tr class="separator:a49be6987859227dc208a808d0f432fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a283c90b2840a7a304e8d39f4683b9f49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTuile.html">Tuile</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a283c90b2840a7a304e8d39f4683b9f49">copyTuile</a> (<a class="el" href="structTuile.html">Tuile</a> tuileACopier)</td></tr>
+<tr class="memdesc:a283c90b2840a7a304e8d39f4683b9f49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copie une tuile dans une autre.  <a href="#a283c90b2840a7a304e8d39f4683b9f49">More...</a><br /></td></tr>
+<tr class="separator:a283c90b2840a7a304e8d39f4683b9f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab13b9336c09cf2b44acbbf08cca4c438"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#ab13b9336c09cf2b44acbbf08cca4c438">randomMinMax</a> (int a, int b)</td></tr>
 <tr class="memdesc:ab13b9336c09cf2b44acbbf08cca4c438"><td class="mdescLeft">&#160;</td><td class="mdescRight">Génére un nombre aléatoire borné  <a href="#ab13b9336c09cf2b44acbbf08cca4c438">More...</a><br /></td></tr>
 <tr class="separator:ab13b9336c09cf2b44acbbf08cca4c438"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d0031896f4537442f54dc86aecd10dd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a6d0031896f4537442f54dc86aecd10dd">LoadTuiles</a> (char *filepath, <a class="el" href="structTuile.html">Tuile</a> gameTuiles[MAXTUILES])</td></tr>
 <tr class="memdesc:a6d0031896f4537442f54dc86aecd10dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Importe un fichier de tuile.  <a href="#a6d0031896f4537442f54dc86aecd10dd">More...</a><br /></td></tr>
 <tr class="separator:a6d0031896f4537442f54dc86aecd10dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe20da6f7de8a08a2fb265b7136cf533"><td class="memItemLeft" align="right" valign="top"><a id="abe20da6f7de8a08a2fb265b7136cf533"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#abe20da6f7de8a08a2fb265b7136cf533">initPlateau</a> (int **gamePlateau)</td></tr>
-<tr class="memdesc:abe20da6f7de8a08a2fb265b7136cf533"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise le plateau de jeu. <br /></td></tr>
-<tr class="separator:abe20da6f7de8a08a2fb265b7136cf533"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56d55656b406eb313537c07d5622bc56"><td class="memItemLeft" align="right" valign="top"><a id="a56d55656b406eb313537c07d5622bc56"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a56d55656b406eb313537c07d5622bc56">startGame</a> (<a class="el" href="structGame.html">Game</a> game)</td></tr>
-<tr class="memdesc:a56d55656b406eb313537c07d5622bc56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise une partie. <br /></td></tr>
-<tr class="separator:a56d55656b406eb313537c07d5622bc56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72f469f6ac4e2dc25da37b8fc425d32b"><td class="memItemLeft" align="right" valign="top"><a id="a72f469f6ac4e2dc25da37b8fc425d32b"></a>
-<a class="el" href="structGame.html">Game</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a72f469f6ac4e2dc25da37b8fc425d32b">initGame</a> ()</td></tr>
-<tr class="memdesc:a72f469f6ac4e2dc25da37b8fc425d32b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise une partie. <br /></td></tr>
-<tr class="separator:a72f469f6ac4e2dc25da37b8fc425d32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28176076b754aaea7a057b84f698b305"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a28176076b754aaea7a057b84f698b305">LoadGame</a> (char *filepath, <a class="el" href="structGame.html">Game</a> *game)</td></tr>
+<tr class="memdesc:a28176076b754aaea7a057b84f698b305"><td class="mdescLeft">&#160;</td><td class="mdescRight">Importe un fichier de tuile.  <a href="#a28176076b754aaea7a057b84f698b305">More...</a><br /></td></tr>
+<tr class="separator:a28176076b754aaea7a057b84f698b305"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08304262f49004c69c1d8c659294f410"><td class="memItemLeft" align="right" valign="top"><a id="a08304262f49004c69c1d8c659294f410"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a08304262f49004c69c1d8c659294f410">initPlateau</a> (int **gamePlateau, int taille)</td></tr>
+<tr class="memdesc:a08304262f49004c69c1d8c659294f410"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise le plateau de jeu. <br /></td></tr>
+<tr class="separator:a08304262f49004c69c1d8c659294f410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adad59be6196f6c09c2ba1f45d9f7dbd4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#adad59be6196f6c09c2ba1f45d9f7dbd4">startGame</a> (int typeGame)</td></tr>
+<tr class="memdesc:adad59be6196f6c09c2ba1f45d9f7dbd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise une partie.  <a href="#adad59be6196f6c09c2ba1f45d9f7dbd4">More...</a><br /></td></tr>
+<tr class="separator:adad59be6196f6c09c2ba1f45d9f7dbd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a269931acc58e33c923d4a738d0c56321"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a269931acc58e33c923d4a738d0c56321">printPlateau</a> (int **plateau, int taille)</td></tr>
 <tr class="memdesc:a269931acc58e33c923d4a738d0c56321"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche le plateau de jeu <em>g</em>.  <a href="#a269931acc58e33c923d4a738d0c56321">More...</a><br /></td></tr>
 <tr class="separator:a269931acc58e33c923d4a738d0c56321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89d184f7c4ecce750b1c9de886121780"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a89d184f7c4ecce750b1c9de886121780">printTuiles</a> (<a class="el" href="structTuile.html">Tuile</a> gameTuiles[MAXTUILES], int nbTuiles)</td></tr>
 <tr class="memdesc:a89d184f7c4ecce750b1c9de886121780"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche les tuiles paramètrées.  <a href="#a89d184f7c4ecce750b1c9de886121780">More...</a><br /></td></tr>
 <tr class="separator:a89d184f7c4ecce750b1c9de886121780"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9287122c667a496d22ad55665ebf711e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a9287122c667a496d22ad55665ebf711e">printIntToCharColor</a> (int car)</td></tr>
+<tr class="memdesc:a9287122c667a496d22ad55665ebf711e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche les int en caractères en couleur.  <a href="#a9287122c667a496d22ad55665ebf711e">More...</a><br /></td></tr>
+<tr class="separator:a9287122c667a496d22ad55665ebf711e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a303c8539cd0e6ce148daa5da86d211fb"><td class="memItemLeft" align="right" valign="top">int **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a303c8539cd0e6ce148daa5da86d211fb">alloc_int_array</a> (int x, int y)</td></tr>
 <tr class="memdesc:a303c8539cd0e6ce148daa5da86d211fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alloue un triple pointeur de char de taille <em>x</em> * <em>y</em>.  <a href="#a303c8539cd0e6ce148daa5da86d211fb">More...</a><br /></td></tr>
 <tr class="separator:a303c8539cd0e6ce148daa5da86d211fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3a32d93f86cf76677ce06d13cde5c37"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#ae3a32d93f86cf76677ce06d13cde5c37">placeTuile</a> (<a class="el" href="structGame.html">Game</a> *game, <a class="el" href="structTuile.html">Tuile</a> t, int x, int y)</td></tr>
-<tr class="memdesc:ae3a32d93f86cf76677ce06d13cde5c37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Place une tuile <em>t</em> à la position <em>x</em> , <em>y</em> du jeu pointé par <em>game</em>.  <a href="#ae3a32d93f86cf76677ce06d13cde5c37">More...</a><br /></td></tr>
-<tr class="separator:ae3a32d93f86cf76677ce06d13cde5c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a5ad717ba34a928c1d467b0eb23f184"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a2a5ad717ba34a928c1d467b0eb23f184">canPlaceTuile</a> (<a class="el" href="structGame.html">Game</a> game, <a class="el" href="structTuile.html">Tuile</a> t, int x, int y)</td></tr>
-<tr class="memdesc:a2a5ad717ba34a928c1d467b0eb23f184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vérifie que le placement de la tuile <em>t</em> est autorisé à la position <em>x</em> , <em>y</em> du jeu <em>game</em>.  <a href="#a2a5ad717ba34a928c1d467b0eb23f184">More...</a><br /></td></tr>
-<tr class="separator:a2a5ad717ba34a928c1d467b0eb23f184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2ff7a10a07ece0871f7ded666c785bb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#ae2ff7a10a07ece0871f7ded666c785bb">placeTuile</a> (<a class="el" href="structGame.html">Game</a> *game, int id, int x, int y, int **previous)</td></tr>
+<tr class="memdesc:ae2ff7a10a07ece0871f7ded666c785bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Place la tuile d'id <em>id</em> à la position <em>x</em> , <em>y</em> du jeu pointé par <em>game</em>.  <a href="#ae2ff7a10a07ece0871f7ded666c785bb">More...</a><br /></td></tr>
+<tr class="separator:ae2ff7a10a07ece0871f7ded666c785bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7ddcc824bd175a62e07384e0852112f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#ae7ddcc824bd175a62e07384e0852112f">canPlaceTuile</a> (<a class="el" href="structGame.html">Game</a> game, int id, int x, int y)</td></tr>
+<tr class="memdesc:ae7ddcc824bd175a62e07384e0852112f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vérifie que le placement de la tuile d'id<em>id</em> est autorisé à la position <em>x</em> , <em>y</em> du jeu <em>game</em>.  <a href="#ae7ddcc824bd175a62e07384e0852112f">More...</a><br /></td></tr>
+<tr class="separator:ae7ddcc824bd175a62e07384e0852112f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a99849745c07e24348767492ee64b3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTuile.html">Tuile</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a0a99849745c07e24348767492ee64b3f">randomTuile</a> (int nb_Tuile)</td></tr>
+<tr class="memdesc:a0a99849745c07e24348767492ee64b3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Génère <em>nb_Tuile</em> tuile(s) aléatoirement.  <a href="#a0a99849745c07e24348767492ee64b3f">More...</a><br /></td></tr>
+<tr class="separator:a0a99849745c07e24348767492ee64b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c28269cdc2d4d16ec07373d3d2ffe32"><td class="memItemLeft" align="right" valign="top">int **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a1c28269cdc2d4d16ec07373d3d2ffe32">saveGame</a> (<a class="el" href="structGame.html">Game</a> *game, int **previous)</td></tr>
+<tr class="memdesc:a1c28269cdc2d4d16ec07373d3d2ffe32"><td class="mdescLeft">&#160;</td><td class="mdescRight">sauvgarde le plateau de jeux actuel case par case dans un tableau  <a href="#a1c28269cdc2d4d16ec07373d3d2ffe32">More...</a><br /></td></tr>
+<tr class="separator:a1c28269cdc2d4d16ec07373d3d2ffe32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcff4cb47597424c7c5bef3172098542"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#abcff4cb47597424c7c5bef3172098542">getPrevious</a> (<a class="el" href="structGame.html">Game</a> *game, int **previous, int id_tuile_removed)</td></tr>
+<tr class="memdesc:abcff4cb47597424c7c5bef3172098542"><td class="mdescLeft">&#160;</td><td class="mdescRight">modifie les cases d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre  <a href="#abcff4cb47597424c7c5bef3172098542">More...</a><br /></td></tr>
+<tr class="separator:abcff4cb47597424c7c5bef3172098542"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a979e87ecf68e92fe5aca7ca83740dea7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game_8h.html#a979e87ecf68e92fe5aca7ca83740dea7">matchEmpty</a> (int **previous, int taile)</td></tr>
+<tr class="memdesc:a979e87ecf68e92fe5aca7ca83740dea7"><td class="mdescLeft">&#160;</td><td class="mdescRight">variefie qu'un tableau ne contient que des 0  <a href="#a979e87ecf68e92fe5aca7ca83740dea7">More...</a><br /></td></tr>
+<tr class="separator:a979e87ecf68e92fe5aca7ca83740dea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Création des paramètres HONSHU. 5 fonctions sont définies:</p><ul>
@@ -246,8 +280,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
 
 </div>
 </div>
-<a id="a2a5ad717ba34a928c1d467b0eb23f184"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a5ad717ba34a928c1d467b0eb23f184">&#9670;&nbsp;</a></span>canPlaceTuile()</h2>
+<a id="ae7ddcc824bd175a62e07384e0852112f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7ddcc824bd175a62e07384e0852112f">&#9670;&nbsp;</a></span>canPlaceTuile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -261,8 +295,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structTuile.html">Tuile</a>&#160;</td>
-          <td class="paramname"><em>t</em>, </td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -284,11 +318,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
       </table>
 </div><div class="memdoc">
 
-<p>Vérifie que le placement de la tuile <em>t</em> est autorisé à la position <em>x</em> , <em>y</em> du jeu <em>game</em>. </p>
+<p>Vérifie que le placement de la tuile d'id<em>id</em> est autorisé à la position <em>x</em> , <em>y</em> du jeu <em>game</em>. </p>
+<p>La position a renseigner est celle du coin le plus en haut à gauche de la tuile, après rotation.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">le</td><td>tableau de jeu (<a class="el" href="structGame.html">Game</a>) </td></tr>
-    <tr><td class="paramname">t</td><td>La tuile a placer (<a class="el" href="structTuile.html">Tuile</a>) </td></tr>
+    <tr><td class="paramname">id</td><td>L'identifiant de la tuile a placer (int) </td></tr>
     <tr><td class="paramname">x</td><td>l'abcisse de la position ou placer la tuile (int) </td></tr>
     <tr><td class="paramname">y</td><td>l'ordonnée de la position ou placer la tuile (int) </td></tr>
   </table>
@@ -318,6 +353,77 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
 
 </div>
 </div>
+<a id="a283c90b2840a7a304e8d39f4683b9f49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a283c90b2840a7a304e8d39f4683b9f49">&#9670;&nbsp;</a></span>copyTuile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structTuile.html">Tuile</a> copyTuile </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structTuile.html">Tuile</a>&#160;</td>
+          <td class="paramname"><em>tuileACopier</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copie une tuile dans une autre. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tuileACopier</td><td>tuile qui doit être copié </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abcff4cb47597424c7c5bef3172098542"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcff4cb47597424c7c5bef3172098542">&#9670;&nbsp;</a></span>getPrevious()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getPrevious </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGame.html">Game</a> *&#160;</td>
+          <td class="paramname"><em>game</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int **&#160;</td>
+          <td class="paramname"><em>previous</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id_tuile_removed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>modifie les cases d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">game</td><td>le tableau de jeu (<a class="el" href="structGame.html">Game</a>) </td></tr>
+    <tr><td class="paramname">previous</td><td>un tableau de la meme taille que le plateau de jeu (int**) </td></tr>
+    <tr><td class="paramname">id_tuile_removed</td><td>L'id de la dernière tuile ajoutée (int) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 si tout s'est bien passé (int) </dd></dl>
+
+</div>
+</div>
 <a id="aa04c963dd7ad64758a95d579306f38f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa04c963dd7ad64758a95d579306f38f9">&#9670;&nbsp;</a></span>HonshuScreen()</h2>
 
@@ -338,8 +444,46 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
 
 </div>
 </div>
-<a id="ac0b5659cf0a2dced27ccf1c9e804a9e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0b5659cf0a2dced27ccf1c9e804a9e6">&#9670;&nbsp;</a></span>initPlacementTuileRandom()</h2>
+<a id="a49be6987859227dc208a808d0f432fce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49be6987859227dc208a808d0f432fce">&#9670;&nbsp;</a></span>initPlacementTuile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void initPlacementTuile </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGame.html">Game</a> *&#160;</td>
+          <td class="paramname"><em>partie</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numTuile</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Positionne la tuile souhaitée. </p>
+<p>Positionne une tuile au hasard au milieu du plateau</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">partie</td><td>variable représentant une partie (structure <a class="el" href="structGame.html">Game</a>). </td></tr>
+    <tr><td class="paramname">numTuile</td><td>vnuméro de la tuile à placer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5dc629e7b272de361e53b04106d5b500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dc629e7b272de361e53b04106d5b500">&#9670;&nbsp;</a></span>initPlacementTuileRandom()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -347,14 +491,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
         <tr>
           <td class="memname">void initPlacementTuileRandom </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structGame.html">Game</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="structGame.html">Game</a> *&#160;</td>
           <td class="paramname"><em>partie</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Génére la tuile aléatoirement. </p>
+<p>GPositionne une tuike aléatoirement. </p>
 <p>Positionne une tuile au hasard au milieu du plateau</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -362,6 +506,45 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a28176076b754aaea7a057b84f698b305"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28176076b754aaea7a057b84f698b305">&#9670;&nbsp;</a></span>LoadGame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LoadGame </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>filepath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structGame.html">Game</a> *&#160;</td>
+          <td class="paramname"><em>game</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Importe un fichier de tuile. </p>
+<p>Récupère le fichier et importe les tuiles dans le tableau de tuiles et renvoie le nombre de tuiles crées.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filepath</td><td>Chemin du fichier. </td></tr>
+    <tr><td class="paramname">gameTuiles</td><td>Tableau de tuiles. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>le nombre de tuiles crée. </dd></dl>
 
 </div>
 </div>
@@ -404,8 +587,46 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
 
 </div>
 </div>
-<a id="ae3a32d93f86cf76677ce06d13cde5c37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3a32d93f86cf76677ce06d13cde5c37">&#9670;&nbsp;</a></span>placeTuile()</h2>
+<a id="a979e87ecf68e92fe5aca7ca83740dea7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a979e87ecf68e92fe5aca7ca83740dea7">&#9670;&nbsp;</a></span>matchEmpty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int matchEmpty </td>
+          <td>(</td>
+          <td class="paramtype">int **&#160;</td>
+          <td class="paramname"><em>previous</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>taile</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>variefie qu'un tableau ne contient que des 0 </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">previous</td><td>un tableau de la meme taille que le plateau de jeu (int**) </td></tr>
+    <tr><td class="paramname">taille</td><td>un entier représantant la taille du tableau (int) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 si toutes les cases du table ne contiennent que des 0 et 1 si une des case de ce tableau contient autre chose que des 0 </dd></dl>
+
+</div>
+</div>
+<a id="ae2ff7a10a07ece0871f7ded666c785bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2ff7a10a07ece0871f7ded666c785bb">&#9670;&nbsp;</a></span>placeTuile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -419,8 +640,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structTuile.html">Tuile</a>&#160;</td>
-          <td class="paramname"><em>t</em>, </td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -432,7 +653,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int **&#160;</td>
+          <td class="paramname"><em>previous</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -442,17 +669,44 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
       </table>
 </div><div class="memdoc">
 
-<p>Place une tuile <em>t</em> à la position <em>x</em> , <em>y</em> du jeu pointé par <em>game</em>. </p>
+<p>Place la tuile d'id <em>id</em> à la position <em>x</em> , <em>y</em> du jeu pointé par <em>game</em>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">game</td><td>Pointeur vers le tableau de jeu (Game*) </td></tr>
-    <tr><td class="paramname">t</td><td>La tuile a placer (<a class="el" href="structTuile.html">Tuile</a>) </td></tr>
+    <tr><td class="paramname">id</td><td>l'identifiant de la tuile a placer (int) </td></tr>
     <tr><td class="paramname">x</td><td>l'abcisse de la position ou placer la tuile (int) </td></tr>
     <tr><td class="paramname">y</td><td>l'ordonnée de la position ou placer la tuile (int) </td></tr>
+    <tr><td class="paramname">previous</td><td>un tableau permetant de sauvegarder le dernier plateau de jeu (int**) </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 si l'exécution s'est bien passée, 1 sinon </dd></dl>
+
+</div>
+</div>
+<a id="a9287122c667a496d22ad55665ebf711e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9287122c667a496d22ad55665ebf711e">&#9670;&nbsp;</a></span>printIntToCharColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printIntToCharColor </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>car</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Affiche les int en caractères en couleur. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">car</td><td>Entier correspondant à la valeur ASCII d'un caractère </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -568,6 +822,97 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="game
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>le nombre random. </dd></dl>
+
+</div>
+</div>
+<a id="a0a99849745c07e24348767492ee64b3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a99849745c07e24348767492ee64b3f">&#9670;&nbsp;</a></span>randomTuile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structTuile.html">Tuile</a>* randomTuile </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nb_Tuile</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Génère <em>nb_Tuile</em> tuile(s) aléatoirement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nb_Tuile</td><td>&gt; 0 nombre de tuile à générer (int) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>un tableau de <em>nb_Tuile</em> tuile(s) </dd></dl>
+
+</div>
+</div>
+<a id="a1c28269cdc2d4d16ec07373d3d2ffe32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c28269cdc2d4d16ec07373d3d2ffe32">&#9670;&nbsp;</a></span>saveGame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int** saveGame </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGame.html">Game</a> *&#160;</td>
+          <td class="paramname"><em>game</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int **&#160;</td>
+          <td class="paramname"><em>previous</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>sauvgarde le plateau de jeux actuel case par case dans un tableau </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">game</td><td>un pointeur vers le tableau de jeu (<a class="el" href="structGame.html">Game</a>) </td></tr>
+    <tr><td class="paramname">previous</td><td>un tableau de la meme taille que le plateau de jeu (int**) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>un tableau de sauvgarde du dernier plateau de jeu (int**) </dd></dl>
+
+</div>
+</div>
+<a id="adad59be6196f6c09c2ba1f45d9f7dbd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adad59be6196f6c09c2ba1f45d9f7dbd4">&#9670;&nbsp;</a></span>startGame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int startGame </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>typeGame</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialise une partie. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">typeGame</td><td>Désigne le type de partie à lancer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
