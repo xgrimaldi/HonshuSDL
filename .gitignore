@@ -1,5 +1,5 @@
 # Repositories
-bin/
-obj/
-++Sujets/
-doxygen/
+/bin
+/obj
+/++Sujets
+/doxygen
