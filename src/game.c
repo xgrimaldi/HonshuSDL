@@ -437,6 +437,7 @@ int startGame(int typeGame){
 					clearScreen();
 					gameTuiles = randomTuile(nb_tuiles);
 				}
+				purger();
 			}
 
 			int size=0;
@@ -462,6 +463,7 @@ int startGame(int typeGame){
 					//Placement de la premiere tuile
 					initPlacementTuileRandom(game);
 				}
+				purger();
 			}
 			break;
 		}
@@ -473,6 +475,7 @@ int startGame(int typeGame){
 			if( EXIT_FAILURE==LoadGame(filepath,game)){
 				return EXIT_FAILURE;
 			}
+			purger();
 			break;
 		}
 	}
@@ -518,7 +521,7 @@ int startGame(int typeGame){
 		       	if(id_Tuile < 0 || id_Tuile >= game->nbTuiles) 
 		       		printf("ID incorrect ! Saisir un ID entre 0 et %d\n", game->nbTuiles-1);//Si Id incorrect alors retour aux choix
 				else if (game->tuiles[id_Tuile].orientation != 'V') 
-					printf("ID indisponible ! La tuile %d est déjà placée.\n",id_Tuile);//si la tuile est déjà placé, on retourne aux choix					
+					printf("ID indisponible ! La tuile %d est déjà plac ée.\n",id_Tuile);//si la tuile est déjà placé, on retourne aux choix					
 				//sinon, on peut continuer
 				else {				
         			while(accepte == 0 ){ //ordonée
@@ -528,12 +531,13 @@ int startGame(int typeGame){
 							printf("Ordonée incorrect ! Saisir un nombre entre 0 et %d\n", game->taille);
 						else 
 							accepte = 1;
+						purger();
 				  	}
 
 				  	accepte = 0;
 				  	while(accepte == 0){ //abcisse
 				    	printf("À quelle abcisse voulez vous placer la tuile %d : ", id_Tuile);
-				    	scanf(" %c", &y);
+				    	scanf("%c", &y);
 				    	if(!(y >= 97 && y < 97+game->taille) && !(y >= 65 && y < 65+game->taille)) printf("Abcisse incorrect ! Saisir une lettre entre A et %c\n", (char)(65+game->taille-1)); // On est contraint de supposer n <= 26
 				    	else {
 				      		accepte = 1;
@@ -544,6 +548,7 @@ int startGame(int typeGame){
 				      		else
 				      			y -= 65;
 				    	}
+				    	purger();
 				  	}
 
 				  	accepte = 0;
@@ -560,6 +565,7 @@ int startGame(int typeGame){
 				      		accepte = 1;
 				      		game->tuiles[id_Tuile].orientation = orientation;
 				    	}
+				    	purger();
 				  	}
 				  
 				  	if(!placeTuile(game, id_Tuile, x, (int) y, previous)){
@@ -660,6 +666,10 @@ int matchEmpty (int** previous, int taille){
 // ######################################
 //	DIVERS FONCTIONS
 // ######################################
+void purger(void)
+{    int c;
+    while ((c = getchar()) != '\n' && c != EOF){}
+}
 
 int randomMinMax(int a,int b){
 	int r = (rand() % (b - a + 1)) + a;

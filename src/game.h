@@ -244,4 +244,6 @@ int getPrevious (Game* game ,int** previous,int id_tuile_removed);
 */
 int matchEmpty (int** previous, int taile);
 
+void purger(void);
+
 #endif
