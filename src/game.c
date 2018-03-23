@@ -666,8 +666,8 @@ int matchEmpty (int** previous, int taille){
 // ######################################
 //	DIVERS FONCTIONS
 // ######################################
-void purger(void)
-{    int c;
+void purger(void){   
+	int c;
     while ((c = getchar()) != '\n' && c != EOF){}
 }
 
