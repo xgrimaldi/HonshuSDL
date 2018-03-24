@@ -75,7 +75,7 @@ void HonshuScreen();
 void clearScreen();
 
 /**
-* \brief GPositionne une tuike aléatoirement
+* \brief Positionne une tuile aléatoirement
 *
 * Positionne une tuile au hasard au milieu du plateau
 *
