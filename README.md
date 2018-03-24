@@ -1,7 +1,7 @@
 # PROJET INFO ENSIIE 1A - SOLVEUR HONSHU
 ##### Xavier GRIMALDI, Houda HASSINI, Johan CHAGNON, Quentin DELAVELLE
 
-### I ) Pré-requis
+# I ) Pré-requis
 ## Installer doxygen
 
 * Ouvrir un terminal BASH
@@ -37,7 +37,7 @@ sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
 * Les fichiers .c .h sont présents dans le fichier "src"
 * Les fichiers .o sont présents dans le fichier "obj"
 
-### II) Démarrer le programme HONSHU
+# II) Démarrer le programme HONSHU
 ## Compiler les fichiers à l'aide du makefile
 
 * Le makefile devra être alimenter en fonction des avancement du projet
@@ -71,7 +71,7 @@ make
 * 2 - Création d'une partie à partir d'un fichier
 
 
-### III) HOW-TO USE GIT
+# III) HOW-TO USE GIT
 ## Ajouter le projet sur votre ordinateur (LINUX !!)
 
 * Ouvrir un terminal BASH
