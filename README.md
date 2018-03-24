@@ -1,5 +1,5 @@
 # PROJET INFO ENSIIE 1A - SOLVEUR HONSHU
-### Xavier GRIMALDI, Houda HASSINI, Johan CHAGNON, Quentin DELAVELLE
+##### Xavier GRIMALDI, Houda HASSINI, Johan CHAGNON, Quentin DELAVELLE
 
 ### I ) Pré-requis
 ## Installer doxygen
