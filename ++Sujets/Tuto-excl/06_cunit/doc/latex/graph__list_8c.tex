@@ -1,0 +1,176 @@
+\hypertarget{graph__list_8c}{}\section{/home/dimitri.watel/\+Documents/\+Travail/\+Enseignement/02\+\_\+\+E\+N\+S\+I\+I\+E/\+Initial/\+S2/\+Projet\+\_\+\+Informatique/\+Cours/\+Tuto/doxygen/src/graph\+\_\+list.c File Reference}
+\label{graph__list_8c}\index{/home/dimitri.\+watel/\+Documents/\+Travail/\+Enseignement/02\+\_\+\+E\+N\+S\+I\+I\+E/\+Initial/\+S2/\+Projet\+\_\+\+Informatique/\+Cours/\+Tuto/doxygen/src/graph\+\_\+list.\+c@{/home/dimitri.\+watel/\+Documents/\+Travail/\+Enseignement/02\+\_\+\+E\+N\+S\+I\+I\+E/\+Initial/\+S2/\+Projet\+\_\+\+Informatique/\+Cours/\+Tuto/doxygen/src/graph\+\_\+list.\+c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}graph.\+h\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structedge}{edge}
+\item 
+struct \hyperlink{structgraph__s}{graph\+\_\+s}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structgraph__s}{graph\+\_\+s} $\ast$ \hyperlink{graph__list_8c_af4b8d10328d75b6dc94c389d04711703}{graph}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph} \hyperlink{graph__list_8c_a58e7f55a399b6d6c898136b2db2784ef}{create\+\_\+graph} (int \hyperlink{graph__matrix_8c_a806c96e623f4031fd9da23dca1110633}{size})
+\begin{DoxyCompactList}\small\item\em Crée puis renvoie une graphe de taille {\itshape size}. \end{DoxyCompactList}\item 
+void \hyperlink{graph__list_8c_a963740d07b573cdec5481c35f2883716}{free\+\_\+graph} (\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph} g)
+\begin{DoxyCompactList}\small\item\em Libère la mémoire du graphe {\itshape g}. \end{DoxyCompactList}\item 
+int \hyperlink{graph__list_8c_a806c96e623f4031fd9da23dca1110633}{size} (\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph} g)
+\begin{DoxyCompactList}\small\item\em Renvoie la taille du graphe {\itshape g}. \end{DoxyCompactList}\item 
+void \hyperlink{graph__list_8c_a34dba0aa77b75cc490ea17a50992fccc}{add\+\_\+edge} (\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph} g, int u, int v)
+\begin{DoxyCompactList}\small\item\em Ajoute une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g}. \end{DoxyCompactList}\item 
+void \hyperlink{graph__list_8c_ad7a7a8008edf92a837be05ab1606fb02}{remove\+\_\+edge} (\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph} g, int u, int v)
+\begin{DoxyCompactList}\small\item\em Retire une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g}. \end{DoxyCompactList}\item 
+int \hyperlink{graph__list_8c_ac818cc20df1c2bc33c8b731950e489bf}{is\+\_\+edge} (\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph} g, int u, int v)
+\begin{DoxyCompactList}\small\item\em Vérifie s\textquotesingle{}il existe une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{graph__list_8c_af4b8d10328d75b6dc94c389d04711703}\label{graph__list_8c_af4b8d10328d75b6dc94c389d04711703}} 
+\index{graph\+\_\+list.\+c@{graph\+\_\+list.\+c}!graph@{graph}}
+\index{graph@{graph}!graph\+\_\+list.\+c@{graph\+\_\+list.\+c}}
+\subsubsection{\texorpdfstring{graph}{graph}}
+{\footnotesize\ttfamily typedef struct \hyperlink{structgraph__s}{graph\+\_\+s}$\ast$ \hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph}}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{graph__list_8c_a34dba0aa77b75cc490ea17a50992fccc}\label{graph__list_8c_a34dba0aa77b75cc490ea17a50992fccc}} 
+\index{graph\+\_\+list.\+c@{graph\+\_\+list.\+c}!add\+\_\+edge@{add\+\_\+edge}}
+\index{add\+\_\+edge@{add\+\_\+edge}!graph\+\_\+list.\+c@{graph\+\_\+list.\+c}}
+\subsubsection{\texorpdfstring{add\+\_\+edge()}{add\_edge()}}
+{\footnotesize\ttfamily void add\+\_\+edge (\begin{DoxyParamCaption}\item[{\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph}}]{g,  }\item[{int}]{u,  }\item[{int}]{v }\end{DoxyParamCaption})}
+
+
+
+Ajoute une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g}. 
+
+Ajoute une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g} si cette arête n\textquotesingle{}existe pas déjà et ne fait rien sinon. Complexité en O(m) (on parcours la liste des arêtes une fois pour éviter d\textquotesingle{}ajouter deux fois la même arête).
+
+\begin{DoxyAttention}{Attention}
+Le graphe g doit avoir été créé avec la fonction {\itshape create\+\_\+graph} et ne doit pas déjà avoir été détruit avec la fonction {\itshape free\+\_\+graph}. {\itshape u} et {\itshape v} doivent être entre 0 et la taille du graphe moins 1. 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em g} & Un graphe. \\
+\hline
+{\em u} & L\textquotesingle{}indice d\textquotesingle{}un noeud du graphe {\itshape g} \\
+\hline
+{\em v} & L\textquotesingle{}indice d\textquotesingle{}un noeud du graphe {\itshape g} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{graph__list_8c_a58e7f55a399b6d6c898136b2db2784ef}\label{graph__list_8c_a58e7f55a399b6d6c898136b2db2784ef}} 
+\index{graph\+\_\+list.\+c@{graph\+\_\+list.\+c}!create\+\_\+graph@{create\+\_\+graph}}
+\index{create\+\_\+graph@{create\+\_\+graph}!graph\+\_\+list.\+c@{graph\+\_\+list.\+c}}
+\subsubsection{\texorpdfstring{create\+\_\+graph()}{create\_graph()}}
+{\footnotesize\ttfamily \hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph} create\+\_\+graph (\begin{DoxyParamCaption}\item[{int}]{size }\end{DoxyParamCaption})}
+
+
+
+Crée puis renvoie une graphe de taille {\itshape size}. 
+
+Alloue la mémoire nécessaire à la création d\textquotesingle{}un graphe de taille {\itshape size}, crée le graphe et le renvoie.
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Taille du graphe souhaité. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Un nouveau graphe de taille {\itshape size}. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph__list_8c_a963740d07b573cdec5481c35f2883716}\label{graph__list_8c_a963740d07b573cdec5481c35f2883716}} 
+\index{graph\+\_\+list.\+c@{graph\+\_\+list.\+c}!free\+\_\+graph@{free\+\_\+graph}}
+\index{free\+\_\+graph@{free\+\_\+graph}!graph\+\_\+list.\+c@{graph\+\_\+list.\+c}}
+\subsubsection{\texorpdfstring{free\+\_\+graph()}{free\_graph()}}
+{\footnotesize\ttfamily void free\+\_\+graph (\begin{DoxyParamCaption}\item[{\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph}}]{g }\end{DoxyParamCaption})}
+
+
+
+Libère la mémoire du graphe {\itshape g}. 
+
+\begin{DoxyAttention}{Attention}
+Le graphe g doit avoir été créé avec la fonction {\itshape create\+\_\+graph} et ne doit pas déjà avoir été détruit avec la fonction {\itshape free\+\_\+graph}. 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em g} & Un graphe que l\textquotesingle{}on souhaite détruire. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{graph__list_8c_ac818cc20df1c2bc33c8b731950e489bf}\label{graph__list_8c_ac818cc20df1c2bc33c8b731950e489bf}} 
+\index{graph\+\_\+list.\+c@{graph\+\_\+list.\+c}!is\+\_\+edge@{is\+\_\+edge}}
+\index{is\+\_\+edge@{is\+\_\+edge}!graph\+\_\+list.\+c@{graph\+\_\+list.\+c}}
+\subsubsection{\texorpdfstring{is\+\_\+edge()}{is\_edge()}}
+{\footnotesize\ttfamily int is\+\_\+edge (\begin{DoxyParamCaption}\item[{\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph}}]{g,  }\item[{int}]{u,  }\item[{int}]{v }\end{DoxyParamCaption})}
+
+
+
+Vérifie s\textquotesingle{}il existe une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g}. 
+
+\begin{DoxyAttention}{Attention}
+Le graphe g doit avoir été créé avec la fonction {\itshape create\+\_\+graph} et ne doit pas déjà avoir été détruit avec la fonction {\itshape free\+\_\+graph}. {\itshape u} et {\itshape v} doivent être entre 0 et la taille du graphe moins 1. 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em g} & Un graphe. \\
+\hline
+{\em u} & L\textquotesingle{}indice d\textquotesingle{}un noeud du graphe {\itshape g} \\
+\hline
+{\em v} & L\textquotesingle{}indice d\textquotesingle{}un noeud du graphe {\itshape g} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 s\textquotesingle{}il existe une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans {\itshape g} et 0 sinon. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph__list_8c_ad7a7a8008edf92a837be05ab1606fb02}\label{graph__list_8c_ad7a7a8008edf92a837be05ab1606fb02}} 
+\index{graph\+\_\+list.\+c@{graph\+\_\+list.\+c}!remove\+\_\+edge@{remove\+\_\+edge}}
+\index{remove\+\_\+edge@{remove\+\_\+edge}!graph\+\_\+list.\+c@{graph\+\_\+list.\+c}}
+\subsubsection{\texorpdfstring{remove\+\_\+edge()}{remove\_edge()}}
+{\footnotesize\ttfamily void remove\+\_\+edge (\begin{DoxyParamCaption}\item[{\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph}}]{g,  }\item[{int}]{u,  }\item[{int}]{v }\end{DoxyParamCaption})}
+
+
+
+Retire une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g}. 
+
+Retire une arête entre les noeuds d\textquotesingle{}indices {\itshape u} et {\itshape v} dans le graphe {\itshape g} si cette arête existe et ne fait rien sinon.
+
+\begin{DoxyAttention}{Attention}
+Le graphe g doit avoir été créé avec la fonction {\itshape create\+\_\+graph} et ne doit pas déjà avoir été détruit avec la fonction {\itshape free\+\_\+graph}. {\itshape u} et {\itshape v} doivent être entre 0 et la taille du graphe moins 1. 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em g} & Un graphe. \\
+\hline
+{\em u} & L\textquotesingle{}indice d\textquotesingle{}un noeud du graphe {\itshape g} \\
+\hline
+{\em v} & L\textquotesingle{}indice d\textquotesingle{}un noeud du graphe {\itshape g} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{graph__list_8c_a806c96e623f4031fd9da23dca1110633}\label{graph__list_8c_a806c96e623f4031fd9da23dca1110633}} 
+\index{graph\+\_\+list.\+c@{graph\+\_\+list.\+c}!size@{size}}
+\index{size@{size}!graph\+\_\+list.\+c@{graph\+\_\+list.\+c}}
+\subsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily int size (\begin{DoxyParamCaption}\item[{\hyperlink{graph_8h_a8ca49c796430e66a10450bfc2d218c81}{graph}}]{g }\end{DoxyParamCaption})}
+
+
+
+Renvoie la taille du graphe {\itshape g}. 
+
+\begin{DoxyAttention}{Attention}
+Le graphe g doit avoir été créé avec la fonction create\+\_\+graph. 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em g} & Un graphe. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le nombre de noeuds de {\itshape g} 
+\end{DoxyReturn}

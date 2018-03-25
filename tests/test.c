@@ -102,8 +102,8 @@ void test_initPlacementTuileRandom (void){
 	partie->nbTuilesPose=1;
 	partie->taille=20;
 	initPlacementTuileRandom(partie);
-	for (int i=10; i<10+3 ;i++){
-		for (int j=10; j<10+2 ;j++){
+	for (int i=9; i<9+3 ;i++){
+		for (int j=9; j<9+2 ;j++){
 			CU_ASSERT_NOT_EQUAL(partie->plateau[i][j],0);
 		}
 	}

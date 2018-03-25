@@ -102,6 +102,19 @@ Tuile copyTuile(Tuile tuileACopier);
 int rotateTuile(Tuile t,char direction);
 
 /**
+* \brief Créer une nouvelle tuile
+* \param id identifiant de la tuile
+* \param x1 case 1
+* \param x2 case 2
+* \param x3 case 3
+* \param x4 case 4
+* \param x5 case 5
+* \param x6 case 6
+* \return retourne la nouvelle tuile
+*/
+Tuile newTuile(int id, char x1, char x2, char x3, char x4, char x5, char x6);
+
+/**
 * \brief Importe un fichier de tuile 
 *
 * Récupère le fichier et importe les tuiles dans le tableau de tuiles et renvoie le nombre de tuiles crées.
@@ -110,7 +123,7 @@ int rotateTuile(Tuile t,char direction);
 * \param gameTuiles Tableau de tuiles.
 * \return le nombre de tuiles crée.
 */
-int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]);
+int LoadTuiles(char* filepath,Tuile* gameTuiles);
 
 /**
 * \brief Importe un fichier de tuile 
@@ -228,7 +241,7 @@ int getPrevious (Game* game ,int** previous,int id_tuile_removed);
 int matchEmpty (int** previous, int taile);
 
 
-/*
+/**
  * \brief Vérifie si le fichier existe en utilisant stat.h
  * \return retourne 1 si le fichier existe, 0 sinon
  */

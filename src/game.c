@@ -128,8 +128,15 @@ void initPlacementTuileRandom(Game* partie){
 }
 
 void initPlacementTuile(Game* partie,int numTuile){
-	int pos_ligne = (partie->taille/2);
-	int pos_col = (partie->taille/2);
+	int pos_ligne=0,pos_col=0;
+	if (partie->taille%2==0){
+		pos_ligne = (partie->taille/2)-1;
+		pos_col = (partie->taille/2)-1;
+	}
+	else{
+		pos_ligne = ((partie->taille-1)/2)-1;
+		pos_col = ((partie->taille-1)/2)-1;
+	}
 	char placement[6]= {partie->tuiles[numTuile].X_1,partie->tuiles[numTuile].X_2,partie->tuiles[numTuile].X_3,partie->tuiles[numTuile].X_4,partie->tuiles[numTuile].X_5,partie->tuiles[numTuile].X_6};
 
 	partie->tuiles[numTuile].orientation='N';
@@ -227,6 +234,7 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
      	fscanf(fichier, "%s", word);
 		game->taille=atoi(word);
 		game->plateau=alloc_int_array(atoi(word),atoi(word));
+		initPlateau(game->plateau,atoi(word));
 
 		// Récupération du nombre de tuiles
      	fscanf(fichier, "%s", word);
