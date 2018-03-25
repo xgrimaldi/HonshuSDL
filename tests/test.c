@@ -6,21 +6,13 @@
 #include <CUnit/CUnit.h>
 #include "../src/game.h"
 
-/* Pointer to the file used by the tests. */
-static FILE* temp_file = NULL;
-
 /* The suite initialization function.
  * Opens the temporary file used by the tests.
  * Returns zero on success, non-zero otherwise.
  */
 int init_suite(void)
 {
-   if (NULL == (temp_file = fopen("temp.txt", "w+"))) {
-      return -1;
-   }
-   else {
-      return 0;
-   }
+	return 0;
 }
 
 
@@ -30,13 +22,7 @@ int init_suite(void)
  */
 int clean_suite(void)
 {
-   if (0 != fclose(temp_file)) {
-      return -1;
-   }
-   else {
-      temp_file = NULL;
-      return 0;
-   }
+	return 0;	
 }
 
 
@@ -55,7 +41,10 @@ void test_Load_Tuiles(void)
 */
 void test_LoadGame(void){
 	Game* partie = malloc(sizeof(Game));
-	CU_ASSERT_NOT_EQUAL(LoadGame("../bin/Tuiles",partie), EXIT_FAILURE);
+	partie->tuiles= malloc(MAXTUILES * sizeof(Tuile));
+	CU_ASSERT_NOT_EQUAL(LoadGame("../bin/Partie1","../bin/Tuiles",partie), EXIT_FAILURE);
+	free(partie->plateau);
+	free(partie->tuiles);
 	free(partie);
 }
 
@@ -63,7 +52,6 @@ void test_LoadGame(void){
 
 void test_randomTuile(void){
 	Tuile* tuile = randomTuile(1);
-
 		CU_ASSERT_EQUAL(tuile[0].id , 0);
 		CU_ASSERT_TRUE(tuile[0].X_1=='L' || tuile[0].X_1=='P' || tuile[0].X_1=='F' || tuile[0].X_1=='V' || tuile[0].X_1=='U' || tuile[0].X_1=='R');
 		CU_ASSERT_TRUE(tuile[0].X_2=='L' || tuile[0].X_2=='P' || tuile[0].X_2=='F' || tuile[0].X_2=='V' || tuile[0].X_2=='U' || tuile[0].X_2=='R');
@@ -73,16 +61,19 @@ void test_randomTuile(void){
 		CU_ASSERT_TRUE(tuile[0].X_6=='L' || tuile[0].X_6=='P' || tuile[0].X_6=='F' || tuile[0].X_6=='V' || tuile[0].X_6=='U' || tuile[0].X_6=='R');
 }
 
-/*teste si la fonction réalise bien l'allocation dynamique de chaque table du tableau*/
-void test_alloc_int_array(void){
-	int ** a = alloc_int_array(10,10);
-	CU_ASSERT_PTR_NOT_NULL(a);
-	for(int i; i<10; i++)
-		CU_ASSERT_PTR_NOT_NULL(a[i]);
-	for(int i; i<10; i++)
-		free(a[i]);
-	free(a);
 
+/*teste si la fonction réalise bien l'allocation dynamique de chaque table du tableau*/
+
+void test_alloc_int_array(void){
+	int** a = alloc_int_array(10,10);
+	initPlateau(a,10);
+
+	CU_ASSERT_PTR_NOT_NULL(a);
+	
+	for(int i; i<10; i++){
+		free(a[i]);
+	}
+	free(a);
 }
 
 
@@ -90,6 +81,7 @@ void test_alloc_int_array(void){
 void test_initPlateau(void){
 	int ** a = alloc_int_array(10,10);
 	initPlateau(a,10);
+
 	for (int i=0;i<10;i++){
 		for(int j=0;j<10;j++){
 			CU_ASSERT_EQUAL(a[i][j],0);
@@ -99,13 +91,12 @@ void test_initPlateau(void){
 		free(a[i]);
 	free(a);
 }
+
 /* teste que une tuile choisie aléatoirement a bien été placée au centre du plateau de jeu*/
 void test_initPlacementTuileRandom (void){
 	Game* partie = malloc(sizeof(Game));
-	int** gamePlateau;
-	gamePlateau = alloc_int_array(20, 20);
-	initPlateau(gamePlateau,20);
-	partie->plateau = gamePlateau;
+	partie->plateau = alloc_int_array(20, 20);
+	initPlateau(partie->plateau,20);
 	partie->tuiles = randomTuile(3);
 	partie->nbTuiles = 3;
 	partie->nbTuilesPose=1;
@@ -117,8 +108,8 @@ void test_initPlacementTuileRandom (void){
 		}
 	}
 	for(int i=0;i<partie->taille;i++){
-					free(partie->plateau[i]);
-				}
+		free(partie->plateau[i]);
+	}
 	free(partie->plateau);
 	free(partie->tuiles);
 	free(partie);
@@ -134,10 +125,8 @@ void test_randomMinMax(void){
 /* teste si la fonction renvoi un succes si la tuile est placée et un échec sinon*/
 void test_placeTuile(void){
 	Game* partie = malloc(sizeof(Game));
-	int** gamePlateau;
-	gamePlateau = alloc_int_array(20, 20);
-	initPlateau(gamePlateau,20);
-	partie->plateau = gamePlateau;
+	partie->plateau = alloc_int_array(20, 20);
+	initPlateau(partie->plateau,20);
 	int** previous;
 	previous = alloc_int_array(20, 20);
 	initPlateau(previous,20);
@@ -147,16 +136,13 @@ void test_placeTuile(void){
 	partie -> tuiles[2].orientation='S';
 	CU_ASSERT_TRUE(placeTuile(partie,2,0,1,previous)==EXIT_FAILURE);
 	for(int i=0;i<partie->taille;i++){
-					free(partie->plateau[i]);
-					free(previous[i]);
-				}
-	free(partie->plateau);
+		free(partie->plateau[i]);
+		free(previous[i]);
+	}
 	free(previous);
+	free(partie->plateau);
 	free(partie->tuiles);
 	free(partie);
-	
-
-
 }
 
 void test_copyTuile(void){
@@ -169,11 +155,9 @@ void test_copyTuile(void){
 /*fonction qui teste que le tableau sauvgardé est bien identique à celui passé en arguments*/
 void test_saveGame(void){
 	Game* partie = malloc(sizeof(Game));
-	int** gamePlateau;
-	gamePlateau = alloc_int_array(20, 20);
-	initPlateau(gamePlateau,20);
-	gamePlateau[0][0]=5;
-	partie->plateau = gamePlateau;
+	partie->plateau = alloc_int_array(20, 20);
+	initPlateau(partie->plateau,20);
+	partie->plateau[0][0]=5;
 	int** previous;
 	previous = alloc_int_array(20, 20);
 	initPlateau(previous,20);
@@ -184,9 +168,9 @@ void test_saveGame(void){
 		}
 	}
 	for(int i=0;i<partie->taille;i++){
-					free(partie->plateau[i]);
-					free(previous[i]);
-				}
+		free(partie->plateau[i]);
+		free(previous[i]);
+	}
 	free(partie->plateau);
 	free(previous);
 	free(partie);
@@ -196,10 +180,8 @@ void test_saveGame(void){
 /*teste si la fonction récupère bien un tableau corrpondant a clui passé en arguments*/
 void test_getPrevious (void){
 	Game* partie = malloc(sizeof(Game));
-	int** gamePlateau;
-	gamePlateau = alloc_int_array(20, 20);
-	initPlateau(gamePlateau,20);
-	partie->plateau = gamePlateau;
+	partie->plateau = alloc_int_array(20, 20);
+	initPlateau(partie->plateau,20);
 	int** previous;
 	previous = alloc_int_array(20, 20);
 	initPlateau(previous,20);
@@ -212,9 +194,9 @@ void test_getPrevious (void){
 		}
 	}
 	for(int i=0;i<partie->taille;i++){
-					free(partie->plateau[i]);
-					free(previous[i]);
-				}
+		free(partie->plateau[i]);
+		free(previous[i]);
+	}
 	free(partie->plateau);
 	free(partie->tuiles);
 	free(previous);
@@ -224,22 +206,21 @@ void test_getPrevious (void){
 
 /*Teste si la fonction renvoie bien un échec si le tableau contient au moins une case non nulle et un succés sinon*/
 void test_matchEmpty (void){
-	int** a;
-	a = alloc_int_array(20, 20);
+	int** a= alloc_int_array(20, 20);
 	initPlateau(a,20);
 	CU_ASSERT_TRUE(matchEmpty(a,20)==EXIT_SUCCESS);
 	a[1][5]=3;
 	CU_ASSERT_TRUE(matchEmpty(a,20)==EXIT_FAILURE);
+	
 	for(int i=0;i<20;i++){
 		free(a[i]);
 	}
-	
 	free(a);
 }
 
-/* The main() function for setting up and running the tests.
- * Returns a CUE_SUCCESS on successful running, another
- * CUnit error code on failure.
+/* main() fonction
+ * Retourne CUE_SUCCESS sur un traitement réussi
+ * CUnit Error sur échecs 
  */
 int main()
 {
@@ -257,10 +238,9 @@ int main()
    }
 
    /* add the tests to the suite */
-   /* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
-   if ((NULL == CU_add_test(pSuite, "Test Chargement Tuiles", test_Load_Tuiles))  ||
+   if (
+   	(NULL == CU_add_test(pSuite, "Test Chargement Tuiles", test_Load_Tuiles))  ||
    	(NULL == CU_add_test(pSuite, "Test Entier aléatoire", test_randomMinMax)) ||
-   	(NULL == CU_add_test(pSuite, "Test d'allocation", test_alloc_int_array)) ||
    	(NULL == CU_add_test(pSuite, "Test d'initialisation des cases d'un tableeau à 0", test_initPlateau)) ||
    	(NULL == CU_add_test(pSuite, "Test du placement d'une tuile aléatoirement  choisie au centre du plateau", test_initPlacementTuileRandom)) ||
    	(NULL == CU_add_test(pSuite, "Test de création d'un tableau de tuile aléatoire", test_randomTuile)) ||
@@ -269,9 +249,8 @@ int main()
    	(NULL == CU_add_test(pSuite, "Test de copie d'une tuile", test_copyTuile)) ||
    	(NULL == CU_add_test(pSuite, "Test de sauvegarde d'un plateau de jeu", test_saveGame)) ||
    	(NULL == CU_add_test(pSuite, "Test récupération d'un tableau dans un autre ", test_getPrevious))||
-   	(NULL == CU_add_test(pSuite, "Test de vérification des tableaux vides", test_matchEmpty))
-
-
+   	(NULL == CU_add_test(pSuite, "Test de vérification des tableaux vides", test_matchEmpty)) ||
+	(NULL == CU_add_test(pSuite, "Test d'allocation", test_alloc_int_array))
    	) 
    {
       CU_cleanup_registry();

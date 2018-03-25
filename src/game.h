@@ -57,22 +57,14 @@ typedef struct Game {
     int taille;
 } Game;
 
-
 /**
-* \brief Affiche le logo Honshu
+* \brief Alloue un triple pointeur de char de taille \a x  * \a y
 *
-* Print du logo Honshu en ASCII ART
-*
+* \param x La taille du premier pointeur (int**)
+* \param y La taille du deuxième pointeur (int*) 
+* \return Un int **
 */
-void HonshuScreen();
-
-/**
-* \brief Clear l'écran
-*
-* Clear l'écran terminal/bash
-*
-*/
-void clearScreen();
+int **alloc_int_array(int x, int y);
 
 /**
 * \brief Positionne une tuile aléatoirement
@@ -89,7 +81,7 @@ void initPlacementTuileRandom(Game* partie);
 * Positionne une tuile au hasard au milieu du plateau
 *
 * \param partie variable représentant une partie (structure Game).
-*\param numTuile vnuméro de la tuile à placer
+* \param numTuile vnuméro de la tuile à placer
 */
 void initPlacementTuile(Game* partie,int numTuile);
 
@@ -97,19 +89,17 @@ void initPlacementTuile(Game* partie,int numTuile);
 * \brief Copie une tuile dans une autre
 *
 * \param tuileACopier tuile qui doit être copié
+* \return retourne la tuile copiée
 */
 Tuile copyTuile(Tuile tuileACopier);
 
 /**
-* \brief Génére un nombre aléatoire borné
+* \brief Permet de changer l'orientation d'une tuile
 *
-* Créer un nombre pris au aléatoirement entre deux bornes \a a et \a b
-*
-* \param a MIN.
-* \param b MAX.
-* \return le nombre random.
+* \param t Tuile qui doit subir la rotation
+* \return 0 si l'exécution s'est bien passée, 1 sinon
 */
-int randomMinMax(int a,int b);
+int rotateTuile(Tuile t,char direction);
 
 /**
 * \brief Importe un fichier de tuile 
@@ -131,7 +121,7 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]);
 * \param gameTuiles Tableau de tuiles.
 * \return le nombre de tuiles crée.
 */
-int LoadGame(char* filepath,Game* game);
+int LoadGame(char* filepath,char* filepathTuile,Game* game);
 
 /**
 * \brief Initialise le plateau de jeu
@@ -143,6 +133,7 @@ void initPlateau(int** gamePlateau,int taille);
 * \brief Initialise une partie
 *
 *\param typeGame Désigne le type de partie à lancer
+*\return 0 si l'exécution s'est bien passée, 1 sinon
 */
 int startGame(int typeGame);
 
@@ -167,16 +158,6 @@ void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles);
 * \param car Entier correspondant à la valeur ASCII d'un caractère
 */
 void printIntToCharColor(int car);
-
-/**
-* \brief Alloue un triple pointeur de char de taille \a x  * \a y
-*
-* \param x La taille du premier pointeur (int**)
-* \param y La taille du deuxième pointeur (int*) 
-* \return Un int **
-*/
-int **alloc_int_array(int x, int y);
-
 
 /**
 * \brief Place la tuile d'id \a id à la position \a x , \a y du jeu pointé par \a game
@@ -228,6 +209,7 @@ Tuile* randomTuile(int nb_Tuile);
 * \return un tableau de sauvgarde du dernier plateau de jeu (int**)
 */
 int** saveGame(Game* game, int** previous);
+
 /**
 * \brief modifie les cases d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre
 * \param game le tableau de jeu (Game)
@@ -236,6 +218,7 @@ int** saveGame(Game* game, int** previous);
 * \return 1 si tout s'est bien passé (int)
 */
 int getPrevious (Game* game ,int** previous,int id_tuile_removed);
+
 /**
 * \brief variefie qu'un tableau ne contient que des 0
 * \param previous un tableau de la meme taille que le plateau de jeu (int**)
@@ -244,6 +227,46 @@ int getPrevious (Game* game ,int** previous,int id_tuile_removed);
 */
 int matchEmpty (int** previous, int taile);
 
+
+/*
+ * \brief Vérifie si le fichier existe en utilisant stat.h
+ * \return retourne 1 si le fichier existe, 0 sinon
+ */
+int fileExist(const char* filename);
+
+/**
+* \brief Génére un nombre aléatoire borné
+*
+* Créer un nombre pris au aléatoirement entre deux bornes \a a et \a b
+*
+* \param a MIN.
+* \param b MAX.
+* \return le nombre random.
+*/
+int randomMinMax(int a,int b);
+
+/**
+* \brief Permet de purger le buffer après un scanf
+*
+* Purge du buffer
+*
+*/
 void purger(void);
+
+/**
+* \brief Affiche le logo Honshu
+*
+* Print du logo Honshu en ASCII ART
+*
+*/
+void HonshuScreen();
+
+/**
+* \brief Clear l'écran
+*
+* Clear l'écran terminal/bash
+*
+*/
+void clearScreen();
 
 #endif

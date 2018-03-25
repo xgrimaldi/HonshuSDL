@@ -6,7 +6,7 @@ OBJDIR = obj
 BINDIR = bin
 TESTDIR = tests
 
-all: $(BINDIR)/honshu_V2 $(BINDIR)/test
+all: $(BINDIR)/honshu $(BINDIR)/test
 	
 #Fichier Objets
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -16,7 +16,7 @@ $(OBJDIR)/%.o: $(TESTDIR)/%.c
 	$(CC) -c -o $@ $^
 
 #Fichier BIN
-$(BINDIR)/honshu_V2: $(OBJDIR)/main.o $(OBJDIR)/game.o
+$(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o
 	$(CC) -o $@ $^
 
 $(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o
@@ -24,6 +24,5 @@ $(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o
 
 clean:
 	rm $(OBJDIR)/*.o
-	rm $(BINDIR)/honshu_V2
+	rm $(BINDIR)/honshu
 	rm $(TESTDIR)/test
-

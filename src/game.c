@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "game.h"
 
@@ -14,7 +15,7 @@ int **alloc_int_array(int x, int y) {
 	int **a = (int **)malloc(x* sizeof(int *));
 	for (int i=0; i<x; i++)
 	     a[i] = (int *)malloc(y * sizeof(int));
-	 return a;
+	return a;
 }
 
 // ######################################
@@ -104,8 +105,15 @@ void initPlateau(int** gamePlateau,int taille){
 
 void initPlacementTuileRandom(Game* partie){
 	int choix = randomMinMax(0,partie->nbTuiles-1);
-	int pos_ligne = (partie->taille/2);
-	int pos_col = (partie->taille/2);
+	int pos_ligne=0,pos_col=0;
+	if (partie->taille%2==0){
+		pos_ligne = (partie->taille/2)-1;
+		pos_col = (partie->taille/2)-1;
+	}
+	else{
+		pos_ligne = ((partie->taille-1)/2)-1;
+		pos_col = ((partie->taille-1)/2)-1;
+	}
 	char placement[6]= {partie->tuiles[choix].X_1,partie->tuiles[choix].X_2,partie->tuiles[choix].X_3,partie->tuiles[choix].X_4,partie->tuiles[choix].X_5,partie->tuiles[choix].X_6};
 	
 	partie->tuiles[choix].orientation='N';
@@ -191,14 +199,16 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
 	}
 }
 
-int LoadGame(char* filepath,Game* game){
+int LoadGame(char* filepath,char* filepathTuile,Game* game){
 	//******************************
 	// Récupération du fichier
 	//******************************
-
     Tuile* allTuiles = malloc(MAXTUILES * sizeof(Tuile));
     // Récupération des tuiles de bases
-    LoadTuiles("Tuiles",allTuiles);
+    if(LoadTuiles(filepathTuile,allTuiles) == 0){
+    	free(allTuiles);
+    	return EXIT_FAILURE;
+    }
 
   	FILE* fichier = NULL;
 	fichier = fopen(filepath, "r+");
@@ -265,6 +275,17 @@ Tuile* randomTuile(int nb){
 		tabTuile[i].X_6 = cases[randomMinMax(0, 5)];
 	}
 	return tabTuile;
+}
+
+int rotateTuile(Tuile t,char direction){
+	if (direction != 'N' && direction !='S' && direction != 'O' && direction != 'E'){
+		t.orientation=t.orientation;
+		return EXIT_FAILURE;
+	}
+	else{
+		t.orientation=direction;
+		return EXIT_SUCCESS;
+	}
 }
 
 Tuile copyTuile(Tuile tuileACopier){
@@ -470,12 +491,25 @@ int startGame(int typeGame){
 		case 2:{
 			game->tuiles=gameTuiles;
 			char filepath[1024]={};
+			char filepathTuile[1024]={};
+
 			printf("Quel est le chemin du fichier 'Partie' ? ...\n");
 			scanf("%s",filepath);
-			if( EXIT_FAILURE==LoadGame(filepath,game)){
+			if (!fileExist(filepath)){
+				printf("Fichier non existant");
 				return EXIT_FAILURE;
 			}
 			purger();
+
+			printf("Quel est le chemin du fichier 'Tuiles' ? ...\n");
+			scanf("%s",filepathTuile);
+			if (!fileExist(filepathTuile)){
+				printf("Fichier non existant");
+				return EXIT_FAILURE;
+			}
+			if( EXIT_FAILURE==LoadGame(filepath,filepathTuile,game)){
+				return EXIT_FAILURE;
+			}
 			break;
 		}
 	}
@@ -666,6 +700,16 @@ int matchEmpty (int** previous, int taille){
 // ######################################
 //	DIVERS FONCTIONS
 // ######################################
+
+int fileExist(const char* filename){
+    struct stat buffer;
+    int exist = stat(filename,&buffer);
+    if(exist == 0)
+        return 1;
+    else // -1
+        return 0;
+}
+
 void purger(void){   
 	int c;
     while ((c = getchar()) != '\n' && c != EOF){}
