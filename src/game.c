@@ -24,23 +24,44 @@ int **alloc_int_array(int x, int y) {
 
 void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles){
 	printf("\n\t\t Tuiles paramètrées\n");
-	for(int i=0;i<nbTuiles;i++){
-		printf("\n %s ID:%d%s \n",Color_Bold_White,gameTuiles[i].id,Color_end);
-		printf("| ");
-		printIntToCharColor(gameTuiles[i].X_1);
-		printf(" | ");
-		printIntToCharColor(gameTuiles[i].X_2);
-		printf(" |\n");
-		printf("| ");
-		printIntToCharColor(gameTuiles[i].X_3);
-		printf(" | ");
-		printIntToCharColor(gameTuiles[i].X_4);
-		printf(" |\n");
-		printf("| ");
-		printIntToCharColor(gameTuiles[i].X_5);
-		printf(" | ");
-		printIntToCharColor(gameTuiles[i].X_6);
-		printf(" |\n");
+	int step=5;
+	for(int i=0;i<nbTuiles;i=i+step){
+		for(int j=0;j<step;j++){
+			if(i+j<nbTuiles){
+				printf(" %s ID:%d%s    \t",Color_Bold_White,gameTuiles[i+j].id,Color_end);
+			}
+		}
+		printf("\n");
+		for(int j=0;j<step;j++){
+			if(i+j<nbTuiles){
+				printf("| ");
+				printIntToCharColor(gameTuiles[i+j].X_1);
+				printf(" | ");
+				printIntToCharColor(gameTuiles[i+j].X_2);
+				printf(" |\t");
+			}
+		}
+		printf("\n");
+		for(int j=0;j<step;j++){
+			if(i+j<nbTuiles){
+				printf("| ");
+				printIntToCharColor(gameTuiles[i+j].X_3);
+				printf(" | ");
+				printIntToCharColor(gameTuiles[i+j].X_4);
+				printf(" |\t");
+			}
+		}
+		printf("\n");
+		for(int j=0;j<step;j++){
+			if(i+j<nbTuiles){
+				printf("| ");
+				printIntToCharColor(gameTuiles[i+j].X_5);
+				printf(" | ");
+				printIntToCharColor(gameTuiles[i+j].X_6);
+				printf(" |\t");
+			}
+		}
+		printf("\n\n");
 	}
 }
 
