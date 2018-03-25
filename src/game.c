@@ -278,7 +278,7 @@ Tuile* randomTuile(int nb){
 }
 
 int rotateTuile(Tuile t,char direction){
-	if (direction != 'N' && direction !='S' && direction != 'O' && direction != 'E'){
+	if (direction != 'N' && direction !='S' && direction != 'W' && direction != 'E'){
 		t.orientation=t.orientation;
 		return EXIT_FAILURE;
 	}
@@ -417,6 +417,18 @@ int canPlaceTuile(Game game, int id, int x, int y){ //Reste a traiter le cas de 
 
 char printCase(Game game, int x, int y){
 	return (char)game.plateau[x][y];
+}
+
+Tuile newTuile(int id, char x1, char x2, char x3, char x4, char x5, char x6){
+	Tuile tuile;
+	tuile.id = id;
+	tuile.X_1=x1;
+	tuile.X_2=x2;
+	tuile.X_3=x3;
+	tuile.X_4=x4;
+	tuile.X_5=x5;
+	tuile.X_6=x6;
+	return tuile;
 }
 
 // ######################################
