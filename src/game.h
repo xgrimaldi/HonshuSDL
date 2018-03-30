@@ -37,12 +37,13 @@
 typedef struct Tuile {	
 	int id;
 	char orientation;
-	char X_1;
+  int nbCasesRecouvertes;
+  char X_1;
 	char X_2;
 	char X_3;
 	char X_4;
 	char X_5;
-	char X_6;
+  char X_6;
 } Tuile;
 
 /**
@@ -50,11 +51,12 @@ typedef struct Tuile {
 * Type représentant une partie
 */
 typedef struct Game {
-	int** plateau;
-	Tuile* tuiles;
-    int nbTuiles;
-    int nbTuilesPose;
-    int taille;
+  int** plateau;
+  int** plateauIDmax;
+  Tuile* tuiles;
+  int nbTuiles;
+  int nbTuilesPose;
+  int taille;
 } Game;
 
 /**
@@ -139,8 +141,9 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game);
 /**
 * \brief Initialise le plateau de jeu
 *
+* \param val Est la valeure que va contenir toutes les cases du plateau
 */
-void initPlateau(int** gamePlateau,int taille);
+void initPlateau(int** gamePlateau,int taille, int val);
 
 /**
 * \brief Initialise une partie
@@ -179,22 +182,58 @@ void printIntToCharColor(int car);
 * \param x l'abcisse de la position ou placer la tuile (int)
 * \param y l'ordonnée de la position ou placer la tuile (int)
 * \param previous un tableau permetant de sauvegarder le dernier plateau de jeu (int**)
+* \param previousIDmax un tableau permetant de sauvegarder le dernier plateau des ids max des tuiles (int**) 
+* \param previousNBCasesRec Un tableau contenant les nb de cases recouvertes des tuiles anciennements recouvertes pour gérer le undo (int*)
 * \return 0 si l'exécution s'est bien passée, 1 sinon
 */
-int placeTuile(Game* game, int id, int x, int y, int ** previous);
+int placeTuile(Game* game, int id, int x, int y, int ** previous,int** previousIDmax,int* previousNBCasesRec);
 
 /**
 * \brief Vérifie que le placement de la tuile d'id\a id est autorisé à la position \a x , \a y du jeu \a game
 *
 * La position a renseigner est celle du coin le plus en haut à gauche de la tuile, après rotation.
 *
-* \param game représente le structure de jeu (Game)
+* \param game représente la structure de jeu (Game)
 * \param id L'identifiant de la tuile a placer (int)
 * \param x l'abcisse de la position ou placer la tuile (int)
 * \param y l'ordonnée de la position ou placer la tuile (int)
 * \return 1 si le placement est autorisé, 0 sinon
 */
-int canPlaceTuile(Game game, int id, int x,int y); //Pas entièrement implémentée
+int canPlaceTuile(Game game, int id, int x,int y); 
+
+/**
+* \brief copie les nombres de cases recouvertes des tuiles qui vont être recouvertes par la tuile d'id \a id posée en \a x \a y.
+*
+* \param game représente la structure de jeu (Game)
+* \param id L'identifiant de la tuile a placer (int)
+* \param x l'abcisse de la position où placer la tuile (int)
+* \param y l'ordonnée de la position où placer la tuile (int)
+* \param copie variable dans laquelle sera stockée les nombres de cases recouvertes (int*)
+*/
+void copieNBCasesRec(Game* game, int id, int x,int y,int* copie); 
+
+/**
+* \brief rétabli les anciennes valeures de nombres de cases recouvertes des tuiles qui allaient être recouverte par la tuile d'id \a id placée en position \a x \a y.
+*
+* \param game représente la structure de jeu (Game)
+* \param id L'identifiant de la tuile a placer (int)
+* \param x l'abcisse de la position où placer la tuile (int)
+* \param y l'ordonnée de la position où placer la tuile (int)
+* \param copie Le tableau des anciens nombres de cases recouvertes (int*)
+*/
+void retablishNBCasesRec(Game* game, int id, int x,int y,int* copie); 
+
+/**
+* \brief test si la tuile d'id \a id posée en \a x \a y ne reocuvre pas entièrement une tuile
+*
+* \param game représente la structure de jeu (Game)
+* \param id L'identifiant de la tuile a placer (int)
+* \param x l'abcisse de la position où placer la tuile (int)
+* \param y l'ordonnée de la position où placer la tuile (int)
+* \param previousNBCasesRec un tableau contenant les nombres de cases recouvertes des tuiles avant d'être recouvertes (int*) 
+* \return -1 si aucune tuile n'est entièrement recouverte, l'id de la tuile entièrement recouverte sinon.
+*/
+int testRecouvrementTotal(Game* game, int id, int x,int y,int* previousNBCasesRec); 
 
 /**
 * \brief Vérifie que la position x y est dans le plateau de jeu
@@ -219,18 +258,23 @@ Tuile* randomTuile(int nb_Tuile);
 * \brief sauvgarde le plateau de jeux actuel case par case dans un tableau 
 * \param game un pointeur vers le tableau de jeu (Game)
 * \param previous un tableau de la meme taille que le plateau de jeu (int**)
+* \param previousIDmax un tableau de la meme taille que le plateau des id max des tuiles posées (int**)
 * \return un tableau de sauvgarde du dernier plateau de jeu (int**)
 */
-int** saveGame(Game* game, int** previous);
+void saveGame(Game* game, int** previous, int** previousIDmax);
 
 /**
 * \brief modifie les cases d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre
 * \param game le tableau de jeu (Game)
 * \param previous un tableau de la meme taille que le plateau de jeu (int**)
+* \param previousIDmax un tableau de la meme taille que le plateau des ids max des tuiles (int**)
 * \param id_tuile_removed L'id de la dernière tuile ajoutée (int)
+* \param previousNBCasesRec un tableau contenant les nombres de cases recouvertes des tuiles avant d'être recouvertes (int*)
+* \param x l'abscisse de la tuile qui doit être enlevée (int)
+* \param y l'ordonné de la tuile qui doit être enlevée (char)
 * \return 1 si tout s'est bien passé (int)
 */
-int getPrevious (Game* game ,int** previous,int id_tuile_removed);
+int getPrevious (Game* game ,int** previous,int** previousIDmax,int id_tuile_removed,int* previousNBCasesRec,int x, char y);
 
 /**
 * \brief variefie qu'un tableau ne contient que des 0

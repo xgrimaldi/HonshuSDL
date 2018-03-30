@@ -116,17 +116,17 @@ void printIntToCharColor(int car){
 //	PARTIE INITIALISATION
 // ######################################
 
-void initPlateau(int** gamePlateau,int taille){
+void initPlateau(int** gamePlateau,int taille,int val){
 	for (int i=0;i<taille;i++){
 		for(int j=0;j<taille;j++){
-			gamePlateau[i][j]=0;
+			gamePlateau[i][j]=val;
 		}
 	}
 }
 
 void initPlacementTuileRandom(Game* partie){
-	int choix = randomMinMax(0,partie->nbTuiles-1);
-	int pos_ligne=0,pos_col=0;
+  int choix = randomMinMax(0,partie->nbTuiles-1);
+ 	int pos_ligne=0,pos_col=0;
 	if (partie->taille%2==0){
 		pos_ligne = (partie->taille/2)-1;
 		pos_col = (partie->taille/2)-1;
@@ -144,8 +144,12 @@ void initPlacementTuileRandom(Game* partie){
 		for (int j=pos_col; j<pos_col+2 ;j++){
 			partie->plateau[i][j] = placement[ind];
 			ind++;
+
+			partie->plateauIDmax[i][j] = choix;
 		}
 	}
+
+       
 }
 
 void initPlacementTuile(Game* partie,int numTuile){
@@ -161,11 +165,13 @@ void initPlacementTuile(Game* partie,int numTuile){
 	char placement[6]= {partie->tuiles[numTuile].X_1,partie->tuiles[numTuile].X_2,partie->tuiles[numTuile].X_3,partie->tuiles[numTuile].X_4,partie->tuiles[numTuile].X_5,partie->tuiles[numTuile].X_6};
 
 	partie->tuiles[numTuile].orientation='N';
+	partie->tuiles[numTuile].nbCasesRecouvertes=0;
 
 	int ind=0;
 	for (int i=pos_ligne; i<pos_ligne+3 ;i++){
 		for (int j=pos_col; j<pos_col+2 ;j++){
 			partie->plateau[i][j] = placement[ind];
+			partie->plateauIDmax[i][j] = numTuile;
 			ind++;
 		}
 	}
@@ -214,8 +220,11 @@ int LoadTuiles(char* filepath,Tuile gameTuiles[MAXTUILES]){
     		fgets ( line, sizeof line, fichier );
         	gameTuiles[id_tuile].X_5 = line[0];
         	gameTuiles[id_tuile].X_6 = line[2];
-			// Changement de l'orientation
-			gameTuiles[id_tuile].orientation='V';
+
+		// Changement de l'orientation
+		gameTuiles[id_tuile].orientation='V';
+
+		// Initialisation du recouvrement
 		}
 		fclose(fichier);
 		return nbTuiles;
@@ -250,17 +259,21 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 		//******************************
 	    char word[50];
 	    int nbTuiles=0;
-     	
+
      	// Récupération de la taille du plateau
      	fscanf(fichier, "%s", word);
 		game->taille=atoi(word);
 		game->plateau=alloc_int_array(atoi(word),atoi(word));
-		initPlateau(game->plateau,atoi(word));
+		initPlateau(game->plateau,atoi(word),0);
 
+		game->plateauIDmax=alloc_int_array(atoi(word),atoi(word));
+		initPlateau(game->plateauIDmax,atoi(word),-1);
+		
 		// Récupération du nombre de tuiles
      	fscanf(fichier, "%s", word);
 		nbTuiles=atoi(word);
 		game->nbTuiles=nbTuiles;
+		game->nbTuilesPose=1;
 
 		// Copie des tuiles
  		for(int nbImport=0;nbImport<nbTuiles;nbImport++){
@@ -295,6 +308,7 @@ Tuile* randomTuile(int nb){
 	Tuile* tabTuile = malloc(nb*sizeof(Tuile));
 	for(i = 0; i < nb; i++){
 	        tabTuile[i].orientation='V';
+		tabTuile[i].nbCasesRecouvertes=0;
 		tabTuile[i].id = i;
 		tabTuile[i].X_1 = cases[randomMinMax(0, 5)];
 		tabTuile[i].X_2 = cases[randomMinMax(0, 5)];
@@ -335,15 +349,43 @@ Tuile copyTuile(Tuile tuileACopier){
 //	GESTION DU PLATEAU
 // ######################################
 
-int placeTuile(Game* game, int id, int x, int y, int** previous){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
+int placeTuile(Game* game, int id, int x, int y, int** previous, int** previousIDmax, int* previousNBCasesRec){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
 	Tuile tuile = game -> tuiles[id];
-
 	if(!canPlaceTuile(*game, id, x, y)){
 		printf("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
 		return EXIT_FAILURE;
 	}
-	previous=saveGame(game,previous);
 
+ 
+	int TRT=testRecouvrementTotal(game,id,x,y,previousNBCasesRec);
+	
+	if (TRT!=-1){
+	  printf("Vous recouvrez totalement la tuile d'id %d.\n",TRT);
+	  return EXIT_FAILURE;
+	};
+
+	saveGame(game,previous,previousIDmax);
+	
+	game->tuiles[id].nbCasesRecouvertes=0;
+
+	if (game->tuiles[id].orientation=='N' || game->tuiles[id].orientation=='S'){
+	  game->plateauIDmax[x][y]=id;
+	  game->plateauIDmax[x][y+1]=id;
+	  game->plateauIDmax[x+1][y]=id;
+	  game->plateauIDmax[x+1][y+1]=id;
+	  game->plateauIDmax[x+2][y]=id;
+	  game->plateauIDmax[x+2][y+1]=id;
+	}
+
+	else{
+	  game->plateauIDmax[x][y]=id;
+	  game->plateauIDmax[x][y+1]=id;
+	  game->plateauIDmax[x][y+2]=id;
+	  game->plateauIDmax[x+1][y]=id;
+	  game->plateauIDmax[x+1][y+1]=id;
+	  game->plateauIDmax[x+1][y+2]=id;
+	}
+	
 	switch(game -> tuiles[id].orientation){
 
 		case 'N':{ 
@@ -444,6 +486,206 @@ int canPlaceTuile(Game game, int id, int x, int y){ //Reste a traiter le cas de 
 	return recouvreUneTuile;
 }
 
+void copieNBCasesRec(Game* game, int id, int x, int y,int* copie){
+  int ID;
+  if (game->tuiles[id].orientation=='N' || game->tuiles[id].orientation == 'S'){
+    ID=game->plateauIDmax[x][y];
+    if (ID!=-1) copie[0]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x][y+1];
+    if (ID!=-1) copie[1]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x+1][y];
+    if (ID!=-1) copie[2]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x+1][y+1];
+    if (ID!=-1) copie[3]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x+2][y];
+    if (ID!=-1) copie[4]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x+2][y+1];
+    if (ID!=-1) copie[5]=game->tuiles[ID].nbCasesRecouvertes;
+  }
+  else{
+    ID=game->plateauIDmax[x][y];
+    if (ID!=-1) copie[0]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x][y+1];
+    if (ID!=-1) copie[1]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x][y+2];
+    if (ID!=-1) copie[2]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x+1][y];
+    if (ID!=-1) copie[3]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x+1][y+1];
+    if (ID!=-1) copie[4]=game->tuiles[ID].nbCasesRecouvertes;
+    ID=game->plateauIDmax[x+1][y+2];
+    if (ID!=-1) copie[5]=game->tuiles[ID].nbCasesRecouvertes;
+  }
+}
+
+
+void retablishNBCasesRec(Game* game, int id, int x, int y,int* copie){
+  int ID;
+  if (game->tuiles[id].orientation=='N' || game->tuiles[id].orientation == 'S'){
+
+    ID=game->plateauIDmax[x][y];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[0];
+    ID=game->plateauIDmax[x][y+1];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[1];
+    ID=game->plateauIDmax[x+1][y];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[2];
+    ID=game->plateauIDmax[x+1][y+1];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[3];
+    ID=game->plateauIDmax[x+2][y];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[4];
+    ID=game->plateauIDmax[x+2][y+1];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[5];
+
+  }
+  
+  else{
+    ID=game->plateauIDmax[x][y];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[0];
+    ID=game->plateauIDmax[x][y+1];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[1];
+    ID=game->plateauIDmax[x][y+2];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[2];
+    ID=game->plateauIDmax[x+1][y];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[3];
+    ID=game->plateauIDmax[x+1][y+1];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[4];
+    ID=game->plateauIDmax[x+1][y+2];
+    if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[5];
+
+  }
+}
+
+
+
+int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesRec){
+  int* copieNBCasesRecouverte=(int*)malloc(6*sizeof(int));
+  copieNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+  int idmax;
+  Tuile tuile = game -> tuiles[id];
+
+  if (tuile.orientation=='N' || tuile.orientation == 'S'){
+
+    idmax=game->plateauIDmax[x][y];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes == 5){
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x][y+1];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    
+    idmax=game->plateauIDmax[x+1][y];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x+1][y+1];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x+2][y];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x+2][y+1];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+  }
+	  
+
+  else{
+
+    idmax=game->plateauIDmax[x][y];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes == 5){
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x][y+1];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x][y+2];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x+1][y];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x+1][y+1];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }
+    
+    idmax=game->plateauIDmax[x+1][y+2];
+    if (idmax!=-1){
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+	return idmax;
+      }
+      game->tuiles[idmax].nbCasesRecouvertes++;
+    }    
+  }
+
+  previousNBCasesRec[0]=copieNBCasesRecouverte[0];
+  previousNBCasesRec[1]=copieNBCasesRecouverte[1];
+  previousNBCasesRec[2]=copieNBCasesRecouverte[2];
+  previousNBCasesRec[3]=copieNBCasesRecouverte[3];
+  previousNBCasesRec[4]=copieNBCasesRecouverte[4];
+  previousNBCasesRec[5]=copieNBCasesRecouverte[5];
+  return -1;
+}
+
 char printCase(Game game, int x, int y){
 	return (char)game.plateau[x][y];
 }
@@ -460,6 +702,9 @@ Tuile newTuile(int id, char x1, char x2, char x3, char x4, char x5, char x6){
 	return tuile;
 }
 
+
+
+
 // ######################################
 //	GESTION DE LA PARTIE
 // ######################################
@@ -473,12 +718,15 @@ int startGame(int typeGame){
 	//************************ws*********
 	Game* game=malloc(sizeof(Game));	
 	Tuile* gameTuiles = malloc(MAXTUILES * sizeof(Tuile));
-	int** gamePlateau;	
+	int** gamePlateau;
+	int** gamePlateauIDmax;
 	int** previous;
+	int** previousIDmax;
+	int* previousNBCasesRec;
 
 	int nb_tuiles=0, choix=0 ,id_Tuile = -1,id_Tuile_prec = -1;
-	int x = -1;
-	char y = '^', orientation = 'V';
+	int x = -1, previousx = -1;
+	char y = '^',previousy='^', orientation = 'V';
 	int accepte = 0 ,dep = 0;
 
 	//**********************************
@@ -513,10 +761,15 @@ int startGame(int typeGame){
 				else{
 					// Création du plateau de jeu de taille n*n
 					gamePlateau = alloc_int_array(size, size);
-					initPlateau(gamePlateau,size);
+					initPlateau(gamePlateau,size,0);
+
+					// Création du plateau des ID maximals de taille n*n
+					gamePlateauIDmax = alloc_int_array(size, size);
+					initPlateau(gamePlateauIDmax,size,-1);
 
 					// Attribution du jeu 
 					game->plateau = gamePlateau;
+					game->plateauIDmax = gamePlateauIDmax;
 					game->tuiles = gameTuiles;
 					game->nbTuiles = nb_tuiles;
 					game->nbTuilesPose=1;
@@ -555,8 +808,13 @@ int startGame(int typeGame){
 		}
 	}
 	previous = alloc_int_array(game->taille,game->taille);
-	initPlateau(previous,game->taille);
+	initPlateau(previous,game->taille,0);
 
+	previousIDmax = alloc_int_array(game->taille,game->taille); 
+	initPlateau(previous,game->taille,-1);
+
+	previousNBCasesRec = (int*)malloc(6*sizeof(int));
+	
 	//**********************************
 	// Lancement du jeu 
 	//**********************************
@@ -568,8 +826,9 @@ int startGame(int typeGame){
 	 	printf("1 - Voir les tuiles paramètrés\n");
 	 	printf("2 - Voir le plateau de jeu\n");
 	 	printf("3 - Poser une tuile\n");
-	 	printf("4 - Voulez-vous annuler votre choix\n");
-		if (game->nbTuilesPose==game->nbTuiles){
+	 	printf("4 - Annuler l'action précédente\n");
+		if (game->nbTuilesPose==
+		    game->nbTuiles){
 		  printf("5 - Terminer la partie\n");
 		}
 		printf("0 - Quitter la partie\n");
@@ -596,7 +855,7 @@ int startGame(int typeGame){
 		       	if(id_Tuile < 0 || id_Tuile >= game->nbTuiles) 
 		       		printf("ID incorrect ! Saisir un ID entre 0 et %d\n", game->nbTuiles-1);//Si Id incorrect alors retour aux choix
 				else if (game->tuiles[id_Tuile].orientation != 'V') 
-					printf("ID indisponible ! La tuile %d est déjà plac ée.\n",id_Tuile);//si la tuile est déjà placé, on retourne aux choix					
+					printf("ID indisponible ! La tuile %d est déjà placée.\n",id_Tuile);//si la tuile est déjà placé, on retourne aux choix					
 				//sinon, on peut continuer
 				else {				
         			while(accepte == 0 ){ //ordonée
@@ -643,16 +902,18 @@ int startGame(int typeGame){
 				    	purger();
 				  	}
 				  
-				  	if(!placeTuile(game, id_Tuile, x, (int) y, previous)){
+				  	if(!placeTuile(game, id_Tuile, x, (int) y, previous,previousIDmax,previousNBCasesRec)){
 				    	id_Tuile_prec=id_Tuile;
 				    	printf("Placement réalisé\n");
 				    	game->nbTuilesPose++;
 				    	dep=1;
-				  	}
+					previousx=x;
+					previousy=y;
+			        	}
 				  
 				  	else{
 				    	printf("Placement refusé\n"	);
-				    	game->tuiles[id_Tuile].orientation='V';
+				 	game->tuiles[id_Tuile].orientation='V';
 				  }
 				  
 				}
@@ -663,8 +924,8 @@ int startGame(int typeGame){
 			case 4:{
 				if (matchEmpty(previous, game->taille)){
 					if (dep==1) {
-					  getPrevious(game, previous,id_Tuile_prec);
-						printf("Vous avez récupérer le tableau précedent\n");
+					  getPrevious(game, previous, previousIDmax, id_Tuile_prec,previousNBCasesRec,previousx,previousy);
+						printf("Vous avez récupéré le tableau précedent\n");
 						game->nbTuilesPose--;
 						dep=0;
 					}
@@ -694,9 +955,11 @@ int startGame(int typeGame){
 				for(int i=0;i<game->taille;i++){
 					free(game->plateau[i]);
 					free(previous[i]);
+					free(game->plateauIDmax[i]);
 				}
 				free(previous);
 				free(game->plateau);
+				free(game->plateauIDmax);
 				free(game->tuiles);
 				free(game);
 				stop = 1;
@@ -708,22 +971,28 @@ int startGame(int typeGame){
 	return EXIT_SUCCESS;
 }
 
-int** saveGame(Game* game, int** previous){
+void saveGame(Game* game, int** previous, int** previousIDmax){
 	int i,j;
-	for (i=0; i<(game->taille); i++)
-		for (j=0; j<(game->taille); j++)
-			previous[i][j]=game->plateau[i][j];
-	return previous;
+	for (i=0; i<(game->taille); i++){
+	  for (j=0; j<(game->taille); j++){
+	    previous[i][j]=game->plateau[i][j];
+	    previousIDmax[i][j]=game->plateauIDmax[i][j];
+	  }
+	}
 }
 
-int getPrevious (Game* game ,int** previous,int id_tuile_removed){
+int getPrevious (Game* game ,int** previous,int** previousIDmax, int id_tuile_removed,int* previousNBCasesRec, int x,char y){
 	int i,j;
 	game->tuiles[id_tuile_removed].orientation='V';
 	for (i=0; i<(game->taille); i++){
 		for (j=0; j<(game->taille); j++){
 			game->plateau[i][j]=previous[i][j];
+			game->plateauIDmax[i][j]=previousIDmax[i][j];
 		}
 	}
+
+	retablishNBCasesRec(game,id_tuile_removed,x,y,previousNBCasesRec);
+        
 	return 1;
 }
 

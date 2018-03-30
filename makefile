@@ -1,4 +1,4 @@
-CC = gcc -Wall -Wextra
+CC = gcc -Wall -Wextra -g
 CCUNIT = -lcunit
 
 SRCDIR = src
