@@ -375,17 +375,27 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 		// Initialisation des variables
 		//******************************
 	    char word[50];
+	    int size;
 	    int nbTuiles=0;
 
      	// Récupération de la taille du plateau
      	fscanf(fichier, "%s", word);
-		game->taille=atoi(word);
-		game->plateau=alloc_int_array(atoi(word),atoi(word));
-		initPlateau(game->plateau,atoi(word),0);
-
-		game->plateauIDmax=alloc_int_array(atoi(word),atoi(word));
-		initPlateau(game->plateauIDmax,atoi(word),-1);
 		
+		size = atoi(word);
+		game->taille=size;
+
+		game->plateau=alloc_int_array(size,size);
+		initPlateau(game->plateau,size,0);
+		game->plateauIDmax=alloc_int_array(size,size);
+		initPlateau(game->plateauIDmax,size,-1);
+		game->previous = alloc_int_array(size,size);
+		initPlateau(game->previous,game->taille,0);
+		game->previousIDmax = alloc_int_array(size,size);
+		initPlateau(game->previousIDmax,game->taille,-1);
+		game->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+
+
+
 		// Récupération du nombre de tuiles
      	fscanf(fichier, "%s", word);
 		nbTuiles=atoi(word);
@@ -462,21 +472,21 @@ Tuile copyTuile(Tuile tuileACopier){
 //	GESTION DU PLATEAU
 // ######################################
 
-int placeTuile(Game* game, int id, int x, int y, int** previous, int** previousIDmax, int* previousNBCasesRec){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
+int placeTuile(Game* game, int id, int x, int y){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
 	if(!canPlaceTuile(*game, id, x, y)){
 		printf("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
 		return EXIT_FAILURE;
 	}
 	/*Déclaration de variables*/
 	Tuile tuile = game -> tuiles[id]; 
-	int TRT=testRecouvrementTotal(game,id,x,y,previousNBCasesRec);
+	int TRT=testRecouvrementTotal(game,id,x,y);
 	
 	if (TRT!=-1){
 	  printf("Vous recouvrez totalement la tuile d'id %d.\n",TRT);
 	  return EXIT_FAILURE;
 	};
 
-	saveGame(game,previous,previousIDmax);
+	saveGame(game);
 	game->tuiles[id].nbCasesRecouvertes=0;
 
 	/*Gestion du plateau de recouvrement */
@@ -668,14 +678,13 @@ void retablishNBCasesRec(Game* game, int id, int x, int y,int* copie){
 
 
 
-int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesRec){
+int testRecouvrementTotal(Game* game, int id, int x, int y){
   int* copieNBCasesRecouverte=(int*)malloc(6*sizeof(int));
   copieNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
   int idmax;
   Tuile tuile = game -> tuiles[id];
 
   if (tuile.orientation=='N' || tuile.orientation == 'S'){
-
     idmax=game->plateauIDmax[x][y];
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes == 5){
@@ -733,7 +742,6 @@ int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesR
 	  
 
   else{
-
     idmax=game->plateauIDmax[x][y];
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes == 5){
@@ -788,12 +796,12 @@ int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesR
     }    
   }
 
-  previousNBCasesRec[0]=copieNBCasesRecouverte[0];
-  previousNBCasesRec[1]=copieNBCasesRecouverte[1];
-  previousNBCasesRec[2]=copieNBCasesRecouverte[2];
-  previousNBCasesRec[3]=copieNBCasesRecouverte[3];
-  previousNBCasesRec[4]=copieNBCasesRecouverte[4];
-  previousNBCasesRec[5]=copieNBCasesRecouverte[5];
+  game->previousNBCasesRec[0]=copieNBCasesRecouverte[0];
+  game->previousNBCasesRec[1]=copieNBCasesRecouverte[1];
+  game->previousNBCasesRec[2]=copieNBCasesRecouverte[2];
+  game->previousNBCasesRec[3]=copieNBCasesRecouverte[3];
+  game->previousNBCasesRec[4]=copieNBCasesRecouverte[4];
+  game->previousNBCasesRec[5]=copieNBCasesRecouverte[5];
   free(copieNBCasesRecouverte);
   return -1;
 }
@@ -828,12 +836,6 @@ int startGame(int typeGame){
 	// Déclaration des variables
 	//************************ws*********
 	Game* game=malloc(sizeof(Game));	
-	Tuile* gameTuiles = malloc(MAXTUILES * sizeof(Tuile));
-	int** gamePlateau;
-	int** gamePlateauIDmax;
-	int** previous;
-	int** previousIDmax;
-	int* previousNBCasesRec;
 
 	int nb_tuiles=0, choix=0 ,id_Tuile = -1,id_Tuile_prec = -1;
 	int x = -1, previousx = -1;
@@ -846,11 +848,14 @@ int startGame(int typeGame){
 	// Chargement des paramètres de partie
 	//**********************************
 	switch(typeGame){
+
 		case 1:{	
+			// Initialisation des tuiles
 			while (nb_tuiles==0){
 				LOG_BOLDRED("\t\t\t\tParamètrage des tuiles \n");
 				printf("Combien de tuiles voulez vous générer ? ");
 				scanf("%d", &nb_tuiles);
+				purger();
 				if(nb_tuiles <= 0){
 					printf("Veuillez saisir un nombre entre 1 et %d\n", MAXTUILES);
 					printf("\n");
@@ -858,45 +863,49 @@ int startGame(int typeGame){
 				}
 				else{
 					clearScreen();
-					gameTuiles = randomTuile(nb_tuiles);
+					game->tuiles = malloc(MAXTUILES * sizeof(Tuile));
+					game->tuiles = randomTuile(nb_tuiles);
+					game->nbTuiles = nb_tuiles;
+					game->nbTuilesPose=1;
 				}
-				purger();
 			}
 
+			// Initialisation du plateau
 			int size=0;
 			while (size <= 0 || size>=30){
 				LOG_BOLDRED("\t\t\t\tParamètrage du plateau \n");
 				printf("Quel doit-être la taille du plateau ? ");
 				scanf("%d", &size);
+				purger();
 				if(size <= 0 || size>=30){
 					printf("Veuillez saisir un nombre entre 1 et 30 \n");
 				}
 				else{
-					// Création du plateau de jeu de taille n*n
-					gamePlateau = alloc_int_array(size, size);
-					initPlateau(gamePlateau,size,0);
-
-					// Création du plateau des ID maximals de taille n*n
-					gamePlateauIDmax = alloc_int_array(size, size);
-					initPlateau(gamePlateauIDmax,size,-1);
-
 					// Attribution du jeu 
-					game->plateau = gamePlateau;
-					game->plateauIDmax = gamePlateauIDmax;
-					game->tuiles = gameTuiles;
-					game->nbTuiles = nb_tuiles;
-					game->nbTuilesPose=1;
 					game->taille=size;
+
+					// Création du plateau de jeu de taille n*n
+					game->plateau = alloc_int_array(size, size);
+					// Création du plateau des ID maximals de taille n*n					
+					game->plateauIDmax = alloc_int_array(size, size);
+					game->previous = alloc_int_array(size,size);
+					game->previousIDmax = alloc_int_array(size,size);
+					game->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+					// Initialisation des plateaux
+					initPlateau(game->plateau,size,0);
+					initPlateau(game->plateauIDmax,size,-1);
+					initPlateau(game->previous,size,0);
+					initPlateau(game->previousIDmax,size,-1);
 
 					//Placement de la premiere tuile
 					initPlacementTuileRandom(game);
 				}
-				purger();
 			}
+
 			break;
 		}
 		case 2:{
-			game->tuiles=gameTuiles;
+			game->tuiles = malloc(MAXTUILES * sizeof(Tuile));
 			char filepath[1024]={};
 			char filepathTuile[1024]={};
 
@@ -922,13 +931,6 @@ int startGame(int typeGame){
 			break;
 		}
 	}
-	previous = alloc_int_array(game->taille,game->taille);
-	initPlateau(previous,game->taille,0);
-
-	previousIDmax = alloc_int_array(game->taille,game->taille); 
-	initPlateau(previous,game->taille,-1);
-
-	previousNBCasesRec = (int*)malloc(6*sizeof(int));
 	
 	//**********************************
 	// Lancement du jeu 
@@ -1022,7 +1024,7 @@ int startGame(int typeGame){
 				    	}
 				  	}
 				  
-				  	if(!placeTuile(game, id_Tuile, x, (int) y, previous,previousIDmax,previousNBCasesRec)){
+				  	if(!placeTuile(game, id_Tuile, x, (int) y)){
 				    	id_Tuile_prec=id_Tuile;
 				    	printf("Placement réalisé\n");
 				    	game->nbTuilesPose++;
@@ -1041,9 +1043,9 @@ int startGame(int typeGame){
 			}
 
 			case 4:{
-				if (matchEmpty(previous, game->taille)){
+				if (matchEmpty(game)){
 					if (dep==1) {
-					  getPrevious(game, previous, previousIDmax, id_Tuile_prec,previousNBCasesRec,previousx,previousy);
+					  getPrevious(game,id_Tuile_prec,previousx,previousy);
 						printf("Vous avez récupéré le tableau précedent\n");
 						game->nbTuilesPose--;
 						dep=0;
@@ -1084,12 +1086,12 @@ int startGame(int typeGame){
 				for(int i=0;i<game->taille;i++){
 					free(game->plateau[i]);
 					free(game->plateauIDmax[i]);
-					free(previous[i]);
-					free(previousIDmax[i]);
+					free(game->previous[i]);
+					free(game->previousIDmax[i]);
 				}
-				free(previous);
-				free(previousIDmax);
-				free(previousNBCasesRec);
+				free(game->previous);
+				free(game->previousIDmax);
+				free(game->previousNBCasesRec);
 				free(game->plateau);
 				free(game->plateauIDmax);
 				free(game->tuiles);
@@ -1103,36 +1105,36 @@ int startGame(int typeGame){
 	return EXIT_SUCCESS;
 }
 
-void saveGame(Game* game, int** previous, int** previousIDmax){
+void saveGame(Game* game){
 	int i,j;
 	for (i=0; i<(game->taille); i++){
 	  for (j=0; j<(game->taille); j++){
-	    previous[i][j]=game->plateau[i][j];
-	    previousIDmax[i][j]=game->plateauIDmax[i][j];
+	    game->previous[i][j]=game->plateau[i][j];
+	    game->previousIDmax[i][j]=game->plateauIDmax[i][j];
 	  }
 	}
 }
 
-int getPrevious (Game* game ,int** previous,int** previousIDmax, int id_tuile_removed,int* previousNBCasesRec, int x,char y){
+int getPrevious (Game* game ,int id_tuile_removed,int x,char y){
 	int i,j;
 	game->tuiles[id_tuile_removed].orientation='V';
 	for (i=0; i<(game->taille); i++){
 		for (j=0; j<(game->taille); j++){
-			game->plateau[i][j]=previous[i][j];
-			game->plateauIDmax[i][j]=previousIDmax[i][j];
+			game->plateau[i][j]=game->previous[i][j];
+			game->plateauIDmax[i][j]=game->previousIDmax[i][j];
 		}
 	}
 
-	retablishNBCasesRec(game,id_tuile_removed,x,y,previousNBCasesRec);
+	retablishNBCasesRec(game,id_tuile_removed,x,y,game->previousNBCasesRec);
         
 	return 1;
 }
 
-int matchEmpty (int** previous, int taille){
+int matchEmpty (Game* game){
 	int i,j;
-	for (i=0; i<taille; i++){
-		for (j=0; j<taille; j++){
-			if (previous [i][j]!=0)
+	for (i=0; i<game->taille; i++){
+		for (j=0; j<game->taille; j++){
+			if (game->previous [i][j]!=0)
 				return EXIT_FAILURE;
 		}
 	}
