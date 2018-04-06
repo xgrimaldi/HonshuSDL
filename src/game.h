@@ -99,9 +99,9 @@ Tuile copyTuile(Tuile tuileACopier);
 * \brief Permet de changer l'orientation d'une tuile
 *
 * \param t Tuile qui doit subir la rotation
-* \return 0 si l'exécution s'est bien passée, 1 sinon
+* \return La tuile modifiée
 */
-int rotateTuile(Tuile t,char direction);
+Tuile rotateTuile(Tuile t,char direction);
 
 /**
 * \brief Créer une nouvelle tuile

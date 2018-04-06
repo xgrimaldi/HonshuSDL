@@ -23,42 +23,159 @@ int **alloc_int_array(int x, int y) {
 // ######################################
 
 void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles){
-	printf("\n\t\t Tuiles paramètrées\n");
+	printf("\n\t\t Tuiles disponibles\n");
 	int step=5;
 	for(int i=0;i<nbTuiles;i=i+step){
 		for(int j=0;j<step;j++){
 			if(i+j<nbTuiles){
-				printf(" %s ID:%d%s    \t",Color_Bold_White,gameTuiles[i+j].id,Color_end);
+				if(gameTuiles[i+j].orientation == 'E' || gameTuiles[i+j].orientation == 'W'){
+					printf(" %s   ID:%d%s    \t",Color_Bold_White,gameTuiles[i+j].id,Color_end);
+				}
+				else{
+					printf(" %s ID:%d%s    \t",Color_Bold_White,gameTuiles[i+j].id,Color_end);
+				}
 			}
 		}
 		printf("\n");
 		for(int j=0;j<step;j++){
 			if(i+j<nbTuiles){
-				printf("| ");
-				printIntToCharColor(gameTuiles[i+j].X_1);
-				printf(" | ");
-				printIntToCharColor(gameTuiles[i+j].X_2);
-				printf(" |\t");
+				switch(gameTuiles[i+j].orientation){
+					case 'N':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_1);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_2);
+						printf(" |\t");
+						break;
+					}
+					case 'V':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_1);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_2);
+						printf(" |\t");
+						break;
+					}
+					case 'E':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_5);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_3);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_1);
+						printf(" |\t");
+						break;
+					}
+					case 'W':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_2);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_4);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_6);
+						printf(" |\t");
+						break;
+					}
+					case 'S':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_6);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_5);
+						printf(" |\t");
+						break;
+					}
+				}
 			}
 		}
 		printf("\n");
 		for(int j=0;j<step;j++){
 			if(i+j<nbTuiles){
-				printf("| ");
-				printIntToCharColor(gameTuiles[i+j].X_3);
-				printf(" | ");
-				printIntToCharColor(gameTuiles[i+j].X_4);
-				printf(" |\t");
+				switch (gameTuiles[i+j].orientation){
+					case 'N':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_3);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_4);
+						printf(" |\t");
+						break;
+					}
+					case 'V':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_3);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_4);
+						printf(" |\t");
+						break;
+					}
+					case 'S':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_4);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_3);
+						printf(" |\t");
+						break;
+					}
+					case 'E':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_6);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_4);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_2);
+						printf(" |\t");
+						break;
+					}
+					case 'W':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_1);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_3);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_5);
+						printf(" |\t");
+						break;
+					}
+
+				}
 			}
 		}
 		printf("\n");
 		for(int j=0;j<step;j++){
 			if(i+j<nbTuiles){
-				printf("| ");
-				printIntToCharColor(gameTuiles[i+j].X_5);
-				printf(" | ");
-				printIntToCharColor(gameTuiles[i+j].X_6);
-				printf(" |\t");
+				switch(gameTuiles[i+j].orientation){
+					case 'N':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_5);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_6);
+						printf(" |\t");
+						break;
+					}
+					case 'V':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_5);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_6);
+						printf(" |\t");
+						break;
+					}
+					case 'S':{
+						printf("| ");
+						printIntToCharColor(gameTuiles[i+j].X_2);
+						printf(" | ");
+						printIntToCharColor(gameTuiles[i+j].X_1);
+						printf(" |\t");	
+						break;				
+					}
+					case 'W':{
+						printf("             \t");
+						break;
+					}
+					case 'E':{
+						printf("             \t");
+						break;
+					}
+				}
 			}
 		}
 		printf("\n\n");
@@ -162,14 +279,14 @@ void initPlacementTuile(Game* partie,int numTuile){
 		pos_ligne = ((partie->taille-1)/2)-1;
 		pos_col = ((partie->taille-1)/2)-1;
 	}
-	char placement[6]= {partie->tuiles[numTuile].X_1,partie->tuiles[numTuile].X_2,partie->tuiles[numTuile].X_3,partie->tuiles[numTuile].X_4,partie->tuiles[numTuile].X_5,partie->tuiles[numTuile].X_6};
+	char placement[6]= {partie->tuiles[numTuile].X_5,partie->tuiles[numTuile].X_3,partie->tuiles[numTuile].X_1,partie->tuiles[numTuile].X_6,partie->tuiles[numTuile].X_4,partie->tuiles[numTuile].X_2};
 
-	partie->tuiles[numTuile].orientation='N';
+	partie->tuiles[numTuile].orientation='E';
 	partie->tuiles[numTuile].nbCasesRecouvertes=0;
 
 	int ind=0;
-	for (int i=pos_ligne; i<pos_ligne+3 ;i++){
-		for (int j=pos_col; j<pos_col+2 ;j++){
+	for (int i=pos_ligne; i<pos_ligne+2 ;i++){
+		for (int j=pos_col; j<pos_col+3 ;j++){
 			partie->plateau[i][j] = placement[ind];
 			partie->plateauIDmax[i][j] = numTuile;
 			ind++;
@@ -320,15 +437,11 @@ Tuile* randomTuile(int nb){
 	return tabTuile;
 }
 
-int rotateTuile(Tuile t,char direction){
-	if (direction != 'N' && direction !='S' && direction != 'W' && direction != 'E'){
-		t.orientation=t.orientation;
-		return EXIT_FAILURE;
-	}
-	else{
+Tuile rotateTuile(Tuile t,char direction){
+	if (direction == 'N' || direction == 'S' || direction == 'W' || direction == 'E'){
 		t.orientation=direction;
-		return EXIT_SUCCESS;
 	}
+	return t;
 }
 
 Tuile copyTuile(Tuile tuileACopier){
@@ -350,13 +463,12 @@ Tuile copyTuile(Tuile tuileACopier){
 // ######################################
 
 int placeTuile(Game* game, int id, int x, int y, int** previous, int** previousIDmax, int* previousNBCasesRec){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
-	Tuile tuile = game -> tuiles[id];
 	if(!canPlaceTuile(*game, id, x, y)){
 		printf("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
 		return EXIT_FAILURE;
 	}
-
- 
+	/*Déclaration de variables*/
+	Tuile tuile = game -> tuiles[id]; 
 	int TRT=testRecouvrementTotal(game,id,x,y,previousNBCasesRec);
 	
 	if (TRT!=-1){
@@ -365,9 +477,9 @@ int placeTuile(Game* game, int id, int x, int y, int** previous, int** previousI
 	};
 
 	saveGame(game,previous,previousIDmax);
-	
 	game->tuiles[id].nbCasesRecouvertes=0;
 
+	/*Gestion du plateau de recouvrement */
 	if (game->tuiles[id].orientation=='N' || game->tuiles[id].orientation=='S'){
 	  game->plateauIDmax[x][y]=id;
 	  game->plateauIDmax[x][y+1]=id;
@@ -376,7 +488,6 @@ int placeTuile(Game* game, int id, int x, int y, int** previous, int** previousI
 	  game->plateauIDmax[x+2][y]=id;
 	  game->plateauIDmax[x+2][y+1]=id;
 	}
-
 	else{
 	  game->plateauIDmax[x][y]=id;
 	  game->plateauIDmax[x][y+1]=id;
@@ -386,6 +497,7 @@ int placeTuile(Game* game, int id, int x, int y, int** previous, int** previousI
 	  game->plateauIDmax[x+1][y+2]=id;
 	}
 	
+	/*Gestion du plateau*/
 	switch(game -> tuiles[id].orientation){
 
 		case 'N':{ 
@@ -551,7 +663,6 @@ void retablishNBCasesRec(Game* game, int id, int x, int y,int* copie){
     if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[4];
     ID=game->plateauIDmax[x+1][y+2];
     if (ID!=-1) game->tuiles[ID].nbCasesRecouvertes=copie[5];
-
   }
 }
 
@@ -567,17 +678,17 @@ int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesR
 
     idmax=game->plateauIDmax[x][y];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes == 5){
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes == 5){
+		return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x][y+1];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -586,35 +697,35 @@ int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesR
     idmax=game->plateauIDmax[x+1][y];
     if (idmax!=-1){
       if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+1][y+1];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+2][y];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+2][y+1];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -625,53 +736,53 @@ int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesR
 
     idmax=game->plateauIDmax[x][y];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes == 5){
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes == 5){
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x][y+1];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x][y+2];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+1][y];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+1][y+1];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+1][y+2];
     if (idmax!=-1){
-      if (game->tuiles[idmax].nbCasesRecouvertes==5){
-	retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-	return idmax;
+    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
+			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }    
@@ -683,6 +794,7 @@ int testRecouvrementTotal(Game* game, int id, int x, int y,int* previousNBCasesR
   previousNBCasesRec[3]=copieNBCasesRecouverte[3];
   previousNBCasesRec[4]=copieNBCasesRecouverte[4];
   previousNBCasesRec[5]=copieNBCasesRecouverte[5];
+  free(copieNBCasesRecouverte);
   return -1;
 }
 
@@ -699,10 +811,9 @@ Tuile newTuile(int id, char x1, char x2, char x3, char x4, char x5, char x6){
 	tuile.X_4=x4;
 	tuile.X_5=x5;
 	tuile.X_6=x6;
+	tuile.orientation='V';
 	return tuile;
 }
-
-
 
 
 // ######################################
@@ -728,6 +839,8 @@ int startGame(int typeGame){
 	int x = -1, previousx = -1;
 	char y = '^',previousy='^', orientation = 'V';
 	int accepte = 0 ,dep = 0;
+	char orientation_selected='V';
+	int tuile_selected=-1;
 
 	//**********************************
 	// Chargement des paramètres de partie
@@ -819,17 +932,16 @@ int startGame(int typeGame){
 	// Lancement du jeu 
 	//**********************************
 	int stop = 0;
-	choix=0;
 	while(stop == 0){
-
+		choix=0;
 		printf("\nQue voulez-vous faire ?\n");
 	 	printf("1 - Voir les tuiles paramètrés\n");
 	 	printf("2 - Voir le plateau de jeu\n");
 	 	printf("3 - Poser une tuile\n");
 	 	printf("4 - Annuler l'action précédente\n");
-		if (game->nbTuilesPose==
-		    game->nbTuiles){
-		  printf("5 - Terminer la partie\n");
+	 	printf("5 - Changer l'orientation d'une tuile\n");
+		if (game->nbTuilesPose == game->nbTuiles){
+		  printf("6 - Terminer la partie\n");
 		}
 		printf("0 - Quitter la partie\n");
 		
@@ -847,6 +959,11 @@ int startGame(int typeGame){
 				clearScreen();
 				// Affichage du plateau
 				printPlateau(game->plateau,game->taille);
+				// Affichage des tuiles disponibles 
+				if(game->nbTuiles > 0)
+					printTuiles(game->tuiles,game->nbTuiles);
+				else
+					printf("Aucune tuile: Vérifier le paramètrage ! \n");
 				break;
 			}
 			case 3:{ 
@@ -907,8 +1024,8 @@ int startGame(int typeGame){
 				    	printf("Placement réalisé\n");
 				    	game->nbTuilesPose++;
 				    	dep=1;
-					previousx=x;
-					previousy=y;
+						previousx=x;
+						previousy=y;
 			        	}
 				  
 				  	else{
@@ -936,12 +1053,22 @@ int startGame(int typeGame){
 				
 				break;
 			}
+		    case 5:{
+		    	tuile_selected=-1;
+		    	printf("Quelle tuile voulez-vous changer d'orientation \n?");
+		    	scanf("%d",&tuile_selected);
 
-
-			 case 5:{
-			  
+		    	printf("Quelle est l'orientation souhaité ? (N/E/W/S)\n");
+		    	purger();
+		    	scanf(" %c",&orientation_selected);
+		    	if (tuile_selected != -1 && (orientation_selected == 'N' || orientation_selected == 'S' || orientation_selected == 'E' || orientation_selected == 'W')) {
+					game->tuiles[tuile_selected]=rotateTuile(game->tuiles[tuile_selected],orientation_selected);
+					printf("Orientaion de la tuile: %c",game->tuiles[tuile_selected].orientation);
+				}
+				break;
+		    }
+			case 6:{
 			  if (game->nbTuilesPose==game->nbTuiles){
-			    
 			    clearScreen();
 			    printf("Vous avez marqué 42 points !");
 			  
@@ -949,15 +1076,18 @@ int startGame(int typeGame){
 			    stop=1;
 			  }
 			  break;
-		        }
-			   
+		    }
+			/*QUITTER LE PROGRAMME*/
 			case 0:{
 				for(int i=0;i<game->taille;i++){
 					free(game->plateau[i]);
-					free(previous[i]);
 					free(game->plateauIDmax[i]);
+					free(previous[i]);
+					free(previousIDmax[i]);
 				}
 				free(previous);
+				free(previousIDmax);
+				free(previousNBCasesRec);
 				free(game->plateau);
 				free(game->plateauIDmax);
 				free(game->tuiles);
