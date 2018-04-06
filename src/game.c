@@ -902,14 +902,16 @@ int startGame(int typeGame){
 
 			printf("Quel est le chemin du fichier 'Partie' ? ...\n");
 			scanf("%s",filepath);
+			purger();
 			if (!fileExist(filepath)){
 				printf("Fichier non existant");
 				return EXIT_FAILURE;
 			}
-			purger();
+
 
 			printf("Quel est le chemin du fichier 'Tuiles' ? ...\n");
 			scanf("%s",filepathTuile);
+			purger();
 			if (!fileExist(filepathTuile)){
 				printf("Fichier non existant");
 				return EXIT_FAILURE;
@@ -969,6 +971,7 @@ int startGame(int typeGame){
 			case 3:{ 
 			  	printf("Quelle tuile voulez vous placer ? : ");
 				scanf("%d", &id_Tuile);
+				purger();
 		       	if(id_Tuile < 0 || id_Tuile >= game->nbTuiles) 
 		       		printf("ID incorrect ! Saisir un ID entre 0 et %d\n", game->nbTuiles-1);//Si Id incorrect alors retour aux choix
 				else if (game->tuiles[id_Tuile].orientation != 'V') 
@@ -978,17 +981,18 @@ int startGame(int typeGame){
         			while(accepte == 0 ){ //ordonée
 						printf("À quelle ordonée voulez vous placer la tuile %d : ", id_Tuile);
 						scanf("%d", &x);
+						purger();
 						if(x < 0 || x >= game->taille) 
 							printf("Ordonée incorrect ! Saisir un nombre entre 0 et %d\n", game->taille);
 						else 
 							accepte = 1;
-						purger();
 				  	}
 
 				  	accepte = 0;
 				  	while(accepte == 0){ //abcisse
 				    	printf("À quelle abcisse voulez vous placer la tuile %d : ", id_Tuile);
 				    	scanf("%c", &y);
+    					purger();
 				    	if(!(y >= 97 && y < 97+game->taille) && !(y >= 65 && y < 65+game->taille)) printf("Abcisse incorrect ! Saisir une lettre entre A et %c\n", (char)(65+game->taille-1)); // On est contraint de supposer n <= 26
 				    	else {
 				      		accepte = 1;
@@ -999,13 +1003,13 @@ int startGame(int typeGame){
 				      		else
 				      			y -= 65;
 				    	}
-				    	purger();
 				  	}
 
 				  	accepte = 0;
 				  	while(accepte == 0){ //orientation
 				    	printf("Quelle orientation pour la tuile %d : ", id_Tuile);
 				    	scanf(" %c", &orientation);
+						purger();
 				    	if( orientation != 'N' && orientation != 'n' && orientation != 'E' && orientation != 'e' && orientation != 'S' && orientation != 's' && orientation != 'W' && orientation != 'w'){
 				      		printf("Orientation inconnue (saisir 'N', 'E', 'S' ou 'W')\n"); // On est contraint de supposer n <= 26
 				    	}
@@ -1016,7 +1020,6 @@ int startGame(int typeGame){
 				      		accepte = 1;
 				      		game->tuiles[id_Tuile].orientation = orientation;
 				    	}
-				    	purger();
 				  	}
 				  
 				  	if(!placeTuile(game, id_Tuile, x, (int) y, previous,previousIDmax,previousNBCasesRec)){
@@ -1030,9 +1033,8 @@ int startGame(int typeGame){
 				  
 				  	else{
 				    	printf("Placement refusé\n"	);
-				 	game->tuiles[id_Tuile].orientation='V';
-				  }
-				  
+				 		game->tuiles[id_Tuile].orientation='V';
+				  	}  
 				}
 				accepte = 0;
 				break;
