@@ -10,16 +10,20 @@ all: $(BINDIR)/honshu $(BINDIR)/test
 	
 #Fichier Objets
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	$(CC) -c -o $@ $^
 
 $(OBJDIR)/%.o: $(TESTDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	$(CC) -c -o $@ $^
 
 #Fichier BIN
 $(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o
+	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^
 
 $(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o
+	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^ $(CCUNIT)
 
 clean:
