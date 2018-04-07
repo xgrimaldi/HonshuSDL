@@ -1,4 +1,4 @@
 #FICHIERS A NE PAS PRENDRE EN COMPTE
-bin/honshu
-bin/test
+*/bin/honshu
+*/bin/test
 obj/*
