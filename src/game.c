@@ -139,7 +139,7 @@ int startGame(int typeGame){
 
 			// Initialisation du plateau
 			int size=0;
-			while (size <= 0 || size>=30){
+			while (size <= 0 || size > 30){
 				LOG_BOLDRED("\t\t\t\tParamètrage du plateau \n");
 				printf("Quel doit-être la taille du plateau ? ");
 				scanf("%d", &size);
