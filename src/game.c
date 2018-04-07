@@ -144,7 +144,7 @@ int startGame(int typeGame){
 				printf("Quel doit-être la taille du plateau ? ");
 				scanf("%d", &size);
 				purger();
-				if(size <= 0 || size>=30){
+				if(size <= 0 || size > 30){
 					printf("Veuillez saisir un nombre entre 1 et 30 \n");
 				}
 				else{
@@ -206,7 +206,7 @@ int startGame(int typeGame){
 	while(stop == 0){
 		choix=0;
 		printf("\nQue voulez-vous faire ?\n");
-	 	printf("1 - Voir les tuiles paramètrés\n");
+	 	printf("1 - Voir les tuiles paramétrées\n");
 	 	printf("2 - Voir le plateau de jeu\n");
 	 	printf("3 - Poser une tuile\n");
 	 	printf("4 - Annuler l'action précédente\n");

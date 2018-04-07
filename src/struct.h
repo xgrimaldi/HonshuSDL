@@ -32,6 +32,7 @@
 #define Color_Bold_Blue "\033[1m\033[34m" 
 #define Color_Bold_Magenta "\033[1m\033[35m"
 #define Color_Bold_White "\033[1m\033[37m" 
+#define Color_Bold_Gray "\033[1m\033[36m"
 #define Color_end "\033[0m" // To flush out prev settings
 #define LOG_BOLDRED(X) printf("%s %s %s",Color_Bold_Red,X,Color_end)
 

@@ -148,13 +148,13 @@ void printIntToCharColor(int car){
 	if (car=='L')
 		printf("%s%c%s",Color_Bold_Blue,car,Color_end);
 	else if (car=='P')
-		printf("%s%c%s",Color_Bold_Green,car,Color_end);
+		printf("%s%c%s",Color_Bold_Yellow,car,Color_end);
 	else if (car=='F')
 		printf("%s%c%s",Color_Bold_Green,car,Color_end);
 	else if (car=='V')
 		printf("%s%c%s",Color_Bold_Magenta,car,Color_end);
 	else if (car=='U')
-		printf("%s%c%s",Color_Bold_Yellow,car,Color_end);
+		printf("%s%c%s",Color_Bold_Gray,car,Color_end);
 	else if (car=='R')
 		printf("%s%c%s",Color_Bold_Red,car,Color_end);
 	else
