@@ -2,12 +2,10 @@
 * PROJET INFO - LES TUILEURS
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-
 #include "game.h"
+#include "tuile.h"
+#include "plateau.h"
+#include "struct.h"
 
 int main() {
 	/*********************************
