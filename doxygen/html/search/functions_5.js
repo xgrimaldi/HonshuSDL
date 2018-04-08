@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['initplacementtuile',['initPlacementTuile',['../game_8h.html#a49be6987859227dc208a808d0f432fce',1,'game.c']]],
-  ['initplacementtuilerandom',['initPlacementTuileRandom',['../game_8h.html#a5dc629e7b272de361e53b04106d5b500',1,'game.c']]],
-  ['initplateau',['initPlateau',['../game_8h.html#a08304262f49004c69c1d8c659294f410',1,'game.c']]],
-  ['inplateau',['inPlateau',['../game_8h.html#adcd014e149f93f35d3150ff6f8dc4a06',1,'game.c']]]
+  ['initplacementtuile',['initPlacementTuile',['../plateau_8h.html#a49be6987859227dc208a808d0f432fce',1,'plateau.c']]],
+  ['initplacementtuilerandom',['initPlacementTuileRandom',['../plateau_8h.html#a5dc629e7b272de361e53b04106d5b500',1,'plateau.c']]],
+  ['initplateau',['initPlateau',['../plateau_8h.html#ad85467f68165f377538995d762beb1f6',1,'plateau.c']]],
+  ['inplateau',['inPlateau',['../plateau_8h.html#adcd014e149f93f35d3150ff6f8dc4a06',1,'plateau.c']]]
 ];

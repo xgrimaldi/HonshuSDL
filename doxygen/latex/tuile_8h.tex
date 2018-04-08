@@ -1,0 +1,234 @@
+\hypertarget{tuile_8h}{}\section{/home/sphinx06/\+Documents/\+E\+N\+S\+I\+I\+E/\+Les\+\_\+\+Tuileurs\+\_\+\+Honshu/src/tuile.h File Reference}
+\label{tuile_8h}\index{/home/sphinx06/\+Documents/\+E\+N\+S\+I\+I\+E/\+Les\+\_\+\+Tuileurs\+\_\+\+Honshu/src/tuile.\+h@{/home/sphinx06/\+Documents/\+E\+N\+S\+I\+I\+E/\+Les\+\_\+\+Tuileurs\+\_\+\+Honshu/src/tuile.\+h}}
+{\ttfamily \#include \char`\"{}struct.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}game.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}plateau.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{tuile_8h_a90b1ca59e4aafac75877ab40b57c7a2e}{Load\+Tuiles} (char $\ast$filepath, \hyperlink{structTuile}{Tuile} $\ast$game\+Tuiles)
+\begin{DoxyCompactList}\small\item\em Importe un fichier de tuile. \end{DoxyCompactList}\item 
+\hyperlink{structTuile}{Tuile} \hyperlink{tuile_8h_a283c90b2840a7a304e8d39f4683b9f49}{copy\+Tuile} (\hyperlink{structTuile}{Tuile} tuile\+A\+Copier)
+\begin{DoxyCompactList}\small\item\em Copie une tuile dans une autre. \end{DoxyCompactList}\item 
+\hyperlink{structTuile}{Tuile} \hyperlink{tuile_8h_ad7e23944e3209c8709aaac6d6989f503}{rotate\+Tuile} (\hyperlink{structTuile}{Tuile} t, char direction)
+\begin{DoxyCompactList}\small\item\em Permet de changer l\textquotesingle{}orientation d\textquotesingle{}une tuile. \end{DoxyCompactList}\item 
+\hyperlink{structTuile}{Tuile} \hyperlink{tuile_8h_a67abfbd6fb3086140c82e1eaa2ecd425}{new\+Tuile} (int id, char x1, char x2, char x3, char x4, char x5, char x6)
+\begin{DoxyCompactList}\small\item\em Créer une nouvelle tuile. \end{DoxyCompactList}\item 
+void \hyperlink{tuile_8h_a89d184f7c4ecce750b1c9de886121780}{print\+Tuiles} (\hyperlink{structTuile}{Tuile} game\+Tuiles\mbox{[}M\+A\+X\+T\+U\+I\+L\+ES\mbox{]}, int nb\+Tuiles)
+\begin{DoxyCompactList}\small\item\em Affiche les tuiles paramètrées. \end{DoxyCompactList}\item 
+void \hyperlink{tuile_8h_a9287122c667a496d22ad55665ebf711e}{print\+Int\+To\+Char\+Color} (int car)
+\begin{DoxyCompactList}\small\item\em Affiche les int en caractères en couleur. \end{DoxyCompactList}\item 
+int \hyperlink{tuile_8h_a1cfa977af7d450d2d1da93ce4b494100}{place\+Tuile} (\hyperlink{structGame}{Game} $\ast$game, int id, int x, int y)
+\begin{DoxyCompactList}\small\item\em Place la tuile d\textquotesingle{}id {\itshape id} à la position {\itshape x} , {\itshape y} du jeu pointé par {\itshape game}. \end{DoxyCompactList}\item 
+int \hyperlink{tuile_8h_ae7ddcc824bd175a62e07384e0852112f}{can\+Place\+Tuile} (\hyperlink{structGame}{Game} game, int id, int x, int y)
+\begin{DoxyCompactList}\small\item\em Vérifie que le placement de la tuile d\textquotesingle{}id{\itshape id} est autorisé à la position {\itshape x} , {\itshape y} du jeu {\itshape game}. \end{DoxyCompactList}\item 
+\hyperlink{structTuile}{Tuile} $\ast$ \hyperlink{tuile_8h_a0a99849745c07e24348767492ee64b3f}{random\+Tuile} (int nb\+\_\+\+Tuile)
+\begin{DoxyCompactList}\small\item\em Génère {\itshape nb\+\_\+\+Tuile} tuile(s) aléatoirement. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+\begin{DoxyItemize}
+\item {\bfseries new\+Tuile} crée une nouvelle tuile
+\item {\bfseries random\+Tuile} créer des tuiles aléatoirement
+\item {\bfseries Load\+Tuiles} charge un fichier tuile
+\item {\bfseries copy\+Tuile} copie une tuile
+\item {\bfseries rotate\+Tuile} oriente une tuile
+\item {\bfseries print\+Tuiles} affiche les tuiles
+\item {\bfseries print\+Int\+To\+Char\+Color} affiche en couleur un caractère donné
+\item {\bfseries place\+Tuile} place une tuile
+\item {\bfseries can\+Place\+Tuile} vérifie la possibilité de placer une tuile 
+\end{DoxyItemize}
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{tuile_8h_ae7ddcc824bd175a62e07384e0852112f}\label{tuile_8h_ae7ddcc824bd175a62e07384e0852112f}} 
+\index{tuile.\+h@{tuile.\+h}!can\+Place\+Tuile@{can\+Place\+Tuile}}
+\index{can\+Place\+Tuile@{can\+Place\+Tuile}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{can\+Place\+Tuile()}{canPlaceTuile()}}
+{\footnotesize\ttfamily int can\+Place\+Tuile (\begin{DoxyParamCaption}\item[{\hyperlink{structGame}{Game}}]{game,  }\item[{int}]{id,  }\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+
+
+Vérifie que le placement de la tuile d\textquotesingle{}id{\itshape id} est autorisé à la position {\itshape x} , {\itshape y} du jeu {\itshape game}. 
+
+La position a renseigner est celle du coin le plus en haut à gauche de la tuile, après rotation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em game} & représente la structure de jeu (\hyperlink{structGame}{Game}) \\
+\hline
+{\em id} & L\textquotesingle{}identifiant de la tuile a placer (int) \\
+\hline
+{\em x} & l\textquotesingle{}abcisse de la position ou placer la tuile (int) \\
+\hline
+{\em y} & l\textquotesingle{}ordonnée de la position ou placer la tuile (int) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 si le placement est autorisé, 0 sinon 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tuile_8h_a283c90b2840a7a304e8d39f4683b9f49}\label{tuile_8h_a283c90b2840a7a304e8d39f4683b9f49}} 
+\index{tuile.\+h@{tuile.\+h}!copy\+Tuile@{copy\+Tuile}}
+\index{copy\+Tuile@{copy\+Tuile}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{copy\+Tuile()}{copyTuile()}}
+{\footnotesize\ttfamily \hyperlink{structTuile}{Tuile} copy\+Tuile (\begin{DoxyParamCaption}\item[{\hyperlink{structTuile}{Tuile}}]{tuile\+A\+Copier }\end{DoxyParamCaption})}
+
+
+
+Copie une tuile dans une autre. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tuile\+A\+Copier} & tuile qui doit être copié \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne la tuile copiée 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tuile_8h_a90b1ca59e4aafac75877ab40b57c7a2e}\label{tuile_8h_a90b1ca59e4aafac75877ab40b57c7a2e}} 
+\index{tuile.\+h@{tuile.\+h}!Load\+Tuiles@{Load\+Tuiles}}
+\index{Load\+Tuiles@{Load\+Tuiles}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{Load\+Tuiles()}{LoadTuiles()}}
+{\footnotesize\ttfamily int Load\+Tuiles (\begin{DoxyParamCaption}\item[{char $\ast$}]{filepath,  }\item[{\hyperlink{structTuile}{Tuile} $\ast$}]{game\+Tuiles }\end{DoxyParamCaption})}
+
+
+
+Importe un fichier de tuile. 
+
+Récupère le fichier et importe les tuiles dans le tableau de tuiles et renvoie le nombre de tuiles crées.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & Chemin du fichier. \\
+\hline
+{\em game\+Tuiles} & Tableau de tuiles. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+le nombre de tuiles crée. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tuile_8h_a67abfbd6fb3086140c82e1eaa2ecd425}\label{tuile_8h_a67abfbd6fb3086140c82e1eaa2ecd425}} 
+\index{tuile.\+h@{tuile.\+h}!new\+Tuile@{new\+Tuile}}
+\index{new\+Tuile@{new\+Tuile}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{new\+Tuile()}{newTuile()}}
+{\footnotesize\ttfamily \hyperlink{structTuile}{Tuile} new\+Tuile (\begin{DoxyParamCaption}\item[{int}]{id,  }\item[{char}]{x1,  }\item[{char}]{x2,  }\item[{char}]{x3,  }\item[{char}]{x4,  }\item[{char}]{x5,  }\item[{char}]{x6 }\end{DoxyParamCaption})}
+
+
+
+Créer une nouvelle tuile. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & identifiant de la tuile \\
+\hline
+{\em x1} & case 1 \\
+\hline
+{\em x2} & case 2 \\
+\hline
+{\em x3} & case 3 \\
+\hline
+{\em x4} & case 4 \\
+\hline
+{\em x5} & case 5 \\
+\hline
+{\em x6} & case 6 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+retourne la nouvelle tuile 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tuile_8h_a1cfa977af7d450d2d1da93ce4b494100}\label{tuile_8h_a1cfa977af7d450d2d1da93ce4b494100}} 
+\index{tuile.\+h@{tuile.\+h}!place\+Tuile@{place\+Tuile}}
+\index{place\+Tuile@{place\+Tuile}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{place\+Tuile()}{placeTuile()}}
+{\footnotesize\ttfamily int place\+Tuile (\begin{DoxyParamCaption}\item[{\hyperlink{structGame}{Game} $\ast$}]{game,  }\item[{int}]{id,  }\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+
+
+Place la tuile d\textquotesingle{}id {\itshape id} à la position {\itshape x} , {\itshape y} du jeu pointé par {\itshape game}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em game} & Pointeur vers le tableau de jeu (Game$\ast$) \\
+\hline
+{\em id} & l\textquotesingle{}identifiant de la tuile a placer (int) \\
+\hline
+{\em x} & l\textquotesingle{}abcisse de la position ou placer la tuile (int) \\
+\hline
+{\em y} & l\textquotesingle{}ordonnée de la position ou placer la tuile (int) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 si l\textquotesingle{}exécution s\textquotesingle{}est bien passée, 1 sinon 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tuile_8h_a9287122c667a496d22ad55665ebf711e}\label{tuile_8h_a9287122c667a496d22ad55665ebf711e}} 
+\index{tuile.\+h@{tuile.\+h}!print\+Int\+To\+Char\+Color@{print\+Int\+To\+Char\+Color}}
+\index{print\+Int\+To\+Char\+Color@{print\+Int\+To\+Char\+Color}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{print\+Int\+To\+Char\+Color()}{printIntToCharColor()}}
+{\footnotesize\ttfamily void print\+Int\+To\+Char\+Color (\begin{DoxyParamCaption}\item[{int}]{car }\end{DoxyParamCaption})}
+
+
+
+Affiche les int en caractères en couleur. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em car} & Entier correspondant à la valeur A\+S\+C\+II d\textquotesingle{}un caractère \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{tuile_8h_a89d184f7c4ecce750b1c9de886121780}\label{tuile_8h_a89d184f7c4ecce750b1c9de886121780}} 
+\index{tuile.\+h@{tuile.\+h}!print\+Tuiles@{print\+Tuiles}}
+\index{print\+Tuiles@{print\+Tuiles}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{print\+Tuiles()}{printTuiles()}}
+{\footnotesize\ttfamily void print\+Tuiles (\begin{DoxyParamCaption}\item[{\hyperlink{structTuile}{Tuile}}]{game\+Tuiles\mbox{[}\+M\+A\+X\+T\+U\+I\+L\+E\+S\mbox{]},  }\item[{int}]{nb\+Tuiles }\end{DoxyParamCaption})}
+
+
+
+Affiche les tuiles paramètrées. 
+
+\begin{DoxyAttention}{Attention}
+Si aucune tuiles, message d\textquotesingle{}erreur affiché. 
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em game\+Tuiles} & Le tableau de tuiles. \\
+\hline
+{\em nb\+Tuiles} & Le nombre de tuiles \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{tuile_8h_a0a99849745c07e24348767492ee64b3f}\label{tuile_8h_a0a99849745c07e24348767492ee64b3f}} 
+\index{tuile.\+h@{tuile.\+h}!random\+Tuile@{random\+Tuile}}
+\index{random\+Tuile@{random\+Tuile}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{random\+Tuile()}{randomTuile()}}
+{\footnotesize\ttfamily \hyperlink{structTuile}{Tuile}$\ast$ random\+Tuile (\begin{DoxyParamCaption}\item[{int}]{nb\+\_\+\+Tuile }\end{DoxyParamCaption})}
+
+
+
+Génère {\itshape nb\+\_\+\+Tuile} tuile(s) aléatoirement. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nb\+\_\+\+Tuile} & $>$ 0 nombre de tuile à générer (int) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+un tableau de {\itshape nb\+\_\+\+Tuile} tuile(s) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tuile_8h_ad7e23944e3209c8709aaac6d6989f503}\label{tuile_8h_ad7e23944e3209c8709aaac6d6989f503}} 
+\index{tuile.\+h@{tuile.\+h}!rotate\+Tuile@{rotate\+Tuile}}
+\index{rotate\+Tuile@{rotate\+Tuile}!tuile.\+h@{tuile.\+h}}
+\subsubsection{\texorpdfstring{rotate\+Tuile()}{rotateTuile()}}
+{\footnotesize\ttfamily \hyperlink{structTuile}{Tuile} rotate\+Tuile (\begin{DoxyParamCaption}\item[{\hyperlink{structTuile}{Tuile}}]{t,  }\item[{char}]{direction }\end{DoxyParamCaption})}
+
+
+
+Permet de changer l\textquotesingle{}orientation d\textquotesingle{}une tuile. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & \hyperlink{structTuile}{Tuile} qui doit subir la rotation \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+La tuile modifiée 
+\end{DoxyReturn}
