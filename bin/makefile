@@ -22,7 +22,7 @@ $(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^
 
-$(BINDIR)/test : $(OBJDIR)/main.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o 
+$(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o 
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^ $(CCUNIT)
 

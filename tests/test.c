@@ -4,6 +4,7 @@
 #include "CUnit/CUnit.h"
 #include "CUnit/Basic.h"
 #include <CUnit/CUnit.h>
+#include "../src/struct.h"
 #include "../src/game.h"
 #include "../src/plateau.h"
 #include "../src/tuile.h"
@@ -326,7 +327,7 @@ void test_testRecouvrementTotal(){
 	initPlateau(partie->previous,20,0);
 	initPlateau(partie->previousIDmax,20,-1);
 	initPlacementTuileRandom(partie);
-	partie -> tuiles[1].orientation='W';
+	partie -> tuiles[1].orientation='E';
 	CU_ASSERT_EQUAL(testRecouvrementTotal(partie,1,9,'j'),-1); //une tuile de doit pas être totalement recouverte
 
 }
@@ -340,7 +341,7 @@ int main()
       return CU_get_error();
 
    /* add a suite to the registry */
-   pSuite = CU_add_suite("Suite_1", init_suite, clean_suite);
+   pSuite = CU_add_suite("TEST LOT A ET B", init_suite, clean_suite);
    if (NULL == pSuite) {
       CU_cleanup_registry();
       return CU_get_error();
