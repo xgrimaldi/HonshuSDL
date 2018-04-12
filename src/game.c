@@ -1,6 +1,7 @@
 #include "game.h"
 #include "tuile.h"
 #include "plateau.h"
+#include "score.h"
 
 
 int LoadGame(char* filepath,char* filepathTuile,Game* game){
@@ -123,8 +124,8 @@ int startGame(int typeGame){
 				printf("Combien de tuiles voulez vous générer ? ");
 				scanf("%d", &nb_tuiles);
 				purger();
-				if(nb_tuiles <= 0){
-					printf("Veuillez saisir un nombre entre 1 et %d\n", MAXTUILES);
+				if(nb_tuiles < 5){
+					printf("Veuillez saisir un nombre entre 5 et %d\n", MAXTUILES);
 					printf("\n");
 					nb_tuiles = 0;
 				}
@@ -139,13 +140,13 @@ int startGame(int typeGame){
 
 			// Initialisation du plateau
 			int size=0;
-			while (size <= 0 || size > 30){
+			while (size < 6 || size > 30){
 				LOG_BOLDRED("\t\t\t\tParamètrage du plateau \n");
 				printf("Quel doit-être la taille du plateau ? ");
 				scanf("%d", &size);
 				purger();
-				if(size <= 0 || size > 30){
-					printf("Veuillez saisir un nombre entre 1 et 30 \n");
+				if(size < 6 || size > 30){
+					LOG_BOLDRED("Veuillez saisir un nombre entre 6 et 30 \n");
 				}
 				else{
 					// Attribution du jeu 
@@ -230,11 +231,14 @@ int startGame(int typeGame){
 				clearScreen();
 				// Affichage du plateau
 				printPlateau(game->plateau,game->taille);
-				// Affichage des tuiles disponibles 
-				if(game->nbTuiles > 0)
+				// Affichage des tuiles disponibles et non disponibles
+				if(game->nbTuiles > 0){
+					printTuilesNonDisponibles(game->tuiles,game->nbTuiles);
 					printTuiles(game->tuiles,game->nbTuiles);
-				else
-					printf("Aucune tuile: Vérifier le paramètrage ! \n");
+					printf("\nLE SCORE EST DE %d points\n.",getScore(game));
+				
+				}else
+					LOG_BOLDRED("Aucune tuile: Vérifier le paramètrage ! \n");
 				break;
 			}
 			case 3:{ 
@@ -301,7 +305,7 @@ int startGame(int typeGame){
 			        	}
 				  
 				  	else{
-				    	printf("Placement refusé\n"	);
+				    	LOG_BOLDRED("Placement refusé\n"	);
 				  	}  
 				}
 				accepte = 0;
@@ -326,15 +330,15 @@ int startGame(int typeGame){
 
 		    case 5:{
 		    	tuile_selected=-1;
-		    	printf("Quelle tuile voulez-vous changer d'orientation \n?");
+		    	printf("Quelle tuile voulez-vous changer d'orientation ? \n");
 		    	scanf("%d",&tuile_selected);
-
-		    	printf("Quelle est l'orientation souhaité ? (N/E/W/S)\n");
 		    	purger();
+
+		    	printf("Quelle est l'orientation souhaité ? (N/E/W/S) \n");
 		    	scanf(" %c",&orientation_selected);
+		    	purger();
 		    	if (tuile_selected != -1 && (orientation_selected == 'N' || orientation_selected == 'S' || orientation_selected == 'E' || orientation_selected == 'W')) {
 					game->tuiles[tuile_selected]=rotateTuile(game->tuiles[tuile_selected],orientation_selected);
-					printf("Orientaion de la tuile: %c",game->tuiles[tuile_selected].orientation);
 				}
 				break;
 		    }

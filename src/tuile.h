@@ -75,6 +75,12 @@ void printTuiles(Tuile gameTuiles[MAXTUILES],int nbTuiles);
 void printIntToCharColor(int car);
 
 /**
+* \brief Affiche id des tuiles disponibles 
+* \param gameTuiles Le tableau de tuiles.
+* \param nbTuiles Le nombre de tuiles
+*/
+void printTuilesNonDisponibles(Tuile gameTuiles[MAXTUILES],int nbTuiles);
+/**
 * \brief Place la tuile d'id \a id à la position \a x , \a y du jeu pointé par \a game
 * \param game Pointeur vers le tableau de jeu (Game*)
 * \param id l'identifiant de la tuile a placer (int)

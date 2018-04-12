@@ -19,11 +19,11 @@ $(OBJDIR)/%.o: $(TESTDIR)/%.c
 	$(CC) -c -o $@ $^
 
 #Fichier BIN
-$(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o 
+$(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^
 
-$(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o
+$(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^ $(CCUNIT)
 

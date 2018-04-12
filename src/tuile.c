@@ -161,6 +161,14 @@ void printIntToCharColor(int car){
 		printf("%s%c%s",Color_Bold_White,car,Color_end);
 }
 
+void printTuilesNonDisponibles(Tuile gameTuiles[MAXTUILES],int nbTuiles){
+	printf("\nID des tuiles jouées ");
+	for(int i=0;i<nbTuiles;i++){
+		if(gameTuiles[i].pos.x != -1 && gameTuiles[i].pos.y != -1)
+			printf("| %d ",i);
+	}
+}
+
 
 // ######################################
 //	Gestion des fichiers
@@ -248,8 +256,15 @@ Tuile* randomTuile(int nb){
 
 Tuile rotateTuile(Tuile t,char direction){
 	if (direction == 'N' || direction == 'S' || direction == 'W' || direction == 'E'){
-		t.orientation=direction;
+		if (t.pos.x == -1 && t.pos.y==-1){
+			t.orientation=direction;
+			printf("Rotation effectué\n");
+		}
+		else
+			LOG_BOLDRED("Impossible d'orienter une tuile déjà posée sur le plateau.\n");
 	}
+	else
+		LOG_BOLDRED("L'orientation choisi n'est pas correcte.\n");
 	return t;
 }
 
@@ -275,7 +290,7 @@ Tuile copyTuile(Tuile tuileACopier){
 
 int placeTuile(Game* game, int id, int x, int y){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
 	if(!canPlaceTuile(*game, id, x, y)){
-		printf("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
+		LOG_BOLDRED("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
 		return EXIT_FAILURE;
 	}
 	/*Déclaration de variables*/
@@ -352,7 +367,7 @@ int placeTuile(Game* game, int id, int x, int y){ //Les coordonées de la positi
 		}
 
 		default:{
-			printf("Erreur d'orientation de la tuile (Utiliser 'N', 'E', 'S' ou 'W' uniquement)\n");
+			LOG_BOLDRED("Erreur d'orientation de la tuile (Utiliser 'N', 'E', 'S' ou 'W' uniquement)\n");
 			return EXIT_FAILURE;
 		}
 	}
