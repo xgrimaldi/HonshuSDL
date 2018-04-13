@@ -5,7 +5,7 @@ int getScore(Game* game){
 	/* Déclaration des variables */
 	Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
 	int nbPos=0;
-	int nbCasesVillages=0,nbForet=0,nbLac=0,score=0;
+	int villageMax=0,nbForet=0,nbLac=0,nbRessource=0,nbUsine=0,score=0;
 	int** plateau = game->plateau;
 
 	/*Lecture du plateau et ajout des points aux variables */
@@ -14,8 +14,8 @@ int getScore(Game* game){
 			if(plateau[i][j]=='V' && !inPos(i,j,posChecked,nbPos)){
 				int nbCaseContigue=0;
 				nbCaseContigue=Add_Case_And_Check_Around(game,'V',i,j,posChecked,&nbPos);
-				if (nbCaseContigue > 1)
-					nbCasesVillages+=nbCaseContigue;
+				if (nbCaseContigue > villageMax )
+					villageMax=nbCaseContigue;
 			}
 			else if(plateau[i][j]=='F'){
 				nbForet++;
@@ -23,13 +23,31 @@ int getScore(Game* game){
 			else if(plateau[i][j]=='L'){
 				nbLac++;
 			}
+			else if(plateau[i][j]=='R'){
+				nbRessource++;
+			}
+			else if(plateau[i][j]=='U'){
+				nbUsine++;
+			}
 		}
 	}
 
 	/* Gestion du score final*/
-	if(nbLac>1)
+	
+	/*Lac*/
+	if(nbLac>1){
 		score+=((nbLac-1)*3);
-	score += nbCasesVillages + (nbForet*2);
+	}
+	
+	/* USINE RESSOURCE */
+	while(nbUsine != 0 && nbRessource != 0){
+		nbRessource--;
+		nbUsine--;
+		score+=1;
+	}
+
+	/* Villages FORET */
+	score += villageMax + (nbForet*2);
 
 	/*Libération des ressources */
 	free(posChecked);
