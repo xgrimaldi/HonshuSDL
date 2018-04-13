@@ -1,5 +1,6 @@
-CC = gcc -Wall -Wextra
+CC = gcc -Wall -Wextra -g
 CCUNIT = -lcunit
+CCSDL = `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 SRCDIR = ../src
 OBJDIR = ../obj
@@ -18,11 +19,11 @@ $(OBJDIR)/%.o: $(TESTDIR)/%.c
 	$(CC) -c -o $@ $^
 
 #Fichier BIN
-$(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o
+$(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/SDL.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o  
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^
 
-$(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o
+$(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/SDL.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o  
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^ $(CCUNIT)
 
