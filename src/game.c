@@ -392,7 +392,7 @@ int startGame(int typeGame){
 			case 7:{
 			  if (game->nbTuilesPose==game->nbTuiles){
 			    clearScreen();
-			    printf("Vous avez marqué 42 points !");
+			    printf("Vous avez marqué %d points !",getScore(game,ville));
 			  
 			    //Comptage des points à faire
 			    stop=1;
