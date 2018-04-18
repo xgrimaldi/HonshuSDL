@@ -1,7 +1,7 @@
 #include "score.h"
 #include "plateau.h"
 
-int getScore(Game* game){
+int getScore(Game* game,int** ville){
 	/* Déclaration des variables */
 	Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
 	int nbPos=0;
@@ -13,7 +13,7 @@ int getScore(Game* game){
 		for(int j=0;j<game->taille;j++){
 			if(plateau[i][j]=='V' && !inPos(i,j,posChecked,nbPos)){
 				int nbCaseContigue=0;
-				nbCaseContigue=Add_Case_And_Check_Around(game,'V',i,j,posChecked,&nbPos);
+				nbCaseContigue=Add_Case_And_Check_Around(game,'V',i,j,posChecked,&nbPos,ville);
 				if (nbCaseContigue > villageMax )
 					villageMax=nbCaseContigue;
 			}
@@ -50,7 +50,7 @@ int getScore(Game* game){
 	score += villageMax + (nbForet*2);
 
 	/*Libération des ressources */
-	free(posChecked);
+	/*free(posChecked);*/
 	
 	return score;
 }
@@ -65,7 +65,7 @@ int inPos(int x , int y, Position* positions,int nbPos){
 	return 0;
 }
 
-int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* positions,int* nbPos){
+int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* positions,int* nbPos, int** ville){
 	int nbCaseContigue = 0;
 	// On ajoute la position
 	positions[*nbPos].x=x;
@@ -74,10 +74,44 @@ int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* posi
 	nbCaseContigue++;
 
 	// On teste les cases alentours en recursive
-	if(inPlateau(x+1,y,game->taille) && !inPos(x+1,y,positions,*nbPos) && game->plateau[x+1][y]==lettre) nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x+1,y,positions,nbPos);
-	if(inPlateau(x-1,y,game->taille) && !inPos(x-1,y,positions,*nbPos) && game->plateau[x-1][y]==lettre) nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x-1,y,positions,nbPos);
-	if(inPlateau(x,y+1,game->taille) && !inPos(x,y+1,positions,*nbPos) && game->plateau[x][y+1]==lettre) nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y+1,positions,nbPos);
-	if(inPlateau(x,y-1,game->taille) && !inPos(x,y-1,positions,*nbPos) && game->plateau[x][y-1]==lettre) nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y-1,positions,nbPos);
+	if(inPlateau(x+1,y,game->taille) && !inPos(x+1,y,positions,*nbPos) && game->plateau[x+1][y]==lettre) {
+		ville [nbCaseContigue][0]= x+1;
+		ville [nbCaseContigue][1]= y;
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x+1,y,positions,nbPos,ville);
+	}
+	if(inPlateau(x-1,y,game->taille) && !inPos(x-1,y,positions,*nbPos) && game->plateau[x-1][y]==lettre) {
+		ville [nbCaseContigue][0]= x-1;
+		ville [nbCaseContigue][1]= y;
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x-1,y,positions,nbPos,ville);
+	}
+	if(inPlateau(x,y+1,game->taille) && !inPos(x,y+1,positions,*nbPos) && game->plateau[x][y+1]==lettre) {
+		ville [nbCaseContigue][0]= x;
+		ville [nbCaseContigue][1]= y+1;
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y+1,positions,nbPos,ville);
+	}
+	if(inPlateau(x,y-1,game->taille) && !inPos(x,y-1,positions,*nbPos) && game->plateau[x][y-1]==lettre) {
+		ville [nbCaseContigue][0]= x;
+		ville [nbCaseContigue][1]= y-1;
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y-1,positions,nbPos,ville);
+	}
 	
 	return nbCaseContigue;
+}
+void printVillage (int** ville, int n){
+	printf("les ville associé au village est :\n");
+	for (int i=0; i<n;i++)
+		printf("(%d,%d) ",ville[i][0],ville[i][1]);
+} 
+
+void printRules (void){
+	printf("\n Afin de maximiser vos points vous pouvez :\n");
+	printf("1 augmenter la taille de votre plus grand village,\n");
+	printf("	Le nombre de ville dans celui-ci représente le nombre de points obtenue.\n");
+	printf("2 Augmenter le nombre de Forets.Le nombre d’abres compte double dans le score.\n");
+	printf("3 Augmenter le nombre de lacs.Le nombre de lacs compte triple dans le score.\n");
+	printf("4 Compter les Ressources. On alloue une Ressource par Usine tant qu’il reste \n");
+	printf("	des cases Ressource et des cases Usine. Chaque Ressource alloué à une Usine \n");
+	printf("	rapporte 4points. Une Usine ne peut traiter qu’une Ressource et une Ressource\n");
+	printf("	ne  peut être allouée qu’à une Usine.\n");
+	printf("	Une Usine peut traiter une ressource d’une case qui ne lui est pas contigue\n");
 }
