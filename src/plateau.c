@@ -364,3 +364,12 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
   free(copieNBCasesRecouverte);
   return -1;
 }
+
+int copyPlateauToPlateauBis(Game* game){
+  for (int i=0;i<game->taille;i++){
+    for(int j=0;j<game->taille;j++){
+      game->plateauBis[i][j]=game->plateau[i][j];
+    }
+  }
+  return EXIT_SUCCESS;
+}

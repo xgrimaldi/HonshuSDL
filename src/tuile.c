@@ -434,3 +434,150 @@ Tuile newTuile(int id, char x1, char x2, char x3, char x4, char x5, char x6){
 	tuile.pos.y=-1;
 	return tuile;
 }
+
+/* ######################################
+* Fonctions pour SDL
+* ####################################### */
+
+void firstTuileAvailable(Game* game){
+	int i=0;
+	game->tuileJoue.id=-1;
+	while((game->tuileJoue.id == -1) && i < game->nbTuiles){
+		if(game->tuiles[i].pos.x == -1 && game->tuiles[i].pos.y == -1 ){
+			game->tuileJoue.id=i;
+			break;
+		}
+		i++;
+	}
+}
+
+
+void initTuileJoue(Game* game){
+	firstTuileAvailable(game);
+	game->tuileJoue.pos.x=0;
+	game->tuileJoue.pos.y=0;
+	game->tuileJoue.orientation='N';
+}
+
+void nextTuileAvailable(Game* game){
+	int i=game->tuileJoue.id;
+	if(i!=-1){
+		while(game->nbTuilesPose < game->nbTuiles){
+			if(i+1 < game->nbTuiles)
+				i++;
+			else
+				i=0;
+			if(game->tuiles[i].pos.x == -1 && game->tuiles[i].pos.y == -1){
+				game->tuileJoue.id=i;
+				break;
+			}
+		}
+	}
+}
+
+void changeOrientationTuileJoue(Game* game){
+	char o=game->tuileJoue.orientation;
+	if(o=='N'&& game->tuileJoue.pos.x < game->taille-2)
+		game->tuileJoue.orientation='E';
+	else if(o=='E' && game->tuileJoue.pos.y < game->taille-2)
+		game->tuileJoue.orientation='S';
+	else if(o=='S' && game->tuileJoue.pos.x < game->taille-2)
+		game->tuileJoue.orientation='W';
+	else if(o=='W' && game->tuileJoue.pos.y < game->taille-2)
+		game->tuileJoue.orientation='N';
+}
+
+int placeTuileJoue(Game* game){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
+	if(game->tuileJoue.id!=-1){
+		Tuile tuile = game -> tuiles[game->tuileJoue.id];
+		// Inversion des coordonnées pour avoir x en col et y en ligne
+		int y= game->tuileJoue.pos.x;
+		int x= game->tuileJoue.pos.y;
+
+		// Remise à zéro du plateauBis
+		initPlateau(game->plateauBis,game->taille,0);
+
+		switch(game -> tuileJoue.orientation){
+
+			case 'N':{
+				game -> plateauBis[x][y] = tuile.X_1;
+				game -> plateauBis[x][y+1] = tuile.X_2;
+				game -> plateauBis[x+1][y] = tuile.X_3;
+				game -> plateauBis[x+1][y+1] = tuile.X_4;
+				game -> plateauBis[x+2][y] = tuile.X_5;
+				game -> plateauBis[x+2][y+1] = tuile.X_6;
+				break;
+			}
+
+			case 'E':{
+				game -> plateauBis[x][y] = tuile.X_5;
+				game -> plateauBis[x][y+1] = tuile.X_3;
+				game -> plateauBis[x][y+2] = tuile.X_1;
+				game -> plateauBis[x+1][y] = tuile.X_6;
+				game -> plateauBis[x+1][y+1] = tuile.X_4;
+				game -> plateauBis[x+1][y+2] = tuile.X_2;
+				break;
+			}
+
+			case 'S':{
+				game -> plateauBis[x][y] = tuile.X_6;
+				game -> plateauBis[x][y+1] = tuile.X_5;
+				game -> plateauBis[x+1][y] = tuile.X_4;
+				game -> plateauBis[x+1][y+1] = tuile.X_3;
+				game -> plateauBis[x+2][y] = tuile.X_2;
+				game -> plateauBis[x+2][y+1] = tuile.X_1;
+				break;
+			}
+
+			case 'W':{
+				game -> plateauBis[x][y] = tuile.X_2;
+				game -> plateauBis[x][y+1] = tuile.X_4;
+				game -> plateauBis[x][y+2] = tuile.X_6;
+				game -> plateauBis[x+1][y] = tuile.X_1;
+				game -> plateauBis[x+1][y+1] = tuile.X_3;
+				game -> plateauBis[x+1][y+2] = tuile.X_5;
+				break;
+			}
+
+			default:{
+				printf("Erreur d'orientation de la tuile (Utiliser 'N', 'E', 'S' ou 'W' uniquement)\n");
+				return EXIT_FAILURE;
+			}
+		}
+	}
+	return EXIT_SUCCESS;
+}
+
+void moveTuileJoue(Game* game,int x,int y){
+    if (game->tuileJoue.id != -1 && game->tuileJoue.pos.x >= 0 && game->tuileJoue.pos.y >=0) {
+
+		Tuile tuileJoue = game->tuileJoue;
+
+        //GESTION DU X
+        if (x > 0){
+            if((tuileJoue.orientation=='N' || tuileJoue.orientation=='S') && ((game->tuileJoue.pos.x + x) <= (game->taille-2))) {
+                game->tuileJoue.pos.x = (game->tuileJoue.pos.x + x);
+            }
+            else if((tuileJoue.orientation=='W' || tuileJoue.orientation=='E') && ((game->tuileJoue.pos.x + x) <= (game->taille-3))) {
+                game->tuileJoue.pos.x = (game->tuileJoue.pos.x + x);
+            }
+        }
+        else if(x < 0 && ((game->tuileJoue.pos.x + x) >= 0)) {
+                game->tuileJoue.pos.x = (game->tuileJoue.pos.x + x);
+        }
+
+        //GESTION DU Y
+        if (y > 0){
+            if((tuileJoue.orientation=='N' || tuileJoue.orientation=='S') && ((game->tuileJoue.pos.y + y) <= (game->taille-3))) {
+            	game->tuileJoue.pos.y = (game->tuileJoue.pos.y + y);
+            }
+            else if ((tuileJoue.orientation == 'W' || tuileJoue.orientation == 'E') && ((game->tuileJoue.pos.y + y) <= (game->taille - 2))) {
+                game->tuileJoue.pos.y = (game->tuileJoue.pos.y + y);
+            }
+        }
+        else if (y < 0 && ((game->tuileJoue.pos.y + y) >= 0)) {
+            game->tuileJoue.pos.y = (game->tuileJoue.pos.y + y);
+        }
+        placeTuileJoue(game);
+    }
+}

@@ -1,20 +1,25 @@
+#ifndef SDL_H
+#define SDL_H
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+
 #include "game.h"
 #include "struct.h"
 #include "plateau.h"
 #include "tuile.h"
 #include "score.h"
-#include "game.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 480
 
+
  // Structure pour gérer la map à afficher (à compléter plus tard)
 typedef struct Menu{
 	SDL_Texture *background;
+	Mix_Music *gMusic;
 } Menu;
 
 typedef struct Case{
@@ -51,9 +56,13 @@ void delay(unsigned int frameLimit);
 void drawMenu(void);
 void drawGame();
 void cleanup();
+void cleanGame();
+void cleanMenu();
 void initHonshu(char *title);
 SDL_Renderer *getrenderer(void);
 void drawImage(SDL_Texture *image, int x, int y);
-int startGameSDL() ;
+int startGameSDL();
+void loadGameSDL();
 
 
+#endif

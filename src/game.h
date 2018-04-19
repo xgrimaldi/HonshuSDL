@@ -44,6 +44,7 @@ void freeGame(Game* game);
 */
 int startGame(int typeGame);
 
+
 /**
  * \brief Vérifie si le fichier existe en utilisant stat.h
  * \return retourne 1 si le fichier existe, 0 sinon

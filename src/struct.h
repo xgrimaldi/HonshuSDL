@@ -52,14 +52,14 @@ typedef struct Position{
 typedef struct Tuile {	
 	int id;
 	Position pos;
-  	int nbCasesRecouvertes;
-	char orientation;
-  	char X_1;
-	char X_2;
-	char X_3;
-	char X_4;
-	char X_5;
-  	char X_6;
+  int nbCasesRecouvertes;
+  char orientation;
+  char X_1;
+  char X_2;
+  char X_3;
+  char X_4;
+  char X_5;
+  char X_6;
 } Tuile;
 
 /**
@@ -69,10 +69,12 @@ typedef struct Tuile {
 typedef struct Game {
   int** plateau;
   int** plateauIDmax;
+  int** plateauBis;
   int** previous;
   int** previousIDmax;
   int* previousNBCasesRec;
   Tuile* tuiles;
+  Tuile tuileJoue;
   int nbTuiles;
   int nbTuilesPose;
   int taille;

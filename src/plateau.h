@@ -121,6 +121,15 @@ int inPlateau(int x, int y,int taille);
 void savePlateau(Game* game);
 
 /**
+* \brief Copie le plateau dans le plateauBis
+*
+*\param game Désigne le type de partie à lancer
+*\return 0 si l'exécution s'est bien passée, 1 sinon
+*/
+int copyPlateauToPlateauBis(Game* game);
+
+
+/**
 * \brief modifie les cases d'un plateau de jeu en les remplaçant case par case par celle d'un tableau passé en paramètre
 * \param game le tableau de jeu (Game)
 * \param id_tuile_removed L'id de la dernière tuile ajoutée (int)
@@ -137,47 +146,5 @@ int getPrevious (Game* game ,int id_tuile_removed,int x, char y);
 * \return 0 si toutes les cases du table ne contiennent que des 0 et 1 si une des case de ce tableau contient autre chose que des 0
 */
 int matchEmpty (Game* game);
-
-
-/**
- * \brief Vérifie si le fichier existe en utilisant stat.h
- * \return retourne 1 si le fichier existe, 0 sinon
- */
-int fileExist(const char* filename);
-
-/**
-* \brief Génére un nombre aléatoire borné
-*
-* Créer un nombre pris au aléatoirement entre deux bornes \a a et \a b
-*
-* \param a MIN.
-* \param b MAX.
-* \return le nombre random.
-*/
-int randomMinMax(int a,int b);
-
-/**
-* \brief Permet de purger le buffer après un scanf
-*
-* Purge du buffer
-*
-*/
-void purger(void);
-
-/**
-* \brief Affiche le logo Honshu
-*
-* Print du logo Honshu en ASCII ART
-*
-*/
-void HonshuScreen();
-
-/**
-* \brief Clear l'écran
-*
-* Clear l'écran terminal/bash
-*
-*/
-void clearScreen();
 
 #endif

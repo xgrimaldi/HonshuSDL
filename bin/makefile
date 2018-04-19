@@ -12,20 +12,20 @@ all: $(BINDIR)/honshu $(BINDIR)/test
 #Fichier Objets
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)
-	$(CC) -c -o $@ $^
+	$(CC) -c $(CCSDL) -o $@ $^
 
 $(OBJDIR)/%.o: $(TESTDIR)/%.c
 	@mkdir -p $(OBJDIR)
-	$(CC) -c -o $@ $^
+	$(CC) -c $(CCSDL) -o $@ $^
 
 #Fichier BIN
 $(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/SDL.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o  
 	@mkdir -p $(BINDIR)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(CCSDL) 
 
 $(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/SDL.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o  
 	@mkdir -p $(BINDIR)
-	$(CC) -o $@ $^ $(CCUNIT)
+	$(CC) -o $@ $^ $(CCSDL) $(CCUNIT)
 
 clean:
 	rm $(OBJDIR)/*.o

@@ -36,16 +36,17 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 		game->taille=size;
 
 		game->plateau=alloc_int_array(size,size);
-		initPlateau(game->plateau,size,0);
+		game->plateauBis=alloc_int_array(size,size);
 		game->plateauIDmax=alloc_int_array(size,size);
-		initPlateau(game->plateauIDmax,size,-1);
 		game->previous = alloc_int_array(size,size);
-		initPlateau(game->previous,game->taille,0);
 		game->previousIDmax = alloc_int_array(size,size);
-		initPlateau(game->previousIDmax,game->taille,-1);
 		game->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
 
-
+		initPlateau(game->plateau,size,0);
+		initPlateau(game->plateauBis,size,0);
+		initPlateau(game->plateauIDmax,size,-1);
+		initPlateau(game->previous,game->taille,0);
+		initPlateau(game->previousIDmax,game->taille,-1);
 
 		// Récupération du nombre de tuiles
      	fscanf(fichier, "%s", word);
@@ -79,6 +80,7 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 void freeGame(Game* game){
 	for(int i=0;i<game->taille;i++){
 		free(game->plateau[i]);
+		free(game->plateauBis[i]);
 		free(game->plateauIDmax[i]);
 		free(game->previous[i]);
 		free(game->previousIDmax[i]);
@@ -87,10 +89,12 @@ void freeGame(Game* game){
 	free(game->previousIDmax);
 	free(game->previousNBCasesRec);
 	free(game->plateau);
+	free(game->plateauBis);
 	free(game->plateauIDmax);
 	free(game->tuiles);
 	free(game);
 }
+
 
 // ######################################
 //	GESTION DE LA PARTIE

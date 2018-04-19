@@ -80,6 +80,7 @@ void printIntToCharColor(int car);
 * \param nbTuiles Le nombre de tuiles
 */
 void printTuilesNonDisponibles(Tuile gameTuiles[MAXTUILES],int nbTuiles);
+
 /**
 * \brief Place la tuile d'id \a id à la position \a x , \a y du jeu pointé par \a game
 * \param game Pointeur vers le tableau de jeu (Game*)
@@ -109,5 +110,31 @@ int canPlaceTuile(Game game, int id, int x,int y);
 * \return un tableau de \a nb_Tuile tuile(s)
 */
 Tuile* randomTuile(int nb_Tuile);
+
+void initTuileJoue(Game* game);
+void firstTuileAvailable(Game* game);
+void changeOrientationTuileJoue(Game* game);
+
+/**
+* \brief Prochaine tuile disponible
+* \param game
+*/
+void nextTuileAvailable(Game* game);
+
+/**
+* \brief Place la tuile en cours de jeu dans le plateau Bis (qui sert de copie)
+* \param game Pointeur vers le tableau de jeu (Game*)
+* \return 0 si l'exécution s'est bien passée, 1 sinon
+*/
+int placeTuileJoue(Game* game);
+
+/**
+* \brief Déplace la tuile en vérifiant les contraintes du plateau
+* \param game Pointeur vers le tableau de jeu (Game*)
+* \param x position x à incrémenter ou décrémenter
+* \param y position y à incrémenter ou décrementer
+* \return 0 si l'exécution s'est bien passée, 1 sinon
+*/
+void moveTuileJoue(Game* game,int x,int y);
 
 #endif

@@ -114,19 +114,23 @@ void drawImage(SDL_Texture *image, int x, int y){
 * ========================================*/
  
 void cleanup(){
-    //On quitte SDL_Mixer 2 et on décharge la mémoire
-    Mix_CloseAudio();
-    Mix_Quit();
- 
+	// Effacement de la partie
+	cleanMenu();
+	cleanGame();
+
     //On fait le ménage et on remet les pointeurs à NULL
     SDL_DestroyRenderer(renderer);
     renderer = NULL;
     SDL_DestroyWindow(screen);
     screen = NULL;
- 
+
+    //On quitte SDL_Mixer 2 et on décharge la mémoire
+    Mix_CloseAudio();
+    Mix_Quit();
+
     //On quitte SDL_TTF 2
     TTF_Quit();
- 
+	IMG_Quit();
     //On quitte la SDL
     SDL_Quit();
 }
@@ -270,7 +274,13 @@ void runTextInput(SDL_Renderer* renderer,char* rep)
 void loadMenu(void)
 {
  	// Charge l'image du fond (background)
-	menu.background = loadImage("menu.bmp");
+	menu.background = loadImage("../images/menu.bmp");
+	 //Load music
+	menu.gMusic = Mix_LoadMUS( "../sound//beat.wav" ); 
+	if( menu.gMusic == NULL ) {
+		 printf( "Impossible de lancer la musique ! SDL_mixer Error: %s\n", Mix_GetError() ); 
+		 exit(0);
+	}
 }
 
 void drawMenu(void){
@@ -303,14 +313,14 @@ void getInputsMenu(Input *input,int* state)
         switch (event.type){
  
             case SDL_QUIT:
-                exit(0);
+                *state=0;
             break;
  
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_ESCAPE:
-                        exit(0);
+                        *state=0;
                     break;
   
                     case SDLK_UP:
@@ -331,18 +341,19 @@ void getInputsMenu(Input *input,int* state)
 
 void cleanMenu(void)
 {
-// Libère la texture du background
-if (menu.background != NULL)
-{
-	SDL_DestroyTexture(menu.background);
-	menu.background = NULL;
+	// Libère la texture du background
+	if (menu.background != NULL)
+	{
+		SDL_DestroyTexture(menu.background);
+		menu.background = NULL;
 	}
+	Mix_FreeMusic( menu.gMusic );
  
 }
 /* =======================================
 * 			JEU
 * ========================================*/
-void loadGame(void)
+void LoadGameSDL(void)
 {
 	// Malloc GAME
 	jeu.data=malloc(sizeof(Game));
@@ -353,19 +364,32 @@ void loadGame(void)
 
 	//Attribut data(Game)
 	jeu.data->taille=10;
-	jeu.data->nbTuiles = 21;
+	jeu.data->nbTuiles = 10;
 	jeu.data->nbTuilesPose=1;
 	jeu.data->tuiles = malloc(MAXTUILES * sizeof(Tuile));
 	jeu.data->tuiles = randomTuile(jeu.data->nbTuiles);
 	jeu.data->tuileJoue.id = -1;
 	jeu.data->tuileJoue.pos.x=-1;
 	jeu.data->tuileJoue.pos.y=-1;
+
 	// Création du plateau de jeu de taille n*n
 	jeu.data->plateau = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.data->plateau,jeu.data->taille);
+	initPlateau(jeu.data->plateau,jeu.data->taille,0);
 	// Plateau de copie
 	jeu.data->plateauBis = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.data->plateauBis,jeu.data->taille);
+	initPlateau(jeu.data->plateauBis,jeu.data->taille,0);
+	// Plateau de copie
+	jeu.data->plateauIDmax = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->plateauIDmax,jeu.data->taille,-1);
+	// Plateau de copie
+	jeu.data->previous = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->previous,jeu.data->taille,0);
+	// Plateau de copie
+	jeu.data->previousIDmax = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->previousIDmax,jeu.data->taille,-1);
+
+	jeu.data->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+
 	//Placement de la premiere tuile
 	initPlacementTuileRandom(jeu.data);
 
@@ -399,12 +423,12 @@ void loadGame(void)
 	jeu.background.h=SCREEN_HEIGHT;
 
     // Chargement des images du jeu
-	jeu.img[0] = IMG_LoadTexture(getrenderer(), "lac.png");
-	jeu.img[1] = IMG_LoadTexture(getrenderer(), "foret.png");
-	jeu.img[2] = IMG_LoadTexture(getrenderer(), "ressource.png");
-	jeu.img[3] = IMG_LoadTexture(getrenderer(), "village.png");
-	jeu.img[4] = IMG_LoadTexture(getrenderer(), "plaine.png");
-	jeu.img[5] = IMG_LoadTexture(getrenderer(), "usine.png");
+	jeu.img[0] = IMG_LoadTexture(getrenderer(), "../images/lac.png");
+	jeu.img[1] = IMG_LoadTexture(getrenderer(), "../images/foret.png");
+	jeu.img[2] = IMG_LoadTexture(getrenderer(), "../images/ressource.png");
+	jeu.img[3] = IMG_LoadTexture(getrenderer(), "../images/village.png");
+	jeu.img[4] = IMG_LoadTexture(getrenderer(), "../images/plaine.png");
+	jeu.img[5] = IMG_LoadTexture(getrenderer(), "../images/usine.png");
 
 }
 
@@ -507,7 +531,6 @@ void drawGame(void){
     // Ajout du fond noir
     SDL_RenderFillRect( getrenderer(), &jeu.background);
 
-
 	drawTextGame("Tuile en main", 5,5);
     /* Affichage JEU */
     // Affichage du plateau
@@ -530,13 +553,7 @@ void cleanGame(void)
 	     free(jeu.casePlateau[i]);
 	free(jeu.casePlateau);
 
-	for(int i=0;i<jeu.data->taille;i++){
-		free(jeu.data->plateau[i]);
-	}
-	free(jeu.data->plateau);
-	free(jeu.data->plateauBis);
-	free(jeu.data->tuiles);
-	free(jeu.data);
+	freeGame(jeu.data);
 
 	TTF_CloseFont(jeu.font);
  
@@ -552,7 +569,7 @@ void getInputsGame(Input *input,int* state)
         switch (event.type){
  
             case SDL_QUIT:
-                exit(0);
+                *state= 0;
             break;
  
             case SDL_KEYDOWN:
@@ -570,8 +587,10 @@ void getInputsGame(Input *input,int* state)
 						break;
 					}
 					case SDLK_a:{
-						nextTuileAvailable(jeu.data);
-						placeTuileJoue(jeu.data);
+						if (jeu.data->tuileJoue.id != -1) {
+							nextTuileAvailable(jeu.data);
+							placeTuileJoue(jeu.data);
+						}
 						break;
 					}
 					case SDLK_o:{
@@ -579,6 +598,19 @@ void getInputsGame(Input *input,int* state)
 						placeTuileJoue(jeu.data);
 						break;
 					}
+					case SDLK_RETURN:{
+						if (jeu.data->tuileJoue.id != -1) {
+							jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
+						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x)){
+						    	printf("Placement réalisé\n");
+						    	jeu.data->nbTuilesPose++;
+				        	}
+				        	nextTuileAvailable(jeu.data);
+				        	placeTuileJoue(jeu.data);
+						}
+			        	break;
+					}
+
 					case SDLK_RIGHT: {
                         moveTuileJoue(jeu.data,1,0);
 						break;
@@ -608,7 +640,7 @@ void getInputsGame(Input *input,int* state)
 * 			Main fonction
 * ========================================*/
 int startGameSDL() {
-	int state=1,go=1;
+	int state=1;
 	unsigned int frameLimit = SDL_GetTicks() + 16;
 
 	 // Initialisation de la SDL
@@ -616,17 +648,22 @@ int startGameSDL() {
 	 
 	// Chargement des ressources (graphismes, sons)
 	loadMenu();
-	loadGame();
+	LoadGameSDL();
 
 	// Appelle la fonction cleanup à la fin du programme
 	atexit(cleanup);
 	 
 	// Boucle infinie, principale, du jeu
-	while (go == 1)
+	while (state != 0)
 	{	 	
 	 	if(state==1){
 	 		if(menu.background==NULL){
 	 			loadMenu();
+	 		}
+	 		//If there is no music playing 
+ 			if( Mix_PlayingMusic() == 0 ) { 
+ 				//Play the music
+	 		 	Mix_PlayMusic( menu.gMusic, -1 );
 	 		}
 			//Gestion des inputs clavier
 			getInputsMenu(&input,&state);
@@ -645,7 +682,7 @@ int startGameSDL() {
 		delay(frameLimit);
 		frameLimit = SDL_GetTicks() + 16;
 	}
-	cleanGame();
+
 	// On quitte
 	exit(0);
 }
