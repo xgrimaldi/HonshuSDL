@@ -2,9 +2,36 @@
 ##### Xavier GRIMALDI, Houda HASSINI, Johan CHAGNON, Quentin DELAVELLE
 
 # I ) Pré-requis
+
+### Installer SDL 2.0
+
+* Ouvrir un terminal
+* Cette commande permet de visualiser toutes les librairies disponibles:
+
+```
+apt-cache search ^libsdl2
+```
+
+* Pour Honshu, nous aurons besoin des librairies suivantes:
+    1. libsdl2-2.0-0 - bibliothèque Simple DirectMedia Layer
+    2. libsdl2-dev - Fichiers de développement Simple DirectMedia Layer
+    3. libsdl2-image-2.0-0 - Image loading library for Simple DirectMedia Layer 2, libraries
+    4. libsdl2-image-dev - Image loading library for Simple DirectMedia Layer 2, development files
+    5. libsdl2-mixer-2.0-0 - Mixer library for Simple DirectMedia Layer 2, libraries
+    6. libsdl2-mixer-dev - Mixer library for Simple DirectMedia Layer 2, development files
+    7. libsdl2-ttf-2.0-0 - TrueType Font library for Simple DirectMedia Layer 2, libraries
+    8. libsdl2-ttf-dev - TrueType Font library for Simple DirectMedia Layer 2, development files
+
+* Installer les libraires via cette commande
+
+```
+ sudo apt-get install libsdl2-2.0-0 libsdl2-dev libsdl2-image-2.0-0 libsdl2-image-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev libsdl2-ttf-2.0-0 libsdl2-tff-dev
+```
+
+
 ### Installer doxygen
 
-* Ouvrir un terminal BASH
+* Ouvrir un terminal
 * Télécharger doxygen:
 
 ```
@@ -69,6 +96,7 @@ make
 * Dans le menu principale, il est possible de sélectionner 2 modes
 * 1 - Création d'une partie personnalisée
 * 2 - Création d'une partie à partir d'un fichier
+* 3 - Lancement d'une partie graphique (SDL)
 
 
 # III) HOW-TO USE GIT

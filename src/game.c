@@ -115,6 +115,7 @@ int startGame(int typeGame){
 	int accepte = 0 ,dep = 0;
 	char orientation_selected='N';
 	int tuile_selected=-1;
+	
 
 	//**********************************
 	// Chargement des paramètres de partie
@@ -208,7 +209,16 @@ int startGame(int typeGame){
 	// Lancement du jeu 
 	//**********************************
 	int stop = 0;
+	int ** ville =(int **)malloc(game->taille* sizeof(int *));
+	for (int i=0; i<game->taille; i++)
+	     ville[i] = (int *)malloc(2 * sizeof(int));
+	for (int i=0;i<game->taille;i++){
+		for(int j=0;j<game->taille;j++){
+			ville[i][j]=-1;
+		}
+	}
 	while(stop == 0){
+		printRules();
 		choix=0;
 		printf("\nQue voulez-vous faire ?\n");
 	 	printf("1 - Voir les tuiles paramétrées\n");
@@ -216,10 +226,12 @@ int startGame(int typeGame){
 	 	printf("3 - Poser une tuile\n");
 	 	printf("4 - Annuler l'action précédente\n");
 	 	printf("5 - Changer l'orientation d'une tuile\n");
+	 	printf("6 - Envoyer le village associé à une case\n");
 		if (game->nbTuilesPose == game->nbTuiles){
-		  printf("6 - Terminer la partie\n");
+		  printf("7 - Terminer la partie\n");
 		}
 		printf("0 - Quitter la partie\n");
+
 		
 		scanf("%d",&choix);
 		switch(choix){
@@ -239,7 +251,7 @@ int startGame(int typeGame){
 				if(game->nbTuiles > 0){
 					printTuilesNonDisponibles(game->tuiles,game->nbTuiles);
 					printTuiles(game->tuiles,game->nbTuiles);
-					printf("\nLE SCORE EST DE %d points\n.",getScore(game));
+					printf("\nLE SCORE EST DE %d points\n.",getScore(game,ville));
 				
 				}else
 					LOG_BOLDRED("Aucune tuile: Vérifier le paramètrage ! \n");
@@ -327,7 +339,7 @@ int startGame(int typeGame){
 					else printf("Le dernier placement a déja été annulé, veuillez effectuer une nouvelle pose de tuiles avant d'annuler\n");
 				}
 				else
-					printf("le tableau représente la siuation initiale du jeu , vous ne pouvez pas annuler");
+					printf("le tableau représente la situation initiale du jeu , vous ne pouvez pas annuler");
 				
 				break;
 			}
@@ -347,10 +359,44 @@ int startGame(int typeGame){
 				break;
 		    }
 
-			case 6:{
+		    case 6:{
+		    int x ;
+		    char y;
+		    int nbVille;
+		    Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
+			int nbPos=0;
+			printf("Qu'elle est abscisse du ville choisie ? \n");
+		    scanf("%d",&x);
+		    purger();
+
+			printf("Qu'elle est ordonné du ville choisie ? \n");
+		    scanf(" %c",&y);
+		    purger();
+		    if(!(y >= 97 && y < 97+game->taille) && !(y >= 65 && y < 65+game->taille))
+		    printf("Abcisse incorrect ! Saisir une lettre entre A et %c\n", (char)(65+game->taille-1)); // On est contraint de supposer n <= 26
+				else {
+				  		if(y >= 97 && y < 97+game->taille){ 
+				      		//ici y est une minuscule
+							y -= 97;
+				      		}
+				      		else
+				      			y -= 65;
+				    	}
+
+			if (game->plateau[x][(int) y]!='V') LOG_BOLDRED("Ceci n'est pas une ville\n");
+			else {
+		    	nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville);
+		    	if (nbVille== 1) printf("cette ville n'est associé à aucun village");
+		    	else printVillage(ville,nbVille);
+		    }
+			  break;
+		    }
+
+
+			case 7:{
 			  if (game->nbTuilesPose==game->nbTuiles){
 			    clearScreen();
-			    printf("Vous avez marqué 42 points !");
+			    printf("Vous avez marqué %d points !",getScore(game,ville));
 			  
 			    //Comptage des points à faire
 			    stop=1;
