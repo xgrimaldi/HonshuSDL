@@ -161,12 +161,14 @@ int startGame(int typeGame){
 					game->plateau = alloc_int_array(size, size);
 					// Création du plateau des ID maximals de taille n*n					
 					game->plateauIDmax = alloc_int_array(size, size);
+					game->plateauBis = alloc_int_array(size,size);
 					game->previous = alloc_int_array(size,size);
 					game->previousIDmax = alloc_int_array(size,size);
 					game->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
 					// Initialisation des plateaux
 					initPlateau(game->plateau,size,0);
 					initPlateau(game->plateauIDmax,size,-1);
+					initPlateau(game->plateauBis,size,0);
 					initPlateau(game->previous,size,0);
 					initPlateau(game->previousIDmax,size,-1);
 
@@ -209,14 +211,10 @@ int startGame(int typeGame){
 	// Lancement du jeu 
 	//**********************************
 	int stop = 0;
-	int ** ville =(int **)malloc(game->taille* sizeof(int *));
-	for (int i=0; i<game->taille; i++)
-	     ville[i] = (int *)malloc(2 * sizeof(int));
-	for (int i=0;i<game->taille;i++){
-		for(int j=0;j<game->taille;j++){
-			ville[i][j]=-1;
-		}
-	}
+
+	int** ville = alloc_int_array(game->taille, game->taille);
+	initPlateau(ville,game->taille,-1);
+
 	while(stop == 0){
 		printRules();
 		choix=0;
@@ -360,20 +358,20 @@ int startGame(int typeGame){
 		    }
 
 		    case 6:{
-		    int x ;
-		    char y;
-		    int nbVille;
-		    Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
-			int nbPos=0;
-			printf("Qu'elle est abscisse du ville choisie ? \n");
-		    scanf("%d",&x);
-		    purger();
+			    int x,nbVille,nbPos=0;
+			    char y;
+			    Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
 
-			printf("Qu'elle est ordonné du ville choisie ? \n");
-		    scanf(" %c",&y);
-		    purger();
-		    if(!(y >= 97 && y < 97+game->taille) && !(y >= 65 && y < 65+game->taille))
-		    printf("Abcisse incorrect ! Saisir une lettre entre A et %c\n", (char)(65+game->taille-1)); // On est contraint de supposer n <= 26
+				printf("Qu'elle est abscisse du ville choisie ? \n");
+			    scanf("%d",&x);
+			    purger();
+
+				printf("Qu'elle est ordonné du ville choisie ? \n");
+			    scanf(" %c",&y);
+			    purger();
+
+			    if(!(y >= 97 && y < 97+game->taille) && !(y >= 65 && y < 65+game->taille))
+			    printf("Abcisse incorrect ! Saisir une lettre entre A et %c\n", (char)(65+game->taille-1)); // On est contraint de supposer n <= 26
 				else {
 				  		if(y >= 97 && y < 97+game->taille){ 
 				      		//ici y est une minuscule
@@ -383,13 +381,17 @@ int startGame(int typeGame){
 				      			y -= 65;
 				    	}
 
-			if (game->plateau[x][(int) y]!='V') LOG_BOLDRED("Ceci n'est pas une ville\n");
-			else {
-		    	nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville);
-		    	if (nbVille== 1) printf("cette ville n'est associé à aucun village");
-		    	else printVillage(ville,nbVille);
-		    }
-			  break;
+				if (game->plateau[x][(int) y]!='V') 
+					LOG_BOLDRED("Ceci n'est pas une ville\n");
+				else {
+					nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville);
+					if (nbVille== 1) 
+						printf("cette ville n'est associé à aucun village");
+					else 
+						printVillage(ville,nbVille);
+				}
+				free(posChecked);
+				break;
 		    }
 
 
@@ -407,6 +409,10 @@ int startGame(int typeGame){
 			/*QUITTER LE PROGRAMME*/
 			case 0:{
 				freeGame(game);
+				for(int i=0;i<game->taille;i++){
+					free(ville[i]);
+				}
+				free(ville);
 				stop = 1;
 				return EXIT_SUCCESS;
 				break;

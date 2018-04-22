@@ -247,7 +247,8 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     idmax=game->plateauIDmax[x][y];
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes == 5){
-		return idmax;
+        free(copieNBCasesRecouverte);
+		    return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -256,7 +257,8 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes==5){
 			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-			return idmax;
+			  free(copieNBCasesRecouverte);
+      return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -265,8 +267,9 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     idmax=game->plateauIDmax[x+1][y];
     if (idmax!=-1){
       if (game->tuiles[idmax].nbCasesRecouvertes==5){
-			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-			return idmax;
+        retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+			  free(copieNBCasesRecouverte);
+        return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -274,26 +277,29 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     idmax=game->plateauIDmax[x+1][y+1];
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes==5){
-			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-			return idmax;
+        retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+        free(copieNBCasesRecouverte);
+        return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+2][y];
     if (idmax!=-1){
-    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
-			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-			return idmax;
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+        retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+        free(copieNBCasesRecouverte);
+        return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
     
     idmax=game->plateauIDmax[x+2][y+1];
     if (idmax!=-1){
-    	if (game->tuiles[idmax].nbCasesRecouvertes==5){
-			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-			return idmax;
+      if (game->tuiles[idmax].nbCasesRecouvertes==5){
+        retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+        free(copieNBCasesRecouverte);
+        return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -303,8 +309,9 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
   else{
     idmax=game->plateauIDmax[x][y];
     if (idmax!=-1){
-    	if (game->tuiles[idmax].nbCasesRecouvertes == 5){
-			return idmax;
+      if (game->tuiles[idmax].nbCasesRecouvertes == 5){
+        free(copieNBCasesRecouverte);
+        return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -312,8 +319,9 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     idmax=game->plateauIDmax[x][y+1];
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes==5){
-			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-			return idmax;
+        retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+        free(copieNBCasesRecouverte);			
+      return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -322,7 +330,8 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes==5){
 			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
-			return idmax;
+		  free(copieNBCasesRecouverte);
+      return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
     }
@@ -331,6 +340,7 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes==5){
 			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+      free(copieNBCasesRecouverte);
 			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
@@ -340,6 +350,7 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes==5){
 			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+      free(copieNBCasesRecouverte);
 			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
@@ -349,6 +360,7 @@ int testRecouvrementTotal(Game* game, int id, int x, int y){
     if (idmax!=-1){
     	if (game->tuiles[idmax].nbCasesRecouvertes==5){
 			retablishNBCasesRec(game,id,x,y,copieNBCasesRecouverte);
+      free(copieNBCasesRecouverte);
 			return idmax;
       }
       game->tuiles[idmax].nbCasesRecouvertes++;
