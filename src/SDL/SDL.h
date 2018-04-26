@@ -6,14 +6,15 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
-#include "game.h"
-#include "struct.h"
-#include "plateau.h"
-#include "tuile.h"
-#include "score.h"
+#include "../game.h"
+#include "../struct.h"
+#include "../plateau.h"
+#include "../tuile.h"
+#include "../score.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 480
+
 
 
  // Structure pour gérer la map à afficher (à compléter plus tard)
@@ -46,6 +47,13 @@ typedef struct Input
  
 } Input;
 
+/* Variables globables */
+SDL_Window *screen;
+SDL_Renderer *renderer;
+Menu menu;
+GameSDL jeu;
+Input input;
+
 void drawPlateau();
 void cleanScreen(void);
 void getInputsGame(Input *input,int* state);
@@ -62,7 +70,9 @@ void initHonshu(char *title);
 SDL_Renderer *getrenderer(void);
 void drawImage(SDL_Texture *image, int x, int y);
 int startGameSDL();
-void loadGameSDL();
+void LoadGameSDL();
+void loadMenu();
+void cleanScreenSDL();
 
 
 #endif

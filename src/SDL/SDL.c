@@ -4,19 +4,19 @@
 #include <string.h>
 #include "SDL.h"
 
-/* Variables globables */
-SDL_Window *screen;
-SDL_Renderer *renderer;
-Menu menu;
-GameSDL jeu;
-Input input;
- 
-
 /* =======================================
 * 			INITIALISATION
 * ========================================*/
  
 void initHonshu(char *title){
+
+    /* Initialisation simple */
+    if (SDL_Init(SDL_INIT_VIDEO) != 0 )
+    {
+        fprintf(stdout,"Échec de l'initialisation de la SDL (%s)\n",SDL_GetError());
+        exit(0);
+    }
+
 	/*Création de fênetre*/
     screen = SDL_CreateWindow(title,
                                   SDL_WINDOWPOS_CENTERED,
