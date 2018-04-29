@@ -1,7 +1,7 @@
 #include "score.h"
 #include "plateau.h"
 
-int getScore(Game* game,int** ville){
+int getScore(Game* game,int** ville,int solv){
 	/* Déclaration des variables */
 	Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
 	int nbPos=0;
@@ -13,7 +13,7 @@ int getScore(Game* game,int** ville){
 		for(int j=0;j<game->taille;j++){
 			if(plateau[i][j]=='V' && !inPos(i,j,posChecked,nbPos)){
 				int nbCaseContigue=0;
-				nbCaseContigue=Add_Case_And_Check_Around(game,'V',i,j,posChecked,&nbPos,ville);
+				nbCaseContigue=Add_Case_And_Check_Around(game,'V',i,j,posChecked,&nbPos,ville,solv);
 				if (nbCaseContigue > villageMax )
 					villageMax=nbCaseContigue;
 			}
@@ -65,7 +65,7 @@ int inPos(int x , int y, Position* positions,int nbPos){
 	return 0;
 }
 
-int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* positions,int* nbPos, int** ville){
+int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* positions,int* nbPos, int** ville,int solv){
 	int nbCaseContigue = 0;
 	// On ajoute la position
 	positions[*nbPos].x=x;
@@ -74,25 +74,25 @@ int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* posi
 	nbCaseContigue++;
 
 	// On teste les cases alentours en recursive
-	if(inPlateau(x+1,y,game->taille) && !inPos(x+1,y,positions,*nbPos) && game->plateau[x+1][y]==lettre) {
+	if(inPlateau(x+1,y,game->taille,solv) && !inPos(x+1,y,positions,*nbPos) && game->plateau[x+1][y]==lettre) {
 		ville [nbCaseContigue][0]= x+1;
 		ville [nbCaseContigue][1]= y;
-		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x+1,y,positions,nbPos,ville);
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x+1,y,positions,nbPos,ville,solv);
 	}
-	if(inPlateau(x-1,y,game->taille) && !inPos(x-1,y,positions,*nbPos) && game->plateau[x-1][y]==lettre) {
+	if(inPlateau(x-1,y,game->taille,solv) && !inPos(x-1,y,positions,*nbPos) && game->plateau[x-1][y]==lettre) {
 		ville [nbCaseContigue][0]= x-1;
 		ville [nbCaseContigue][1]= y;
-		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x-1,y,positions,nbPos,ville);
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x-1,y,positions,nbPos,ville,solv);
 	}
-	if(inPlateau(x,y+1,game->taille) && !inPos(x,y+1,positions,*nbPos) && game->plateau[x][y+1]==lettre) {
+	if(inPlateau(x,y+1,game->taille,solv) && !inPos(x,y+1,positions,*nbPos) && game->plateau[x][y+1]==lettre) {
 		ville [nbCaseContigue][0]= x;
 		ville [nbCaseContigue][1]= y+1;
-		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y+1,positions,nbPos,ville);
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y+1,positions,nbPos,ville,solv);
 	}
-	if(inPlateau(x,y-1,game->taille) && !inPos(x,y-1,positions,*nbPos) && game->plateau[x][y-1]==lettre) {
+	if(inPlateau(x,y-1,game->taille,solv) && !inPos(x,y-1,positions,*nbPos) && game->plateau[x][y-1]==lettre) {
 		ville [nbCaseContigue][0]= x;
 		ville [nbCaseContigue][1]= y-1;
-		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y-1,positions,nbPos,ville);
+		nbCaseContigue+=Add_Case_And_Check_Around(game,lettre,x,y-1,positions,nbPos,ville,solv);
 	}
 	
 	return nbCaseContigue;

@@ -122,8 +122,8 @@ void test_placeTuile(void){
 	initPlateau(partie->previous,20,0);
 	initPlateau(partie->previousIDmax,20,-1);
 	initPlacementTuileRandom(partie);
-	CU_ASSERT_TRUE(placeTuile(partie,2,0,1)==EXIT_FAILURE);
-	freeGame(partie);
+	CU_ASSERT_TRUE(placeTuile(partie,2,0,1,0)==EXIT_FAILURE);
+	freeGame(partie,0);
 }
 
 
@@ -148,14 +148,14 @@ void test_canPlaceTuile(){
 	initPlacementTuileRandom(partie);
 	int pos_ligne = (partie->taille/2)-1;
 	int pos_col = (partie->taille/2)-1;
-	CU_ASSERT_TRUE(canPlaceTuile(*partie,1,0,1)== 0); // Toute nouvelle tuile posée doit recouvrir au moins une case de l’une des tuile précédemment posée
+	CU_ASSERT_TRUE(canPlaceTuile(*partie,1,0,1,0)== 0); // Toute nouvelle tuile posée doit recouvrir au moins une case de l’une des tuile précédemment posée
 	for (int i=pos_ligne; i<pos_ligne+2 ;i++){
 	for (int j=pos_col; j<pos_col+3 ;j++){
 				partie->plateau[i][j] = 'L';
 		}
 	}
-	CU_ASSERT_TRUE(canPlaceTuile(*partie,1,0,1)== 0); // Aucune case Lac ne peut être recouverte.
-	freeGame(partie);
+	CU_ASSERT_TRUE(canPlaceTuile(*partie,1,0,1,0)== 0); // Aucune case Lac ne peut être recouverte.
+	freeGame(partie,0);
 }
 
 
@@ -203,7 +203,7 @@ void test_initPlacementTuileRandom (void){
 			CU_ASSERT_NOT_EQUAL(partie->plateau[i][j],0);
 		}
 	}
-	freeGame(partie);
+	freeGame(partie,0);
 }
 
 
@@ -229,10 +229,10 @@ void test_initPlateau(){
 *ce test permet aussi de faire un test pour s'assurer que les tuiles sont placées dans le plateau
 */
 void test_inPlateau(){
- 	CU_ASSERT_EQUAL(inPlateau(50,7,20),0);
- 	CU_ASSERT_EQUAL(inPlateau(14,7,20),1);
- 	CU_ASSERT_EQUAL(inPlateau(10,700,20),0);
- 	CU_ASSERT_EQUAL(inPlateau(3,7,20),1);
+ 	CU_ASSERT_EQUAL(inPlateau(50,7,20,0),0);
+ 	CU_ASSERT_EQUAL(inPlateau(14,7,20,0),1);
+ 	CU_ASSERT_EQUAL(inPlateau(10,700,20,0),0);
+ 	CU_ASSERT_EQUAL(inPlateau(3,7,20,0),1);
  	
 }
 
@@ -260,7 +260,7 @@ void test_saveGame(void){
 			CU_ASSERT_TRUE(partie->previousIDmax[i][j]==partie->plateauIDmax[i][j]);
 		}
 	}
-	freeGame(partie);
+	freeGame(partie,0);
 }
 
 /*teste si la fonction récupère bien un tableau corrpondant a clui passé en arguments*/
@@ -287,7 +287,7 @@ void test_getPrevious (void){
 			CU_ASSERT_TRUE(partie->plateauIDmax[i][j]==partie->previousIDmax[i][j]);
 		}
 	}
-	freeGame(partie);
+	freeGame(partie,0);
 }
 
 
@@ -309,7 +309,7 @@ void test_matchEmpty (void){
 	CU_ASSERT_TRUE(matchEmpty(partie)==EXIT_SUCCESS);
 	partie->previous[1][1]=3;
 	CU_ASSERT_TRUE(matchEmpty(partie)==EXIT_FAILURE);
-	freeGame(partie);
+	freeGame(partie,0);
 }
 
 void test_testRecouvrementTotal(){

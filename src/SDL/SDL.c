@@ -553,7 +553,7 @@ void cleanGame(void)
 	     free(jeu.casePlateau[i]);
 	free(jeu.casePlateau);
 
-	freeGame(jeu.data);
+	freeGame(jeu.data,0);
 
 	TTF_CloseFont(jeu.font);
  
@@ -601,7 +601,7 @@ void getInputsGame(Input *input,int* state)
 					case SDLK_RETURN:{
 						if (jeu.data->tuileJoue.id != -1) {
 							jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
-						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x)){
+						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x,0)){
 						    	printf("Placement réalisé\n");
 						    	jeu.data->nbTuilesPose++;
 				        	}

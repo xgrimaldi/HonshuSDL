@@ -122,12 +122,12 @@ void initPlacementTuile(Game* partie,int numTuile){
 //	GESTION DU PLATEAU
 // ######################################
 
-int inPlateau(int x, int y,int taille){
-	if( !((0 <= x) && (x < taille)) || !((0 <= y) && (y < taille)) ){
-		printf("La case (%d, %d) ne fait pas partie du plateau de jeu !\n", x, y);
-		return 0;
-	}
-	else return 1;
+int inPlateau(int x, int y,int taille,int solv){
+  if( !((0 <= x) && (x < taille)) || !((0 <= y) && (y < taille)) ){
+    if(!solv) printf("La case (%d, %d) nelateau de jeu !\n", x, y);
+    return 0;
+  }
+  else return 1;
 }
 
 void savePlateau(Game* game){

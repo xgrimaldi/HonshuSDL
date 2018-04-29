@@ -109,9 +109,10 @@ int testRecouvrementTotal(Game* game, int id, int x,int y);
 * \param x l'abcisse de la position ou placer la tuile (int)
 * \param y l'ordonnée de la position ou placer la tuile (int)
 * \param taille Taille du plateau de jeu
+* \param solv = 1 si c'est le solveur qui l'utilise, 0 sinon
 * \return 1 si le placement est autorisé, 0 sinon
 */
-int inPlateau(int x, int y,int taille);
+int inPlateau(int x, int y,int taille,int solv);
 
 /**
 * \brief sauvgarde le plateau de jeux actuel case par case dans un tableau 

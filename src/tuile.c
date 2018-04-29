@@ -288,9 +288,9 @@ Tuile copyTuile(Tuile tuileACopier){
 //	GESTION DU PLATEAU
 // ######################################
 
-int placeTuile(Game* game, int id, int x, int y){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
-	if(!canPlaceTuile(*game, id, x, y)){
-		LOG_BOLDRED("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
+int placeTuile(Game* game, int id, int x, int y,int solv){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
+	if(!canPlaceTuile(*game, id, x, y,solv)){
+		if(!solv) LOG_BOLDRED("Impossible de placer cette tuile ici (vous recouvrez un lac ou aucune tuile !)\n");
 		return EXIT_FAILURE;
 	}
 	/*Déclaration de variables*/
@@ -298,11 +298,11 @@ int placeTuile(Game* game, int id, int x, int y){ //Les coordonées de la positi
 	int TRT=testRecouvrementTotal(game,id,x,y);
 	
 	if (TRT!=-1){
-	  printf("Vous recouvrez totalement la tuile d'id %d.\n",TRT);
+	  if(!solv) printf("Vous recouvrez totalement la tuile d'id %d.\n",TRT);
 	  return EXIT_FAILURE;
 	};
 
-	savePlateau(game);
+	if(!solv) savePlateau(game);
 	game->tuiles[id].nbCasesRecouvertes=0;
 
 	/*Gestion du plateau de recouvrement */
@@ -379,10 +379,18 @@ int placeTuile(Game* game, int id, int x, int y){ //Les coordonées de la positi
 	return EXIT_SUCCESS;
 }
 
-int canPlaceTuile(Game game, int id, int x, int y){ //Reste a traiter le cas de recouvrement complet d'une autre tuile (interdit)
+int canPlaceTuile(Game game, int id, int x, int y, int solv){ //Reste a traiter le cas de recouvrement complet d'une autre tuile (interdit)
 	int recouvreUneTuile = 0;
 	char orientation = game.tuiles[id].orientation;
 	if(orientation =='N' || orientation == 'S'){ //L'ordre des cases n'a pas d'importance pour des orientations de même axe
+
+		if (!(inPlateau(x, y,game.taille,solv))) return 0; if(game.plateau[x][y] == 'L') return 0;
+		if (!(inPlateau(x, y+1,game.taille,solv))) return 0; if (game.plateau[x][y+1] == 'L') return 0;
+		if (!(inPlateau(x+1, y,game.taille,solv))) return 0; if (game.plateau[x+1][y] == 'L') return 0;
+		if (!(inPlateau(x+1, y+1,game.taille,solv))) return 0;if (game.plateau[x+1][y+1] == 'L') return 0;
+		if (!(inPlateau(x+2, y,game.taille,solv))) return 0;if (game.plateau[x+2][y] == 'L') return 0;
+		if (!(inPlateau(x+2, y+1,game.taille,solv))) return 0; if(game.plateau[x+2][y+1] == 'L') return 0;
+
 		
 		if (game.plateau[x][y] != 0) recouvreUneTuile = 1;
 		else if(game.plateau[x][y+1] != 0) recouvreUneTuile = 1;
@@ -391,15 +399,18 @@ int canPlaceTuile(Game game, int id, int x, int y){ //Reste a traiter le cas de 
 		else if(game.plateau[x+2][y] != 0) recouvreUneTuile = 1;
 		else if(game.plateau[x+2][y+1] != 0) recouvreUneTuile = 1;
 
-		if (!(inPlateau(x, y,game.taille)) || game.plateau[x][y] == 'L') return 0;
-		if (!(inPlateau(x, y+1,game.taille)) || game.plateau[x][y+1] == 'L') return 0;
-		if (!(inPlateau(x+1, y,game.taille)) || game.plateau[x+1][y] == 'L') return 0;
-		if (!(inPlateau(x+1, y+1,game.taille)) || game.plateau[x+1][y+1] == 'L') return 0;
-		if (!(inPlateau(x+2, y,game.taille)) || game.plateau[x+2][y] == 'L') return 0;
-		if (!(inPlateau(x+2, y+1,game.taille)) || game.plateau[x+2][y+1] == 'L') return 0;
 	}
 
 	else{
+
+		if (!(inPlateau(x, y,game.taille,solv))) return 0; if (game.plateau[x][y] == 'L') return 0;
+		if (!(inPlateau(x, y+1,game.taille,solv))) return 0; if (game.plateau[x][y+1] == 'L') return 0;
+		if (!(inPlateau(x, y+2,game.taille,solv))) return 0; if (game.plateau[x][y+2] == 'L') return 0;
+		if (!(inPlateau(x+1, y,game.taille,solv))) return 0; if (game.plateau[x+1][y] == 'L') return 0;
+		if (!(inPlateau(x+1, y+1,game.taille,solv))) return 0; if (game.plateau[x+1][y+1] == 'L') return 0;
+		if (!(inPlateau(x+1, y+2,game.taille,solv))) return 0; if (game.plateau[x+1][y+2] == 'L') return 0;
+
+
 		if (game.plateau[x][y] != 0) recouvreUneTuile = 1;
 		else if(game.plateau[x][y+1] != 0) recouvreUneTuile = 1;
 		else if(game.plateau[x][y+2] != 0) recouvreUneTuile = 1;
@@ -407,16 +418,11 @@ int canPlaceTuile(Game game, int id, int x, int y){ //Reste a traiter le cas de 
 		else if(game.plateau[x+1][y+1] != 0) recouvreUneTuile = 1;
 		else if(game.plateau[x+1][y+2] != 0) recouvreUneTuile = 1;
 
-		if (!(inPlateau(x, y,game.taille)) || game.plateau[x][y] == 'L') return 0;
-		if (!(inPlateau(x, y+1,game.taille)) || game.plateau[x][y+1] == 'L') return 0;
-		if (!(inPlateau(x, y+2,game.taille)) || game.plateau[x][y+2] == 'L') return 0;
-		if (!(inPlateau(x+1, y,game.taille)) || game.plateau[x+1][y] == 'L') return 0;
-		if (!(inPlateau(x+1, y+1,game.taille)) || game.plateau[x+1][y+1] == 'L') return 0;
-		if (!(inPlateau(x+1, y+2,game.taille)) || game.plateau[x+1][y+2] == 'L') return 0;
 	}
 
-	if(!recouvreUneTuile) printf("Aucune tuile n'est recouverte !\n");
-
+	if(!recouvreUneTuile) {
+		if (!solv) printf("Aucune tuile n'est recouverte !\n");
+	}
 	return recouvreUneTuile;
 }
 

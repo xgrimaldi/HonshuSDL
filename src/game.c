@@ -2,7 +2,7 @@
 #include "tuile.h"
 #include "plateau.h"
 #include "score.h"
-
+#include "SolvNaif.h"
 
 int LoadGame(char* filepath,char* filepathTuile,Game* game){
 	//******************************
@@ -77,22 +77,26 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 	}
 }
 
-void freeGame(Game* game){
+void freeGame(Game* game,int solv){
 	for(int i=0;i<game->taille;i++){
 		free(game->plateau[i]);
-		free(game->plateauBis[i]);
+		if (!solv) free(game->plateauBis[i]);
 		free(game->plateauIDmax[i]);
-		free(game->previous[i]);
-		free(game->previousIDmax[i]);
+		if (!solv) free(game->previous[i]);
+		if (!solv) free(game->previousIDmax[i]);
 	}
-	free(game->previous);
-	free(game->previousIDmax);
+	if (!solv) free(game->previous);
+	if (!solv) free(game->previousIDmax);
+	
 	free(game->previousNBCasesRec);
 	free(game->plateau);
-	free(game->plateauBis);
+	
+	if (!solv) free(game->plateauBis);
+	
 	free(game->plateauIDmax);
 	free(game->tuiles);
-	free(game);
+	
+	if (!solv) free(game);
 }
 
 
@@ -109,7 +113,7 @@ int startGame(int typeGame){
 	//************************ws*********
 	Game* game=malloc(sizeof(Game));	
 
-	int nb_tuiles=0, choix=0 ,id_Tuile = -1,id_Tuile_prec = -1;
+	int nb_tuiles=0, choix=0,choixniv=0 ,choixsolv=0,id_Tuile = -1,id_Tuile_prec = -1;
 	int x = -1, previousx = -1;
 	char y = '^',previousy='^', orientation = 'N';
 	int accepte = 0 ,dep = 0;
@@ -211,9 +215,26 @@ int startGame(int typeGame){
 	// Lancement du jeu 
 	//**********************************
 	int stop = 0;
+	int stopsolveur;
 
 	int** ville = alloc_int_array(game->taille, game->taille);
 	initPlateau(ville,game->taille,-1);
+
+	game->nivSolv=1;
+
+	//**********************************
+	// Copie du game initial pour le solveur
+	//**********************************
+	Game gameInitial;
+	
+	gameInitial.plateau = alloc_int_array(game->taille,game->taille);
+	gameInitial.plateauIDmax = alloc_int_array(game->taille,game->taille);
+
+	gameInitial.previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+
+	gameInitial.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
+
+	copieGame2(game,&gameInitial);
 
 	while(stop == 0){
 		printRules();
@@ -225,8 +246,9 @@ int startGame(int typeGame){
 	 	printf("4 - Annuler l'action précédente\n");
 	 	printf("5 - Changer l'orientation d'une tuile\n");
 	 	printf("6 - Envoyer le village associé à une case\n");
+	 	printf("7 - Utiliser le solveur\n");
 		if (game->nbTuilesPose == game->nbTuiles){
-		  printf("7 - Terminer la partie\n");
+		  printf("8 - Terminer la partie\n");
 		}
 		printf("0 - Quitter la partie\n");
 
@@ -249,7 +271,7 @@ int startGame(int typeGame){
 				if(game->nbTuiles > 0){
 					printTuilesNonDisponibles(game->tuiles,game->nbTuiles);
 					printTuiles(game->tuiles,game->nbTuiles);
-					printf("\nLE SCORE EST DE %d points\n.",getScore(game,ville));
+					printf("\nLE SCORE EST DE %d points\n.",getScore(game,ville,0));
 				
 				}else
 					LOG_BOLDRED("Aucune tuile: Vérifier le paramètrage ! \n");
@@ -264,7 +286,8 @@ int startGame(int typeGame){
 				else if (game->tuiles[id_Tuile].pos.x != -1 && game->tuiles[id_Tuile].pos.y != -1) 
 					printf("ID indisponible ! La tuile %d est déjà placée.\n",id_Tuile);//si la tuile est déjà placé, on retourne aux choix					
 				//sinon, on peut continuer
-				else {				
+				else {	
+					accepte=0;			
         			while(accepte == 0 ){ //ordonée
 						printf("À quelle ordonée voulez vous placer la tuile %d : ", id_Tuile);
 						scanf("%d", &x);
@@ -309,7 +332,7 @@ int startGame(int typeGame){
 				    	}
 				  	}
 				  
-				  	if(!placeTuile(game, id_Tuile, x, (int) y)){
+				  	if(!placeTuile(game, id_Tuile, x, (int) y,0)){
 				    	id_Tuile_prec=id_Tuile;
 				    	printf("Placement réalisé\n");
 				    	game->nbTuilesPose++;
@@ -384,7 +407,7 @@ int startGame(int typeGame){
 				if (game->plateau[x][(int) y]!='V') 
 					LOG_BOLDRED("Ceci n'est pas une ville\n");
 				else {
-					nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville);
+					nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville,0);
 					if (nbVille== 1) 
 						printf("cette ville n'est associé à aucun village");
 					else 
@@ -395,10 +418,139 @@ int startGame(int typeGame){
 		    }
 
 
-			case 7:{
+		  
+		    case 7:{
+
+		    	stopsolveur = 0;
+		    	clearScreen();
+		    	while (stopsolveur==0){
+			    	
+			    	printf("\nQue voulez-vous faire ?\n");
+		 			printf("1 - Appliquer le solveur sur le plateau initial\n");
+		 			printf("2 - Appliquer le solveur sur le plateau actuel\n");
+		 			printf("3 - Changer le niveau du solveur (son niveau est de %d/%d)\n",game->nivSolv,game->nbTuiles-1);
+		 			printf("0 - Quitter le Solveur\n");
+		 						
+		 			choixsolv = 0;
+		 			scanf("%d",&choixsolv);
+		 			purger();
+
+		 			switch(choixsolv){
+		 				case 1:{
+
+		 					clearScreen();
+					    	
+					    	Game Solvgame;
+			    
+					    	Solvgame.plateau = alloc_int_array(game->taille,game->taille);
+							Solvgame.plateauIDmax = alloc_int_array(game->taille,game->taille);
+							Solvgame.previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+							Solvgame.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
+					    
+							copieGame2(&gameInitial,&Solvgame);
+
+					    	Game copieGame;
+			    
+					    	copieGame.plateau = alloc_int_array(game->taille,game->taille);
+							copieGame.plateauIDmax = alloc_int_array(game->taille,game->taille);
+							copieGame.previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+							copieGame.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
+					    
+							copieGame2(&gameInitial,&copieGame);
+
+
+
+					    	iterSolvNaif(copieGame,&Solvgame,game->nivSolv-1,ville);
+					    	
+
+					    	printf("Le solveur a trouvé:\n");
+					    	printf("\n");
+			    			printPlateau(Solvgame.plateau,game->taille);
+
+			    			printf("Et son SCORE est: %d\n",getScore(&Solvgame,ville,1));
+
+			    			freeGame(&Solvgame,1);
+			    			freeGame(&copieGame,1);
+			    			break;
+		 				}
+		 				case 2:{
+		 					clearScreen();
+					    	
+					    	Game Solvgame;
+			    
+					    	Solvgame.plateau = alloc_int_array(game->taille,game->taille);
+							Solvgame.plateauIDmax = alloc_int_array(game->taille,game->taille);
+							Solvgame.previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+							Solvgame.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
+					    
+					    	copieGame2(game,&Solvgame);
+
+					    	Game copieGame;
+			    
+					    	copieGame.plateau = alloc_int_array(game->taille,game->taille);
+							copieGame.plateauIDmax = alloc_int_array(game->taille,game->taille);
+							copieGame.previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+							copieGame.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
+
+
+							copieGame2(game,&copieGame);
+
+
+					    	iterSolvNaif(copieGame,&Solvgame,game->nivSolv-1,ville);
+					    	
+					    	printf("Le solveur a trouvé:\n");
+					    	printf("\n");
+			    			printPlateau(Solvgame.plateau,game->taille);
+
+			    			printf("Et son SCORE est: %d\n",getScore(&Solvgame,ville,1));
+
+			    			freeGame(&copieGame,1);
+			    			freeGame(&Solvgame,1);
+			    			break;
+		 				}
+		 				case 3:{
+		 					accepte=0;
+		 					while(accepte==0){
+			 					printf("Quel niveau voulez-vous pour le solveur ?\n");
+			 					printf("Le niveau correspond aux anticipations du solveur\n"); 
+			 					printf("1: Solveur nul mais très rapide (Glouton)\n");
+			 					if (game->nbTuiles>2) printf("2: Solveur moyen et rapide\n"); 
+			 					if (game->nbTuiles>3) printf("3: Solveur bon mais lent\n"); 
+			 					if (game->nbTuiles>4) printf("4: Solveur très bon mais très lent\n");
+			 					if (game->nbTuiles>5) printf("entre 5 et %d : Solveur excellent mais horrible\n",game->nbTuiles-1);
+			 					
+			 					scanf("%d",&choixniv);
+			 					purger();
+
+			 					if (choixniv < game->nbTuiles){
+			 						accepte=1;
+			 						game->nivSolv=choixniv;
+			 					}
+			 					else printf("Niveau invalide\n");
+		 					}
+		 					clearScreen();
+		 					break;
+		 					
+		 				}
+
+		 				case 0:{
+		 					stopsolveur=1;
+		 					clearScreen();
+		 					break;
+		 					
+		 				}
+		 			}
+
+				}
+
+		    	break;
+		    }
+
+
+			case 8:{
 			  if (game->nbTuilesPose==game->nbTuiles){
 			    clearScreen();
-			    printf("Vous avez marqué %d points !",getScore(game,ville));
+			    printf("Vous avez marqué %d points !",getScore(game,ville,0));
 			  
 			    //Comptage des points à faire
 			    stop=1;
@@ -408,7 +560,8 @@ int startGame(int typeGame){
 
 			/*QUITTER LE PROGRAMME*/
 			case 0:{
-				freeGame(game);
+				freeGame(game,1);
+				freeGame(&gameInitial,1);
 				for(int i=0;i<game->taille;i++){
 					free(ville[i]);
 				}

@@ -10,9 +10,10 @@
 *
 * \param game la structure de jeu (Game*)
 * \param ville un tableau permettant de récuperer les cordonnées des villes assovcié au plus grand village (int**)
+* \param solv = 1 si c'est le solveur qui l'utilise, 0 sinon
 * \return le score atteint (int)
 */
-int getScore(Game* game,int** ville);
+int getScore(Game* game,int** ville,int solv);
 
 /**
 * \brief Vérifie que la position x y est dans le plateau de jeu
@@ -36,9 +37,10 @@ int inPos(int x , int y, Position* positions,int nbPos);
 * \param positons du plateau de jeu
 * \param nbPos 
 * \param ville un tableau permettant de récuperer les cordonnées des autres villes assovcié au plus grand village (int**)
+* \param solv = 1 si c'est le solveur qui l'utilise, 0 sinon
 
 */
-int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* positions,int* nbPos, int** ville);
+int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* positions,int* nbPos, int** ville,int solv);
 
 /**
 * \brief impression des cordonnées des villes associées à une autre passée en paramètre se sont les coordonnées du village associé
