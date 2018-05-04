@@ -100,8 +100,8 @@ int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* posi
 
 void printVillage (int** ville, int n){
 	printf("les ville associé au village est :\n");
-	for (int i=0; i<n;i++)
-		printf("(%d,%d) ",ville[i][0],ville[i][1]);
+	for (int i=1; i<n;i++)
+		printf("(%d,%c) ",ville[i][0],(char) (64+ville[i][1]));
 } 
 
 void printRules (void){
