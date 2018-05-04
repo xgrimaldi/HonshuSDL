@@ -26,15 +26,15 @@ $(OBJDIR)/%.o: $(SRCDIRSDL)/%.c
 	$(CC) -c $(CCSDL) -o $@ $^
 
 #Fichier BIN
-$(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o  
+$(BINDIR)/honshu: $(OBJDIR)/main.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o $(OBJDIR)/SolvNaif.o
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^
 
-$(BINDIR)/honshuSDL: $(OBJDIR)/mainSDL.o $(OBJDIR)/SDL.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o $(OBJDIR)/plateau.o $(OBJDIR)/score.o  
+$(BINDIR)/honshuSDL: $(OBJDIR)/mainSDL.o $(OBJDIR)/SDL.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o $(OBJDIR)/plateau.o $(OBJDIR)/score.o $(OBJDIR)/SolvNaif.o  
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^ $(CCSDL) 
 
-$(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o  
+$(BINDIR)/test : $(OBJDIR)/test.o $(OBJDIR)/game.o $(OBJDIR)/tuile.o  $(OBJDIR)/plateau.o $(OBJDIR)/score.o $(OBJDIR)/SolvNaif.o
 	@mkdir -p $(BINDIR)
 	$(CC) -o $@ $^ $(CCUNIT)
 clean:
