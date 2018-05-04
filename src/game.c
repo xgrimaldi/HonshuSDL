@@ -385,11 +385,11 @@ int startGame(int typeGame){
 			    char y;
 			    Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
 
-				printf("Qu'elle est abscisse de la ville choisie ? \n");
+				printf("Qu'elle est ordonné  de la ville choisie ? \n");
 			    scanf("%d",&x);
 			    purger();
 
-				printf("Qu'elle est ordonné de la ville choisie ? \n");
+				printf("Qu'elle est abscisse de la ville choisie ? \n");
 			    scanf(" %c",&y);
 			    purger();
 
@@ -407,7 +407,9 @@ int startGame(int typeGame){
 				if (game->plateau[x][(int) y]!='V') 
 					LOG_BOLDRED("Ceci n'est pas une ville\n");
 				else {
-					nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville,0);
+					nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville,0,1);
+					ville [0][0]= x;
+					ville [0][1]= y;
 					if (nbVille== 1) 
 						printf("cette ville n'est associé à aucun village");
 					else 
