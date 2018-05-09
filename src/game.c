@@ -234,7 +234,7 @@ int startGame(int typeGame){
 
 	gameInitial.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
 
-	copieGame2(game,&gameInitial);
+	//copieGame2(game,&gameInitial);
 
 	while(stop == 0){
 		printRules();
@@ -272,7 +272,6 @@ int startGame(int typeGame){
 					printTuilesNonDisponibles(game->tuiles,game->nbTuiles);
 					printTuiles(game->tuiles,game->nbTuiles);
 					printf("\nLE SCORE EST DE %d points\n.",getScore(game,ville,0));
-				
 				}else
 					LOG_BOLDRED("Aucune tuile: Vérifier le paramètrage ! \n");
 				break;
@@ -611,6 +610,67 @@ void HonshuScreen(){
 	printf("	|__|  |__|  \\______/  |__| \\__| |_______/    |__|  |__|  \\______/  \n");
 	printf("\n");
 }
+
+int check_directory (char* dossier_programme){
+    char dossier_lancement[100];
+    getcwd (dossier_lancement, 100);
+    printf("%s",dossier_lancement);
+    if (strcmp (dossier_lancement, dossier_programme) != 0)
+    { /* Si le dossier de lancement est différent du dossier d'installation du programme... */
+            if (chdir(dossier_programme) == 0)
+            { /* On change le répertoire de lancement et on vérifie que tout se passe bien */
+                return EXIT_SUCCESS;
+            }
+            else 
+            {
+                return EXIT_FAILURE;
+            }
+    }
+    else 
+    {
+        return EXIT_SUCCESS;
+    }
+}
+
+void chdirToExecutable(char* chemin_programme)
+{
+    int i;
+    char dossier[100]="";
+    for (i= strlen(chemin_programme) ; i>0; i--)
+    {   
+        if (chemin_programme[i] == '\\' || chemin_programme[i] == '/'  )
+        /* Lorsqu'on tombe sur le premier "\", on commence à recopier chemin_programme dans dossier */
+        {
+
+	        dossier[i] = '\0'; 
+	        i--; /* On passe au caractère précédent pour commencer à recopier le dossier de lancement */
+	        while (i >= 0)
+	        {
+		        dossier[i] = chemin_programme[i];
+		        i--;
+	        }
+        }
+    }
+    chdir(dossier);
+}
+
+int scan_files(char* path,char** files,char* optTextIn){
+  DIR *d;
+  struct dirent *dir;
+  int cpt=0;
+  d = opendir(path);
+  if (d) {
+    while ((dir = readdir(d)) != NULL) {
+	   	if(dir->d_name[0]!='.' && optTextIn[0]==dir->d_name[0]){
+		   	strcpy(files[cpt],dir->d_name);
+   			cpt++;	
+	   	}
+    }
+    closedir(d);
+  }
+  return cpt;
+}
+
 
 void clearScreen() {
     #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)

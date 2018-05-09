@@ -79,6 +79,7 @@ typedef struct Game {
   int nbTuilesPose;
   int taille;
   int nivSolv;
+  int score;
 } Game;
 
 #endif

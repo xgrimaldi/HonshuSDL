@@ -116,6 +116,7 @@ void drawImage(SDL_Texture *image, int x, int y){
 void cleanup(){
 	// Effacement de la partie
 	cleanMenu();
+	cleanMenuCfg();
 	cleanGame();
 
     //On fait le ménage et on remet les pointeurs à NULL
@@ -184,6 +185,670 @@ void delay(unsigned int frameLimit)
     }
 }
 
+/* =======================================
+* 			MENU
+* ========================================*/
+void loadMenu(void)
+{
+	// Chargement du font
+	menu.font = TTF_OpenFont("../font/Raleway-Bold.ttf", 25);
+ 	// Charge l'image du fond (background)
+	menu.background = loadImage("../images/menu.bmp");
+	 //Chargement de la musique
+	menu.gMusic = Mix_LoadMUS( "../sound//beat2.wav" ); 
+	if( menu.gMusic == NULL ) {
+		 printf( "Impossible de lancer la musique ! SDL_mixer Error: %s\n", Mix_GetError() ); 
+		 exit(0);
+	}
+	
+	menu.nb_btn=2;
+    menu.btnMenu= malloc(menu.nb_btn*sizeof(Button));
+ 	strcpy(menu.btnMenu[0].txt,"1: Lancer une nouvelle partie");
+ 	strcpy(menu.btnMenu[1].txt,"2: Chargement partie (en dev)");
+ 	menu.btnMenu[0].value = 2;
+ 	menu.btnMenu[1].value = 3;
+ 	menu.btn_selected=-1;
+
+ 	SDL_Color color = { 255, 255, 255 , 255 };
+    for(int i=0;i<menu.nb_btn;i++) {
+    	menu.btnMenu[i].color = color;
+     	menu.btnMenu[i].rect.w = SCREEN_WIDTH;
+     	menu.btnMenu[i].rect.h = SCREEN_HEIGHT/(menu.nb_btn*4);
+     	menu.btnMenu[i].rect.x = 0;
+     	menu.btnMenu[i].rect.y = SCREEN_HEIGHT/2 + (i+1)*menu.btnMenu[i].rect.h;
+
+		SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(menu.font, menu.btnMenu[i].txt, menu.btnMenu[i].color ,menu.btnMenu[i].rect.w);
+		menu.btnMenu[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
+		SDL_FreeSurface(surface);
+    }
+}
+
+void drawMenu(void){
+	SDL_Rect dest;
+	 
+	/* Règle le rectangle à dessiner selon la taille de l'image source */
+	dest.x = 0;
+	dest.y = 0;
+	int texW = 0;
+	int texH = 0;
+
+	/* Récupère les informations */
+	SDL_QueryTexture(menu.background, NULL, NULL, &dest.w, &dest.h);
+
+	// Affiche le fond (background) aux coordonnées (0,0)
+	drawImage(menu.background, (SCREEN_WIDTH/2)-dest.w/2, (SCREEN_HEIGHT/2)-dest.h/2);
+	
+    // Affichage du plateau
+    for (int i=0;i< menu.nb_btn;i++){
+		SDL_QueryTexture(menu.btnMenu[i].texture, NULL, NULL, &texW, &texH);
+		SDL_Rect dstrect = { ((SCREEN_WIDTH-texW)/2), menu.btnMenu[i].rect.y, texW, texH};
+		SDL_RenderCopy(getrenderer(), menu.btnMenu[i].texture, NULL, &dstrect);
+    }
+
+	// Affiche l'écran
+	SDL_RenderPresent(getrenderer());
+	SDL_RenderClear(getrenderer());
+	// Délai pour laisser respirer le proc
+	SDL_Delay(1); 
+}
+ 
+void getInputsMenu(Input *input,int* state)
+{
+    SDL_Event event = input->m_evenements;
+ 
+    /* Keymapping : gère les appuis sur les touches et les enregistre
+    dans la structure input */
+    while (SDL_PollEvent(&event)){
+        switch (event.type){
+ 
+            case SDL_QUIT:
+                *state=STATE_EXIT;
+            break;
+ 
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.scancode)
+                {
+                    case SDL_SCANCODE_ESCAPE:
+                        *state=STATE_EXIT;
+                    break;
+  
+                    case SDL_SCANCODE_UP:
+                   		btnEventSelect(-1,&menu);
+                    break;
+
+                    case SDL_SCANCODE_DOWN:
+                   		btnEventSelect(1,&menu);
+                    break;
+
+					case SDL_SCANCODE_RETURN:{
+			        	if(menu.btn_selected!=-1){
+			        		*state=menu.btnMenu[menu.btn_selected].value;
+			        	}
+			        	break;
+					}
+                    case SDL_SCANCODE_1:
+                    	*state=STATE_LOADED_GAME;
+                    break;
+
+                    case SDL_SCANCODE_2:
+                    	*state=STATE_PERSO_GAME;
+                    break;
+ 
+                    default:
+                    break;
+                }
+            break;
+        }
+    }
+}
+
+void cleanMenu(void)
+{
+	// Libère la texture du background
+	if (menu.background != NULL)
+	{
+		SDL_DestroyTexture(menu.background);
+		menu.background = NULL;
+	}
+	Mix_FreeMusic( menu.gMusic );
+ 
+}
+/* =======================================
+* 			JEU
+* ========================================*/
+void loadRandomGameSDL(void)
+{
+	//Attribut data(Game)
+	jeu.data->taille=10;
+	jeu.data->nbTuiles = 10;
+	jeu.data->nbTuilesPose=1;
+	jeu.data->tuiles = malloc(MAXTUILES * sizeof(Tuile));
+	jeu.data->tuiles = randomTuile(jeu.data->nbTuiles);
+	jeu.data->tuileJoue.id = -1;
+	jeu.data->tuileJoue.pos.x=-1;
+	jeu.data->tuileJoue.pos.y=-1;
+	jeu.started=1;
+	jeu.fileTuiles=NULL;
+	jeu.filePartie=NULL;
+
+	jeu.ville = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.ville,jeu.data->taille,-1);
+	// Création du plateau de jeu de taille n*n
+	jeu.data->plateau = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->plateau,jeu.data->taille,0);
+	// Plateau de copie
+	jeu.data->plateauBis = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->plateauBis,jeu.data->taille,0);
+	// Plateau de copie
+	jeu.data->plateauIDmax = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->plateauIDmax,jeu.data->taille,-1);
+	// Plateau de copie
+	jeu.data->previous = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->previous,jeu.data->taille,0);
+	// Plateau de copie
+	jeu.data->previousIDmax = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.data->previousIDmax,jeu.data->taille,-1);
+
+	jeu.data->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+
+	//Placement de la premiere tuile
+	initPlacementTuileRandom(jeu.data);
+	jeu.data->score = getScore(jeu.data,jeu.ville,0);
+	
+	// Gestion des cases du plateau SDL
+	jeu.casePlateau= malloc(jeu.data->taille * sizeof(Case));
+	for (int i=0; i<jeu.data->taille; i++)
+	    jeu.casePlateau[i] = malloc(jeu.data->taille * sizeof(Case));
+
+	// Attribution des positions de chaque case
+    for(int row=0; row < jeu.data->taille; row++)
+    {
+        for( int column=0; column < jeu.data->taille; column++)
+        {
+			jeu.casePlateau[row][column].Outline.x=(column * (SCREEN_WIDTH*0.7/jeu.data->taille))+SCREEN_WIDTH*0.3;
+			jeu.casePlateau[row][column].Outline.y=row * SCREEN_HEIGHT/jeu.data->taille;
+			jeu.casePlateau[row][column].Outline.w=SCREEN_WIDTH*0.7/jeu.data->taille;
+			jeu.casePlateau[row][column].Outline.h=SCREEN_HEIGHT/jeu.data->taille;
+		}
+	}
+}
+
+void initGameSDL(void)
+{
+	// Malloc GAME
+	jeu.data = malloc(sizeof(Game));
+ 	// Charge l'image du fond (background)
+	jeu.img  = malloc(6 * sizeof(SDL_Texture*));
+	// Chargement du font
+	jeu.font = TTF_OpenFont("../font/Raleway-Bold.ttf", 25);
+	jeu.backgroundImage = IMG_LoadTexture(getrenderer(), "../images/bg.png");
+
+	//Attribut data(Game)
+	jeu.data->tuileJoue.id = -1;
+	jeu.data->tuileJoue.pos.x=-1;
+	jeu.data->tuileJoue.pos.y=-1;
+	jeu.started=0;
+	jeu.fileTuiles=NULL;
+	jeu.filePartie=NULL;
+	
+	/* Création du rectangle de coté */
+    jeu.leftPanel.x = 0;
+    jeu.leftPanel.y = 0;
+    jeu.leftPanel.w = SCREEN_WIDTH*0.3;
+    jeu.leftPanel.h = SCREEN_HEIGHT;
+
+    /*Création du rectangle de fond de plateau*/
+	jeu.background.x=SCREEN_WIDTH*0.3;
+	jeu.background.y=0;
+	jeu.background.w=SCREEN_WIDTH*0.7;
+	jeu.background.h=SCREEN_HEIGHT;
+
+    // Chargement des images du jeu
+	jeu.img[0] = IMG_LoadTexture(getrenderer(), "../images/lac.png");
+	jeu.img[1] = IMG_LoadTexture(getrenderer(), "../images/foret.png");
+	jeu.img[2] = IMG_LoadTexture(getrenderer(), "../images/ressource.png");
+	jeu.img[3] = IMG_LoadTexture(getrenderer(), "../images/village.png");
+	jeu.img[4] = IMG_LoadTexture(getrenderer(), "../images/plaine.png");
+	jeu.img[5] = IMG_LoadTexture(getrenderer(), "../images/usine.png");
+}
+
+void drawPlateau(void)
+{
+
+	/* GRILLE DE JEU SI BESOIN
+    int row = 0, column = 0;
+    SDL_Rect rect;
+
+    for( ; row < jeu.data->taille; row++)
+    {
+        for( column=0; column < jeu.data->taille; column++)
+        {
+        	//Création d'une grille 
+        	if ((row+column)%2 == 0 )
+   		    	SDL_SetRenderDrawColor(getrenderer(), 212, 23, 43, 0);
+   		    else
+   		    	SDL_SetRenderDrawColor(getrenderer(), 3, 26, 36, 0);
+		
+            rect.w = SCREEN_WIDTH*0.7/jeu.data->taille;
+            rect.h = SCREEN_HEIGHT/jeu.data->taille;
+            rect.x = (column * rect.w)+SCREEN_WIDTH*0.3;
+            rect.y = row * rect.h;
+            SDL_RenderFillRect(getrenderer(), &rect);
+        }
+    }
+	*/
+
+    /* Affichage de la grille */
+	for (int i=0;i<jeu.data->taille;i++){
+		for(int j=0;j<jeu.data->taille;j++){
+			if(jeu.data->plateau[i][j]!=0){
+				if(jeu.data->plateau[i][j]=='L')
+					SDL_RenderCopy(getrenderer(), jeu.img[0], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateau[i][j]=='F')
+					SDL_RenderCopy(getrenderer(), jeu.img[1], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateau[i][j]=='R')
+					SDL_RenderCopy(getrenderer(), jeu.img[2], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateau[i][j]=='V')
+					SDL_RenderCopy(getrenderer(), jeu.img[3], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateau[i][j]=='P')
+					SDL_RenderCopy(getrenderer(), jeu.img[4], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateau[i][j]=='U')
+					SDL_RenderCopy(getrenderer(), jeu.img[5], NULL, &jeu.casePlateau[i][j].Outline);
+
+			}
+		}	
+	}
+
+	/* Affichage de la grille Bis*/
+	for (int i=0;i<jeu.data->taille;i++){
+		for(int j=0;j<jeu.data->taille;j++){
+			if(jeu.data->plateauBis[i][j]!=0){
+				if(jeu.data->plateauBis[i][j]=='L')
+					SDL_RenderCopy(getrenderer(), jeu.img[0], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateauBis[i][j]=='F')
+					SDL_RenderCopy(getrenderer(), jeu.img[1], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateauBis[i][j]=='R')
+					SDL_RenderCopy(getrenderer(), jeu.img[2], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateauBis[i][j]=='V')
+					SDL_RenderCopy(getrenderer(), jeu.img[3], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateauBis[i][j]=='P')
+					SDL_RenderCopy(getrenderer(), jeu.img[4], NULL, &jeu.casePlateau[i][j].Outline);
+				else if(jeu.data->plateauBis[i][j]=='U')
+					SDL_RenderCopy(getrenderer(), jeu.img[5], NULL, &jeu.casePlateau[i][j].Outline);
+
+			}
+		}
+	}
+
+}
+
+void drawTextGame(char * message,int x, int y)
+{
+	int texW = 0;
+	int texH = 0;
+
+	SDL_Color color = { 0, 0, 0 , 0 };
+	SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(jeu.font, message, color,jeu.leftPanel.w);
+	jeu.txt_title = SDL_CreateTextureFromSurface(renderer, surface);
+	
+	SDL_QueryTexture(jeu.txt_title, NULL, NULL, &texW, &texH);
+	SDL_Rect dstrect = { x, y, texW, texH };
+	SDL_RenderCopy(renderer, jeu.txt_title, NULL, &dstrect);
+
+	SDL_FreeSurface(surface);
+}
+
+void drawGame(void)
+{
+	char test[1024]="";
+	if (jeu.data->nbTuilesPose==jeu.data->nbTuiles)
+		sprintf(test,"PARTIE TERMINEE \nLE SCORE FINAL EST DE: %d \n ECHAP POUR QUITTER",jeu.data->score);
+	else if(jeu.data->tuileJoue.id == -1)
+		sprintf(test,"Score: %d \n",jeu.data->score);
+	else if (jeu.data->tuileJoue.id >=0 && jeu.data->tuileJoue.id < jeu.data->nbTuiles)
+		sprintf(test,"Score: %d \n\nInformation: \nNumero tuile: %d/%d \nPos X/Y : %d/%d \nOrientation tuile: %c \n",jeu.data->score,jeu.data->tuileJoue.id,jeu.data->nbTuiles-1,jeu.data->tuileJoue.pos.x,jeu.data->tuileJoue.pos.y,jeu.data->tuileJoue.orientation);
+
+	
+	/* AFFICHAGE CONTOUR */
+	//Affichage en blanc
+    SDL_SetRenderDrawColor( getrenderer(), 255, 255, 255, 0);
+    // Ajout du panneau au renderer
+    SDL_RenderFillRect( getrenderer(), &jeu.leftPanel);
+
+    //Affichage en noir
+    SDL_SetRenderDrawColor( getrenderer(), 0, 0, 0, 0);
+    // Ajout du fond noir
+    SDL_RenderFillRect( getrenderer(), &jeu.background);
+
+	/* BACKGROUND IMAGE */
+	SDL_RenderCopy(getrenderer(), jeu.backgroundImage, NULL, &jeu.background);
+
+	drawTextGame(test, 5,5);
+
+    /* Affichage JEU */
+    // Affichage du plateau
+	drawPlateau();
+	
+	// Update de l'écran
+	SDL_RenderPresent(getrenderer());
+	SDL_RenderClear(getrenderer());
+
+	// Délai pour laisser respirer le proc
+	SDL_Delay(1); 
+}
+
+void cleanGame(void)
+{
+	for(int i=0;i<6;i++){
+		SDL_DestroyTexture(jeu.img[i]);
+	}
+	for (int i=0; i<10; i++)
+	     free(jeu.casePlateau[i]);
+	free(jeu.casePlateau);
+
+	freeGame(jeu.data,0);
+
+	TTF_CloseFont(jeu.font);
+ 
+}
+
+void getInputsGame(Input *input,int* state)
+{
+    SDL_Event event = input->m_evenements;
+ 
+    /* Keymapping : gère les appuis sur les touches et les enregistre
+    dans la structure input */
+    while (SDL_PollEvent(&event)){
+        switch (event.type){
+ 
+            case SDL_QUIT:
+                *state= STATE_EXIT;
+            break;
+ 
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.scancode)
+                {
+                    case SDL_SCANCODE_ESCAPE: {
+						*state = STATE_MENU;
+						break;
+					}
+					case SDL_SCANCODE_1: {
+						if (jeu.data->tuileJoue.id == -1) {
+							initTuileJoue(jeu.data);
+							placeTuileJoue(jeu.data);
+						}
+						else{
+							hideTuileJoue(jeu.data);
+							initPlateau(jeu.data->plateauBis,jeu.data->taille,0);
+						}
+						break;
+					}
+					case SDL_SCANCODE_A:{
+						if (jeu.data->tuileJoue.id != -1) {
+							nextTuileAvailable(jeu.data);
+							placeTuileJoue(jeu.data);
+						}
+						break;
+					}
+					case SDL_SCANCODE_O:{
+						changeOrientationTuileJoue(jeu.data);
+						placeTuileJoue(jeu.data);
+						break;
+					}
+					case SDL_SCANCODE_RETURN:{
+						if (jeu.data->tuileJoue.id != -1) {
+							jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
+						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x,0)){
+						    	printf("Placement réalisé\n");
+						    	jeu.data->nbTuilesPose++;
+						    	jeu.data->score = getScore(jeu.data,jeu.ville,0);
+					        	nextTuileAvailable(jeu.data);
+					        	placeTuileJoue(jeu.data);
+				        	}
+						}
+			        	break;
+					}
+
+					case SDL_SCANCODE_RIGHT: {
+                        moveTuileJoue(jeu.data,1,0);
+						break;
+					}
+					case SDL_SCANCODE_LEFT: {
+						moveTuileJoue(jeu.data,-1,0);
+						break;
+					}
+					case SDL_SCANCODE_UP: {
+                        moveTuileJoue(jeu.data,0,-1);
+						break;
+					}
+					case SDL_SCANCODE_DOWN: {
+                        moveTuileJoue(jeu.data,0,1);
+						break;
+					}
+                    default:{
+                    	break;
+                    }
+                }
+            break;
+        }
+    }
+}
+
+int selectCfgGame(int *state){
+	unsigned int frameLimit;
+	int current_state = *state;
+
+	createBtnMenuCfg("P");
+	while(jeu.filePartie == NULL && *state==current_state){
+			frameLimit = SDL_GetTicks() + 16;
+
+			getInputsMenuCfg(&input,state);
+			drawMenuCfg();
+			
+			// Gestion des 60 fps (1000ms/60 = 16.6 -> 16
+			delay(frameLimit);
+	}
+
+	createBtnMenuCfg("T");
+	while(jeu.fileTuiles == NULL && *state==current_state){
+			frameLimit = SDL_GetTicks() + 16;
+			
+			getInputsMenuCfg(&input,state);
+			drawMenuCfg();
+			
+			// Gestion des 60 fps (1000ms/60 = 16.6 -> 16
+			delay(frameLimit);
+	}
+
+	if(jeu.fileTuiles != NULL && jeu.filePartie != NULL){
+		return EXIT_SUCCESS;
+	}
+	else
+		return 0;
+}
+
+
+void loadMenuCfg()
+{
+	// Chargement du font
+	menuCfg.font = TTF_OpenFont("../font/Raleway-Bold.ttf", 25);
+ 	// Charge l'image du fond (background)
+	menuCfg.background = NULL;
+	 //Chargement de la musique
+	menuCfg.gMusic = NULL;
+}
+
+void createBtnMenuCfg(char* optionTxtContain){
+
+	char **files=(char**)malloc(100*sizeof(char*));
+	for (int i = 0; i < 100; i++){
+    	files[i] = malloc((100+1) * sizeof(char));
+	}
+	
+	// Récupération du nombre de fichiers
+	int nb_files=scan_files("../files",files,optionTxtContain);
+    menuCfg.btnMenu= malloc(nb_files*sizeof(Button));
+	menuCfg.nb_btn=nb_files;
+	menuCfg.btn_selected=-1;
+ 
+    // Récupération des boutons 
+	SDL_Color color = { 255, 255, 255 , 255 };
+    for(int i=0;i<nb_files;i++) {
+     	strcpy(menuCfg.btnMenu[i].txt,files[i]);
+     	menuCfg.btnMenu[i].color= color;
+     	menuCfg.btnMenu[i].rect.w = SCREEN_WIDTH*0.7;
+     	menuCfg.btnMenu[i].rect.h = SCREEN_HEIGHT/(nb_files+2);
+     	menuCfg.btnMenu[i].rect.x = SCREEN_WIDTH*0.3;
+     	menuCfg.btnMenu[i].rect.y = i * (menuCfg.btnMenu[i].rect.h);
+     	menuCfg.btnMenu[i].value=i;
+
+		SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(menuCfg.font,menuCfg.btnMenu[i].txt, menuCfg.btnMenu[i].color ,menuCfg.btnMenu[i].rect.w);
+		menuCfg.btnMenu[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
+		SDL_FreeSurface(surface);
+    }
+
+    free(files);
+}
+
+
+void getInputsMenuCfg(Input *input,int* state)
+{
+    SDL_Event event = input->m_evenements;
+    /* Keymapping : gère les appuis sur les touches et les enregistre
+    dans la structure input */
+    while (SDL_PollEvent(&event)){
+        switch (event.type){
+ 
+            case SDL_QUIT:
+                *state= STATE_EXIT;
+            break;
+ 
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.scancode)
+                {
+                    case SDL_SCANCODE_ESCAPE: {
+						*state = STATE_MENU;
+						break;
+					}
+					case SDL_SCANCODE_RETURN:{
+						if(menuCfg.btn_selected!=-1){
+							if (jeu.filePartie==NULL){
+								jeu.filePartie=menuCfg.btnMenu[menuCfg.btn_selected].txt;	
+							}
+							else if (jeu.fileTuiles==NULL){
+								jeu.fileTuiles=menuCfg.btnMenu[menuCfg.btn_selected].txt;	
+							}
+						}
+			        	break;
+					}
+                    case SDL_SCANCODE_UP:
+                   		btnEventSelect(-1,&menuCfg);
+                    break;
+
+                    case SDL_SCANCODE_DOWN:
+                   		btnEventSelect(1,&menuCfg);
+                    break;
+
+                    default:{
+                    	break;
+                    }
+                }
+            break;
+        }
+    }
+}
+
+void drawMenuCfg(void)
+{
+	char test[1024]="Selectionner le fichier de jeu";
+	int texW = 0;
+	int texH = 0;
+	/* AFFICHAGE CONTOUR */
+	//Affichage en blanc
+    SDL_SetRenderDrawColor( getrenderer(), 255, 255, 255, 0);
+    // Ajout du panneau au renderer
+    SDL_RenderFillRect( getrenderer(), &jeu.leftPanel);
+
+    //Affichage en noir
+    SDL_SetRenderDrawColor( getrenderer(), 0, 0, 0, 0);
+    // Ajout du fond noir
+    SDL_RenderFillRect( getrenderer(), &jeu.background);
+
+    /* Affichage JEU */
+	drawTextGame(test, 5,5);
+
+    // Affichage du plateau
+    for (int i=0;i< menuCfg.nb_btn;i++){
+	    //Affichage en noir
+	    SDL_SetRenderDrawColor( getrenderer(), 52, 23, 234, 234);
+    	// Ajout du fond noir
+    	SDL_RenderFillRect( renderer, &menuCfg.btnMenu[i].rect);
+		
+		SDL_QueryTexture(menuCfg.btnMenu[i].texture, NULL, NULL, &texW, &texH);
+		SDL_Rect dstrect = { (SCREEN_WIDTH+menuCfg.btnMenu[i].rect.x - texW)/2, menuCfg.btnMenu[i].rect.y, texW, texH };
+		SDL_RenderCopy(renderer, menuCfg.btnMenu[i].texture, NULL, &dstrect);
+    }
+	
+	// Update de l'écran
+	SDL_RenderPresent(getrenderer());
+	SDL_RenderClear(getrenderer());
+
+	// Délai pour laisser respirer le proc
+	SDL_Delay(1); 
+}
+
+void cleanMenuCfg(void)
+{
+	free(menuCfg.btnMenu);
+}
+
+/*#############################
+* BOUTONS
+###############################*/
+
+Button  updateTextButton(Button btn,char* text,SDL_Color color,TTF_Font *font){
+	btn.color = color;
+	SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(font, text, color,btn.rect.w);
+	btn.texture = SDL_CreateTextureFromSurface(getrenderer(), surface);
+	SDL_FreeSurface(surface);
+	return btn;
+}
+
+void btnEventSelect(int direction,Menu* me){
+   	SDL_Color colorUnselected = {255,255,255,255};
+	SDL_Color colorSelected = {223,3,3,255};
+	
+	if (me != NULL){
+		if (me->btn_selected==-1)
+		{
+			me->btn_selected=0;
+			me->btnMenu[0]=updateTextButton(me->btnMenu[0],me->btnMenu[0].txt,colorSelected,me->font);
+		}
+		else if( (me->btn_selected+direction) > (me->nb_btn-1) )
+		{
+			me->btnMenu[me->btn_selected] = updateTextButton(me->btnMenu[me->btn_selected],me->btnMenu[me->btn_selected].txt,colorUnselected,me->font);
+			me->btn_selected=0;
+			me->btnMenu[me->btn_selected] = updateTextButton(me->btnMenu[me->btn_selected],me->btnMenu[me->btn_selected].txt,colorSelected,me->font);		
+		}
+		else if ( (me->btn_selected+direction) < 0)
+		{
+			me->btnMenu[me->btn_selected] = updateTextButton(me->btnMenu[me->btn_selected],me->btnMenu[me->btn_selected].txt,colorUnselected,me->font);
+			me->btn_selected=me->nb_btn-1;
+			me->btnMenu[me->btn_selected] = updateTextButton(me->btnMenu[me->btn_selected],me->btnMenu[me->btn_selected].txt,colorSelected,me->font);
+		}
+		else{
+			me->btnMenu[me->btn_selected] = updateTextButton(me->btnMenu[me->btn_selected],me->btnMenu[me->btn_selected].txt,colorUnselected,me->font);
+			me->btn_selected=me->btn_selected+direction;
+			me->btnMenu[me->btn_selected] = updateTextButton(me->btnMenu[me->btn_selected],me->btnMenu[me->btn_selected].txt,colorSelected,me->font);
+		}
+	}
+
+}
+
+
+/*#############################
+* DIVERS / UTILS
+###############################*/
 // Fonction de saisie d'un texte à l'écran 
 void runTextInput(SDL_Renderer* renderer,char* rep)
 {
@@ -266,423 +931,4 @@ void runTextInput(SDL_Renderer* renderer,char* rep)
     SDL_FreeSurface(surface);
     TTF_CloseFont(font);
 	SDL_StopTextInput();
-}
-
-/* =======================================
-* 			MENU
-* ========================================*/
-void loadMenu(void)
-{
- 	// Charge l'image du fond (background)
-	menu.background = loadImage("../images/menu.bmp");
-	 //Load music
-	menu.gMusic = Mix_LoadMUS( "../sound//beat.wav" ); 
-	if( menu.gMusic == NULL ) {
-		 printf( "Impossible de lancer la musique ! SDL_mixer Error: %s\n", Mix_GetError() ); 
-		 exit(0);
-	}
-}
-
-void drawMenu(void){
-	SDL_Rect dest;
-	 
-	/* Règle le rectangle à dessiner selon la taille de l'image source */
-	dest.x = 0;
-	dest.y = 0;
-
-	/* Récupère les informations */
-	SDL_QueryTexture(menu.background, NULL, NULL, &dest.w, &dest.h);
-
-	// Affiche le fond (background) aux coordonnées (0,0)
-	drawImage(menu.background, (SCREEN_WIDTH/2)-dest.w/2, (SCREEN_HEIGHT/2)-dest.h/2);
-	 
-	// Affiche l'écran
-	SDL_RenderPresent(getrenderer());
-	SDL_RenderClear(getrenderer());
-	// Délai pour laisser respirer le proc
-	SDL_Delay(1); 
-}
- 
-void getInputsMenu(Input *input,int* state)
-{
-    SDL_Event event;
- 
-    /* Keymapping : gère les appuis sur les touches et les enregistre
-    dans la structure input */
-    while (SDL_PollEvent(&event)){
-        switch (event.type){
- 
-            case SDL_QUIT:
-                *state=0;
-            break;
- 
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_ESCAPE:
-                        *state=0;
-                    break;
-  
-                    case SDLK_UP:
-                   		input->jump=1;
-                    break;
-  
-                    case SDLK_1:
-                    	*state=2;
-                    break;
- 
-                    default:
-                    break;
-                }
-            break;
-        }
-    }
-}
-
-void cleanMenu(void)
-{
-	// Libère la texture du background
-	if (menu.background != NULL)
-	{
-		SDL_DestroyTexture(menu.background);
-		menu.background = NULL;
-	}
-	Mix_FreeMusic( menu.gMusic );
- 
-}
-/* =======================================
-* 			JEU
-* ========================================*/
-void LoadGameSDL(void)
-{
-	// Malloc GAME
-	jeu.data=malloc(sizeof(Game));
- 	// Charge l'image du fond (background)
-	jeu.img = malloc(6 * sizeof(SDL_Texture*));
-	// Chargement du font
-	jeu.font = TTF_OpenFont("../font/Raleway-Bold.ttf", 25);
-
-	//Attribut data(Game)
-	jeu.data->taille=10;
-	jeu.data->nbTuiles = 10;
-	jeu.data->nbTuilesPose=1;
-	jeu.data->tuiles = malloc(MAXTUILES * sizeof(Tuile));
-	jeu.data->tuiles = randomTuile(jeu.data->nbTuiles);
-	jeu.data->tuileJoue.id = -1;
-	jeu.data->tuileJoue.pos.x=-1;
-	jeu.data->tuileJoue.pos.y=-1;
-
-	// Création du plateau de jeu de taille n*n
-	jeu.data->plateau = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.data->plateau,jeu.data->taille,0);
-	// Plateau de copie
-	jeu.data->plateauBis = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.data->plateauBis,jeu.data->taille,0);
-	// Plateau de copie
-	jeu.data->plateauIDmax = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.data->plateauIDmax,jeu.data->taille,-1);
-	// Plateau de copie
-	jeu.data->previous = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.data->previous,jeu.data->taille,0);
-	// Plateau de copie
-	jeu.data->previousIDmax = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.data->previousIDmax,jeu.data->taille,-1);
-
-	jeu.data->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
-
-	//Placement de la premiere tuile
-	initPlacementTuileRandom(jeu.data);
-
-	// Gestion des cases du plateau SDL
-	jeu.casePlateau= malloc(jeu.data->taille * sizeof(Case));
-	for (int i=0; i<jeu.data->taille; i++)
-	    jeu.casePlateau[i] = malloc(jeu.data->taille * sizeof(Case));
-
-	// Attribution des positions de chaque case
-    for(int row=0; row < jeu.data->taille; row++)
-    {
-        for( int column=0; column < jeu.data->taille; column++)
-        {
-			jeu.casePlateau[row][column].Outline.x=(column * (SCREEN_WIDTH*0.7/jeu.data->taille))+SCREEN_WIDTH*0.3;
-			jeu.casePlateau[row][column].Outline.y=row * SCREEN_HEIGHT/jeu.data->taille;
-			jeu.casePlateau[row][column].Outline.w=SCREEN_WIDTH*0.7/jeu.data->taille;
-			jeu.casePlateau[row][column].Outline.h=SCREEN_HEIGHT/jeu.data->taille;
-		}
-	}
-
-	/* Création du rectangle de coté */
-    jeu.leftPanel.x = 0;
-    jeu.leftPanel.y = 0;
-    jeu.leftPanel.w = SCREEN_WIDTH*0.3;
-    jeu.leftPanel.h = SCREEN_HEIGHT;
-
-    /*Création du rectangle de fond de plateau*/
-	jeu.background.x=SCREEN_WIDTH*0.3;
-	jeu.background.y=0;
-	jeu.background.w=SCREEN_WIDTH*0.7;
-	jeu.background.h=SCREEN_HEIGHT;
-
-    // Chargement des images du jeu
-	jeu.img[0] = IMG_LoadTexture(getrenderer(), "../images/lac.png");
-	jeu.img[1] = IMG_LoadTexture(getrenderer(), "../images/foret.png");
-	jeu.img[2] = IMG_LoadTexture(getrenderer(), "../images/ressource.png");
-	jeu.img[3] = IMG_LoadTexture(getrenderer(), "../images/village.png");
-	jeu.img[4] = IMG_LoadTexture(getrenderer(), "../images/plaine.png");
-	jeu.img[5] = IMG_LoadTexture(getrenderer(), "../images/usine.png");
-
-}
-
-void drawPlateau(void)
-{
-    int row = 0, column = 0;
-    SDL_Rect rect;
-
-    for( ; row < jeu.data->taille; row++)
-    {
-        for( column=0; column < jeu.data->taille; column++)
-        {
-        	if ((row+column)%2 == 0 )
-   		    	SDL_SetRenderDrawColor(getrenderer(), 212, 23, 43, 0);
-   		    else
-   		    	SDL_SetRenderDrawColor(getrenderer(), 3, 26, 36, 0);
-
-            rect.w = SCREEN_WIDTH*0.7/jeu.data->taille;
-            rect.h = SCREEN_HEIGHT/jeu.data->taille;
-            rect.x = (column * rect.w)+SCREEN_WIDTH*0.3;
-            rect.y = row * rect.h;
-            SDL_RenderFillRect(getrenderer(), &rect);
-        }
-    }
-
-    /* Affichage de la grille */
-	for (int i=0;i<jeu.data->taille;i++){
-		for(int j=0;j<jeu.data->taille;j++){
-			if(jeu.data->plateau[i][j]!=0){
-				if(jeu.data->plateau[i][j]=='L')
-					SDL_RenderCopy(getrenderer(), jeu.img[0], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateau[i][j]=='F')
-					SDL_RenderCopy(getrenderer(), jeu.img[1], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateau[i][j]=='R')
-					SDL_RenderCopy(getrenderer(), jeu.img[2], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateau[i][j]=='V')
-					SDL_RenderCopy(getrenderer(), jeu.img[3], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateau[i][j]=='P')
-					SDL_RenderCopy(getrenderer(), jeu.img[4], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateau[i][j]=='U')
-					SDL_RenderCopy(getrenderer(), jeu.img[5], NULL, &jeu.casePlateau[i][j].Outline);
-
-			}
-		}	
-	}
-
-	/* Affichage de la grille Bis*/
-	for (int i=0;i<jeu.data->taille;i++){
-		for(int j=0;j<jeu.data->taille;j++){
-			if(jeu.data->plateauBis[i][j]!=0){
-				if(jeu.data->plateauBis[i][j]=='L')
-					SDL_RenderCopy(getrenderer(), jeu.img[0], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateauBis[i][j]=='F')
-					SDL_RenderCopy(getrenderer(), jeu.img[1], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateauBis[i][j]=='R')
-					SDL_RenderCopy(getrenderer(), jeu.img[2], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateauBis[i][j]=='V')
-					SDL_RenderCopy(getrenderer(), jeu.img[3], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateauBis[i][j]=='P')
-					SDL_RenderCopy(getrenderer(), jeu.img[4], NULL, &jeu.casePlateau[i][j].Outline);
-				else if(jeu.data->plateauBis[i][j]=='U')
-					SDL_RenderCopy(getrenderer(), jeu.img[5], NULL, &jeu.casePlateau[i][j].Outline);
-
-			}
-		}
-	}
-
-}
-
-void drawTextGame(char * message,int x, int y){
-	int texW = 0;
-	int texH = 0;
-
-	SDL_Color color = { 0, 0, 0 , 0 };
-	SDL_Surface * surface = TTF_RenderText_Solid(jeu.font, message, color);
-	jeu.txt_title = SDL_CreateTextureFromSurface(renderer, surface);
-	
-	SDL_QueryTexture(jeu.txt_title, NULL, NULL, &texW, &texH);
-	SDL_Rect dstrect = { x, y, texW, texH };
-	SDL_RenderCopy(renderer, jeu.txt_title, NULL, &dstrect);
-
-	SDL_FreeSurface(surface);
-}
-
-void drawTuileSelected(){
-	if(jeu.data->tuileJoue.id!=-1){
-		printf("OK");
-	}
-}
-
-void drawGame(void){
-	/* AFFICHAGE CONTOUR */
-	//Affichage en blanc
-    SDL_SetRenderDrawColor( getrenderer(), 255, 255, 255, 0);
-    // Ajout du panneau au renderer
-    SDL_RenderFillRect( getrenderer(), &jeu.leftPanel);
-
-    //Affichage en noir
-    SDL_SetRenderDrawColor( getrenderer(), 0, 0, 0, 0);
-    // Ajout du fond noir
-    SDL_RenderFillRect( getrenderer(), &jeu.background);
-
-	drawTextGame("Tuile en main", 5,5);
-    /* Affichage JEU */
-    // Affichage du plateau
-	drawPlateau();
-	
-	// Update de l'écran
-	SDL_RenderPresent(getrenderer());
-	SDL_RenderClear(getrenderer());
-
-	// Délai pour laisser respirer le proc
-	SDL_Delay(1); 
-}
-
-void cleanGame(void)
-{
-	for(int i=0;i<6;i++){
-		SDL_DestroyTexture(jeu.img[i]);
-	}
-	for (int i=0; i<10; i++)
-	     free(jeu.casePlateau[i]);
-	free(jeu.casePlateau);
-
-	freeGame(jeu.data,0);
-
-	TTF_CloseFont(jeu.font);
- 
-}
-
-void getInputsGame(Input *input,int* state)
-{
-    SDL_Event event;
- 
-    /* Keymapping : gère les appuis sur les touches et les enregistre
-    dans la structure input */
-    while (SDL_PollEvent(&event)){
-        switch (event.type){
- 
-            case SDL_QUIT:
-                *state= 0;
-            break;
- 
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_ESCAPE: {
-						*state = 1;
-						break;
-					}
-					case SDLK_1: {
-						if (jeu.data->tuileJoue.id == -1) {
-							initTuileJoue(jeu.data);
-						}
-						placeTuileJoue(jeu.data);
-						break;
-					}
-					case SDLK_a:{
-						if (jeu.data->tuileJoue.id != -1) {
-							nextTuileAvailable(jeu.data);
-							placeTuileJoue(jeu.data);
-						}
-						break;
-					}
-					case SDLK_o:{
-						changeOrientationTuileJoue(jeu.data);
-						placeTuileJoue(jeu.data);
-						break;
-					}
-					case SDLK_RETURN:{
-						if (jeu.data->tuileJoue.id != -1) {
-							jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
-						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x,0)){
-						    	printf("Placement réalisé\n");
-						    	jeu.data->nbTuilesPose++;
-				        	}
-				        	nextTuileAvailable(jeu.data);
-				        	placeTuileJoue(jeu.data);
-						}
-			        	break;
-					}
-
-					case SDLK_RIGHT: {
-                        moveTuileJoue(jeu.data,1,0);
-						break;
-					}
-					case SDLK_LEFT: {
-						moveTuileJoue(jeu.data,-1,0);
-						break;
-					}
-					case SDLK_UP: {
-                        moveTuileJoue(jeu.data,0,-1);
-						break;
-					}
-					case SDLK_DOWN: {
-                        moveTuileJoue(jeu.data,0,1);
-						break;
-					}
-                    default:{
-                    	input->jump=-1;
-                    	break;
-                    }
-                }
-            break;
-        }
-    }
-}
-/* =======================================
-* 			Main fonction
-* ========================================*/
-int startGameSDL() {
-	int state=1;
-	unsigned int frameLimit = SDL_GetTicks() + 16;
-
-	 // Initialisation de la SDL
-	initHonshu("Honshu");
-	 
-	// Chargement des ressources (graphismes, sons)
-	loadMenu();
-	LoadGameSDL();
-
-	// Appelle la fonction cleanup à la fin du programme
-	atexit(cleanup);
-	 
-	// Boucle infinie, principale, du jeu
-	while (state != 0)
-	{	 	
-	 	if(state==1){
-	 		if(menu.background==NULL){
-	 			loadMenu();
-	 		}
-	 		//If there is no music playing 
- 			if( Mix_PlayingMusic() == 0 ) { 
- 				//Play the music
-	 		 	Mix_PlayMusic( menu.gMusic, -1 );
-	 		}
-			//Gestion des inputs clavier
-			getInputsMenu(&input,&state);
-			//On dessine tout
-			drawMenu();
-		}
-		
-		else if(state==2){
-			getInputsGame(&input,&state);
-			drawGame();
-			if(state!=2){
-				cleanScreenSDL();
-			}
-		}
-		// Gestion des 60 fps (1000ms/60 = 16.6 -> 16
-		delay(frameLimit);
-		frameLimit = SDL_GetTicks() + 16;
-	}
-
-	// On quitte
-	exit(0);
 }

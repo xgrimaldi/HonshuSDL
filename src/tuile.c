@@ -384,12 +384,12 @@ int canPlaceTuile(Game game, int id, int x, int y, int solv){ //Reste a traiter 
 	char orientation = game.tuiles[id].orientation;
 	if(orientation =='N' || orientation == 'S'){ //L'ordre des cases n'a pas d'importance pour des orientations de même axe
 
-		if (!(inPlateau(x, y,game.taille,solv))) return 0; if(game.plateau[x][y] == 'L') return 0;
-		if (!(inPlateau(x, y+1,game.taille,solv))) return 0; if (game.plateau[x][y+1] == 'L') return 0;
-		if (!(inPlateau(x+1, y,game.taille,solv))) return 0; if (game.plateau[x+1][y] == 'L') return 0;
-		if (!(inPlateau(x+1, y+1,game.taille,solv))) return 0;if (game.plateau[x+1][y+1] == 'L') return 0;
-		if (!(inPlateau(x+2, y,game.taille,solv))) return 0;if (game.plateau[x+2][y] == 'L') return 0;
-		if (!(inPlateau(x+2, y+1,game.taille,solv))) return 0; if(game.plateau[x+2][y+1] == 'L') return 0;
+		if (!(inPlateau(x, y,game.taille,solv)) || (game.plateau[x][y] == 'L')) return 0;
+		if (!(inPlateau(x, y+1,game.taille,solv)) || (game.plateau[x][y+1] == 'L')) return 0;
+		if (!(inPlateau(x+1, y,game.taille,solv)) || (game.plateau[x+1][y] == 'L')) return 0;
+		if (!(inPlateau(x+1, y+1,game.taille,solv)) || (game.plateau[x+1][y+1] == 'L')) return 0;
+		if (!(inPlateau(x+2, y,game.taille,solv)) || (game.plateau[x+2][y] == 'L')) return 0;
+		if (!(inPlateau(x+2, y+1,game.taille,solv)) || (game.plateau[x+2][y+1] == 'L')) return 0;
 
 		
 		if (game.plateau[x][y] != 0) recouvreUneTuile = 1;
@@ -403,12 +403,12 @@ int canPlaceTuile(Game game, int id, int x, int y, int solv){ //Reste a traiter 
 
 	else{
 
-		if (!(inPlateau(x, y,game.taille,solv))) return 0; if (game.plateau[x][y] == 'L') return 0;
-		if (!(inPlateau(x, y+1,game.taille,solv))) return 0; if (game.plateau[x][y+1] == 'L') return 0;
-		if (!(inPlateau(x, y+2,game.taille,solv))) return 0; if (game.plateau[x][y+2] == 'L') return 0;
-		if (!(inPlateau(x+1, y,game.taille,solv))) return 0; if (game.plateau[x+1][y] == 'L') return 0;
-		if (!(inPlateau(x+1, y+1,game.taille,solv))) return 0; if (game.plateau[x+1][y+1] == 'L') return 0;
-		if (!(inPlateau(x+1, y+2,game.taille,solv))) return 0; if (game.plateau[x+1][y+2] == 'L') return 0;
+		if (!(inPlateau(x, y,game.taille,solv)) || (game.plateau[x][y] == 'L')) return 0;
+		if (!(inPlateau(x, y+1,game.taille,solv)) || (game.plateau[x][y+1] == 'L')) return 0;
+		if (!(inPlateau(x, y+2,game.taille,solv)) || (game.plateau[x][y+2] == 'L')) return 0;
+		if (!(inPlateau(x+1, y,game.taille,solv)) || (game.plateau[x+1][y] == 'L')) return 0;
+		if (!(inPlateau(x+1, y+1,game.taille,solv)) || (game.plateau[x+1][y+1] == 'L')) return 0;
+		if (!(inPlateau(x+1, y+2,game.taille,solv)) || (game.plateau[x+1][y+2] == 'L')) return 0;
 
 
 		if (game.plateau[x][y] != 0) recouvreUneTuile = 1;
@@ -457,11 +457,18 @@ void firstTuileAvailable(Game* game){
 	}
 }
 
-
 void initTuileJoue(Game* game){
 	firstTuileAvailable(game);
 	game->tuileJoue.pos.x=0;
 	game->tuileJoue.pos.y=0;
+	game->tuileJoue.orientation='N';
+}
+
+
+void hideTuileJoue(Game* game){
+	game->tuileJoue.id=-1;
+	game->tuileJoue.pos.x=-1;
+	game->tuileJoue.pos.y=-1;
 	game->tuileJoue.orientation='N';
 }
 

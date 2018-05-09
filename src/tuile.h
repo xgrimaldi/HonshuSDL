@@ -114,6 +114,7 @@ int canPlaceTuile(Game game, int id, int x,int y,int solv);
 Tuile* randomTuile(int nb_Tuile);
 
 void initTuileJoue(Game* game);
+void hideTuileJoue(Game* game);
 void firstTuileAvailable(Game* game);
 void changeOrientationTuileJoue(Game* game);
 

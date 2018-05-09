@@ -1,22 +1,11 @@
-/**
-* \file game.h
-* 
-* Création des paramètres HONSHU. 5 fonctions sont définies:
-* - \b LoadGame charge une partie
-* - \b startGame démarre une partie
-* - \b fileExist vérifie si un fichier existe
-* - \b randomMinMax créer un nombre random entre 2 bornes
-* - \b purger purger la stdin
-* - \b HonshuScreen ecrit HONSHU
-* - \b clearScreen efface l'écran
-*/
-
 #ifndef GAME_H
 #define GAME_H
 
+#include <dirent.h>
 #include "struct.h"
 #include "tuile.h"
 #include "plateau.h"
+#include "SolvNaif.h"
 
 /**
 * \brief Importe un fichier de tuile 
@@ -36,6 +25,8 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game);
 * \param solv = 1 si c'est le solveur qui utilise la fonction 0 sinon
 */
 void freeGame(Game* game,int solv);
+void freeGame(Game* game,int solv);
+
 
 /**
 * \brief Initialise une partie
@@ -86,5 +77,10 @@ void HonshuScreen();
 *
 */
 void clearScreen();
+
+
+int check_directory (char* dossier_programme);
+void chdirToExecutable(char* chemin_programme);
+int scan_files(char* path,char** files,char* optTextIn);
 
 #endif

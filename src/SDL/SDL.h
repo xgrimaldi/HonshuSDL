@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include <stdbool.h>
 
 #include "../game.h"
 #include "../struct.h"
@@ -15,18 +16,41 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 480
 
+#define STATE_EXIT 0
+#define STATE_MENU 1
+#define STATE_LOADED_GAME 2
+#define STATE_PERSO_GAME 3
 
 
  // Structure pour gérer la map à afficher (à compléter plus tard)
-typedef struct Menu{
-	SDL_Texture *background;
-	Mix_Music *gMusic;
-} Menu;
+typedef struct Button{
+	SDL_Texture* texture;
+	SDL_Rect rect;
+	SDL_Color color;
+	char txt[100];
+	int value;
+} Button;
+
+typedef struct Files{
+	char **files;
+	int nb_files;
+}Files;
+
 
 typedef struct Case{
 	SDL_Rect Outline;
 	char type;	
 } Case;
+
+
+typedef struct Menu{
+	SDL_Texture *background;
+	Mix_Music *gMusic;
+	Button* btnMenu;
+	TTF_Font *font; 
+	int btn_selected;
+	int nb_btn;
+} Menu;
 
 typedef struct GameSDL{
 	SDL_Texture **img;
@@ -34,30 +58,36 @@ typedef struct GameSDL{
 	SDL_Texture *txt_idSelected;
 	SDL_Rect leftPanel;
 	SDL_Rect background;
+	SDL_Texture *backgroundImage;
 	TTF_Font *font;
+	char* filePartie;
+	char* fileTuiles;
 	Case **casePlateau;
 	Game* data;
+	int** ville;
+	int started;
 } GameSDL;
-
 
 // Structure pour gérer l'input (clavier puis joystick)
 typedef struct Input
 {
-    int left, right, up, down, jump, attack, enter, erase, pause;
- 
+    SDL_Event m_evenements;
 } Input;
 
 /* Variables globables */
 SDL_Window *screen;
 SDL_Renderer *renderer;
 Menu menu;
+Menu menuCfg;
 GameSDL jeu;
 Input input;
 
+/* ##########
+* FONCTIONS
+############# */
+
 void drawPlateau();
 void cleanScreen(void);
-void getInputsGame(Input *input,int* state);
-void getInputsMenu(Input *input,int* state);
 void drawLeftPanelGame(void);
 SDL_Texture *loadImage(char *name);
 void delay(unsigned int frameLimit);
@@ -69,10 +99,26 @@ void cleanMenu();
 void initHonshu(char *title);
 SDL_Renderer *getrenderer(void);
 void drawImage(SDL_Texture *image, int x, int y);
+
 int startGameSDL();
-void LoadGameSDL();
+void initGameSDL();
+void loadRandomGameSDL();
 void loadMenu();
 void cleanScreenSDL();
 
+void loadMenuCfg();
+void createBtnMenuCfg(char* optionTxtContain);
+void drawMenuCfg(void);
+void cleanMenuCfg(void);
+int selectCfgGame(int *state);
+
+Button updateTextButton(Button btn,char* text,SDL_Color color,TTF_Font *font);
+void btnEventSelect(int direction,Menu* me);
+
+
+/* GESTION DES INPUTS */
+void getInputsGame(Input *input,int* state);
+void getInputsMenu(Input *input,int* state);
+void getInputsMenuCfg(Input *input,int* state);
 
 #endif

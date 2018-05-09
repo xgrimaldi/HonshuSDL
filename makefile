@@ -5,7 +5,7 @@ CCSDL = `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 SRCDIRSDL= src/SDL
 SRCDIR = src
 OBJDIR = obj
-BINDIR = .
+BINDIR = bin
 TESTDIR = tests
 
 all: $(BINDIR)/honshu $(BINDIR)/test $(BINDIR)/honshuSDL
