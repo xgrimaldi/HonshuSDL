@@ -311,7 +311,12 @@ void cleanMenu(void)
 		menu.background = NULL;
 	}
 	Mix_FreeMusic( menu.gMusic );
- 
+
+ 	for(int i=0;i<menu.nb_btn;i++){
+		SDL_DestroyTexture(menu.btnMenu[i].texture);
+	}
+	free(menu.btnMenu);
+	TTF_CloseFont(menu.font);
 }
 /* =======================================
 * 			JEU
@@ -355,6 +360,44 @@ void loadRandomGameSDL(void)
 	initPlacementTuileRandom(jeu.data);
 	jeu.data->score = getScore(jeu.data,jeu.ville,0);
 	
+	// Gestion des cases du plateau SDL
+	jeu.casePlateau= malloc(jeu.data->taille * sizeof(Case));
+	for (int i=0; i<jeu.data->taille; i++)
+	    jeu.casePlateau[i] = malloc(jeu.data->taille * sizeof(Case));
+
+	// Attribution des positions de chaque case
+    for(int row=0; row < jeu.data->taille; row++)
+    {
+        for( int column=0; column < jeu.data->taille; column++)
+        {
+			jeu.casePlateau[row][column].Outline.x=(column * (SCREEN_WIDTH*0.7/jeu.data->taille))+SCREEN_WIDTH*0.3;
+			jeu.casePlateau[row][column].Outline.y=row * SCREEN_HEIGHT/jeu.data->taille;
+			jeu.casePlateau[row][column].Outline.w=SCREEN_WIDTH*0.7/jeu.data->taille;
+			jeu.casePlateau[row][column].Outline.h=SCREEN_HEIGHT/jeu.data->taille;
+		}
+	}
+}
+
+void loadGameSDL(void)
+{
+	char tuiles[100]="../files/";
+	char partie[100]="../files/";
+
+	// Load Game
+	jeu.data->tuiles = malloc(MAXTUILES * sizeof(Tuile));
+	strcat(tuiles,jeu.fileTuiles);
+	strcat(partie,jeu.filePartie);
+	LoadGame(partie,tuiles,jeu.data);
+	jeu.data->tuileJoue.id = -1;
+	jeu.data->tuileJoue.pos.x=-1;
+	jeu.data->tuileJoue.pos.y=-1;
+	jeu.started=1;
+
+	// Gestion score
+	jeu.ville = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.ville,jeu.data->taille,-1);
+	jeu.data->score = getScore(jeu.data,jeu.ville,0);
+
 	// Gestion des cases du plateau SDL
 	jeu.casePlateau= malloc(jeu.data->taille * sizeof(Case));
 	for (int i=0; i<jeu.data->taille; i++)
@@ -542,9 +585,16 @@ void cleanGame(void)
 	for(int i=0;i<6;i++){
 		SDL_DestroyTexture(jeu.img[i]);
 	}
-	for (int i=0; i<10; i++)
-	     free(jeu.casePlateau[i]);
+	SDL_DestroyTexture(jeu.txt_title);
+	SDL_DestroyTexture(jeu.txt_idSelected);
+	SDL_DestroyTexture(jeu.backgroundImage);
+
+	for (int i=0; i<jeu.data->taille; i++){
+	    free(jeu.casePlateau[i]);
+		free(jeu.ville[i]);
+	}
 	free(jeu.casePlateau);
+	free(jeu.ville);
 
 	freeGame(jeu.data,0);
 
@@ -573,7 +623,7 @@ void getInputsGame(Input *input,int* state)
 						break;
 					}
 					case SDL_SCANCODE_1: {
-						if (jeu.data->tuileJoue.id == -1) {
+						if (jeu.data->tuileJoue.id == -1 && jeu.data->nbTuilesPose < jeu.data->nbTuiles) {
 							initTuileJoue(jeu.data);
 							placeTuileJoue(jeu.data);
 						}
@@ -584,7 +634,7 @@ void getInputsGame(Input *input,int* state)
 						break;
 					}
 					case SDL_SCANCODE_A:{
-						if (jeu.data->tuileJoue.id != -1) {
+						if (jeu.data->tuileJoue.id != -1 && jeu.data->nbTuilesPose < jeu.data->nbTuiles) {
 							nextTuileAvailable(jeu.data);
 							placeTuileJoue(jeu.data);
 						}
@@ -596,7 +646,7 @@ void getInputsGame(Input *input,int* state)
 						break;
 					}
 					case SDL_SCANCODE_RETURN:{
-						if (jeu.data->tuileJoue.id != -1) {
+						if (jeu.data->tuileJoue.id != -1 && jeu.data->nbTuilesPose < jeu.data->nbTuiles) {
 							jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
 						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x,0)){
 						    	printf("Placement réalisé\n");
@@ -605,6 +655,10 @@ void getInputsGame(Input *input,int* state)
 					        	nextTuileAvailable(jeu.data);
 					        	placeTuileJoue(jeu.data);
 				        	}
+				        	if(jeu.data->nbTuilesPose == jeu.data->nbTuiles){
+								hideTuileJoue(jeu.data);
+								initPlateau(jeu.data->plateauBis,jeu.data->taille,0);
+							}
 						}
 			        	break;
 					}
@@ -799,14 +853,18 @@ void drawMenuCfg(void)
 
 void cleanMenuCfg(void)
 {
+	for(int i=0;i<menuCfg.nb_btn;i++){
+		SDL_DestroyTexture(menuCfg.btnMenu[i].texture);
+	}
 	free(menuCfg.btnMenu);
+	TTF_CloseFont(menuCfg.font);
 }
 
 /*#############################
 * BOUTONS
 ###############################*/
 
-Button  updateTextButton(Button btn,char* text,SDL_Color color,TTF_Font *font){
+Button updateTextButton(Button btn,char* text,SDL_Color color,TTF_Font *font){
 	btn.color = color;
 	SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(font, text, color,btn.rect.w);
 	btn.texture = SDL_CreateTextureFromSurface(getrenderer(), surface);

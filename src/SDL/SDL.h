@@ -21,8 +21,6 @@
 #define STATE_LOADED_GAME 2
 #define STATE_PERSO_GAME 3
 
-
- // Structure pour gérer la map à afficher (à compléter plus tard)
 typedef struct Button{
 	SDL_Texture* texture;
 	SDL_Rect rect;
@@ -46,8 +44,8 @@ typedef struct Case{
 typedef struct Menu{
 	SDL_Texture *background;
 	Mix_Music *gMusic;
-	Button* btnMenu;
 	TTF_Font *font; 
+	Button* btnMenu;
 	int btn_selected;
 	int nb_btn;
 } Menu;
@@ -56,14 +54,14 @@ typedef struct GameSDL{
 	SDL_Texture **img;
 	SDL_Texture *txt_title;
 	SDL_Texture *txt_idSelected;
+	SDL_Texture *backgroundImage;
 	SDL_Rect leftPanel;
 	SDL_Rect background;
-	SDL_Texture *backgroundImage;
 	TTF_Font *font;
-	char* filePartie;
-	char* fileTuiles;
 	Case **casePlateau;
 	Game* data;
+	char* filePartie;
+	char* fileTuiles;
 	int** ville;
 	int started;
 } GameSDL;
@@ -103,6 +101,7 @@ void drawImage(SDL_Texture *image, int x, int y);
 int startGameSDL();
 void initGameSDL();
 void loadRandomGameSDL();
+void loadGameSDL();
 void loadMenu();
 void cleanScreenSDL();
 
