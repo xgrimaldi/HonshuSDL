@@ -66,6 +66,10 @@ typedef struct GameSDL{
 	int started;
 } GameSDL;
 
+typedef struct GameRessources{
+	SDL_Texture *tilesetBtn;
+} GameRessources; 
+
 // Structure pour gérer l'input (clavier puis joystick)
 typedef struct Input
 {
@@ -78,6 +82,7 @@ SDL_Renderer *renderer;
 Menu menu;
 Menu menuCfg;
 GameSDL jeu;
+GameRessources src;
 Input input;
 
 /* ##########
@@ -102,7 +107,8 @@ int startGameSDL();
 void initGameSDL();
 void loadRandomGameSDL();
 void loadGameSDL();
-void loadMenu();
+void initMenu(void);
+void loadMenu(void);
 void cleanScreenSDL();
 
 void loadMenuCfg();
@@ -119,5 +125,9 @@ void btnEventSelect(int direction,Menu* me);
 void getInputsGame(Input *input,int* state);
 void getInputsMenu(Input *input,int* state);
 void getInputsMenuCfg(Input *input,int* state);
+
+/* GESTION DES TILE */
+void initRessources();
+void drawTile(SDL_Texture *image, int destx, int desty, int destw, int desth ,int srcx, int srcy,int tileWSize, int tileHSize);
 
 #endif

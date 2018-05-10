@@ -26,6 +26,8 @@ int main(int argc, char *argv[]) {
 		 
 		// Chargement des ressources (graphismes, sons)
 		initGameSDL();
+		initMenu();
+		initRessources();
 		loadMenu();
 		loadMenuCfg();
 
@@ -40,40 +42,41 @@ int main(int argc, char *argv[]) {
 		// Boucle infinie, principale, du jeu
 		while (state != STATE_EXIT)
 		{	 	
+			//STATE_MENU
 		 	if(state==1){
-		 		if(menu.background==NULL){
-		 			loadMenu();
-		 		}
 				//Gestion des inputs clavier
 				getInputsMenu(&input,&state);
 				//On dessine tout
 				drawMenu();
 			}
 			
+			// STATE_LOADED_GAME
 			else if(state==2){
-				if(!jeu.started) {
+				if(!jeu.started){
 					loadRandomGameSDL();
 				}
 				else{
 					getInputsGame(&input,&state);
 					drawGame();
-					if(state!=2){
-						cleanScreenSDL();
-					}
 				}
 			}
+
+			// STATE_PERSO_GAME
 			else if(state==3){
-				if(!jeu.started) {
+				if(!jeu.started)
+				{
 					if(selectCfgGame(&state)== EXIT_FAILURE){
 						state=STATE_MENU;
 					}
 					loadGameSDL();
 				}
-				else{
+				else
+				{
 					getInputsGame(&input,&state);
 					drawGame();
 				}
 			}
+
 			// Gestion des 60 fps (1000ms/60 = 16.6 -> 16)
 			delay(frameLimit);
 			frameLimit = SDL_GetTicks() + 16;

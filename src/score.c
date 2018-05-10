@@ -73,8 +73,6 @@ int Add_Case_And_Check_Around(Game* game,char lettre,int x, int y,Position* posi
 	*nbPos=*nbPos+1;
 	nbCaseContigue++;
 	
-	
-
 	// On teste les cases alentours en recursive
 	if(inPlateau(x+1,y,game->taille,solv) && !inPos(x+1,y,positions,*nbPos) && game->plateau[x+1][y]==lettre) {
 		ville [c][0]= x+1;

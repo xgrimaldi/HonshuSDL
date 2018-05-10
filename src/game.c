@@ -53,6 +53,9 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 		nbTuiles=atoi(word);
 		game->nbTuiles=nbTuiles;
 		game->nbTuilesPose=1;
+		game->tuileJoue.id = -1;
+		game->tuileJoue.pos.x=-1;
+		game->tuileJoue.pos.y=-1;
 
 		// Copie des tuiles
  		for(int nbImport=0;nbImport<nbTuiles;nbImport++){

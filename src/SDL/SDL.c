@@ -188,7 +188,11 @@ void delay(unsigned int frameLimit)
 /* =======================================
 * 			MENU
 * ========================================*/
-void loadMenu(void)
+void initRessources(void){
+		src.tilesetBtn = IMG_LoadTexture(getrenderer(), "../images/tilsetbtn.png");
+}
+
+void initMenu(void)
 {
 	// Chargement du font
 	menu.font = TTF_OpenFont("../font/Raleway-Bold.ttf", 25);
@@ -200,11 +204,13 @@ void loadMenu(void)
 		 printf( "Impossible de lancer la musique ! SDL_mixer Error: %s\n", Mix_GetError() ); 
 		 exit(0);
 	}
-	
+}
+void loadMenu(void)
+{
 	menu.nb_btn=2;
     menu.btnMenu= malloc(menu.nb_btn*sizeof(Button));
- 	strcpy(menu.btnMenu[0].txt,"1: Lancer une nouvelle partie");
- 	strcpy(menu.btnMenu[1].txt,"2: Chargement partie (en dev)");
+ 	strcpy(menu.btnMenu[0].txt,"1: Lancer une partie aléatoire");
+ 	strcpy(menu.btnMenu[1].txt,"2: Charger une partie");
  	menu.btnMenu[0].value = 2;
  	menu.btnMenu[1].value = 3;
  	menu.btn_selected=-1;
@@ -217,7 +223,7 @@ void loadMenu(void)
      	menu.btnMenu[i].rect.x = 0;
      	menu.btnMenu[i].rect.y = SCREEN_HEIGHT/2 + (i+1)*menu.btnMenu[i].rect.h;
 
-		SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(menu.font, menu.btnMenu[i].txt, menu.btnMenu[i].color ,menu.btnMenu[i].rect.w);
+		SDL_Surface * surface = TTF_RenderUTF8_Blended_Wrapped(menu.font, menu.btnMenu[i].txt, menu.btnMenu[i].color ,menu.btnMenu[i].rect.w);
 		menu.btnMenu[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
 		SDL_FreeSurface(surface);
     }
@@ -266,31 +272,31 @@ void getInputsMenu(Input *input,int* state)
             break;
  
             case SDL_KEYDOWN:
-                switch (event.key.keysym.scancode)
+                switch (event.key.keysym.sym)
                 {
-                    case SDL_SCANCODE_ESCAPE:
+                    case SDLK_ESCAPE:
                         *state=STATE_EXIT;
                     break;
   
-                    case SDL_SCANCODE_UP:
+                    case SDLK_UP:
                    		btnEventSelect(-1,&menu);
                     break;
 
-                    case SDL_SCANCODE_DOWN:
+                    case SDLK_DOWN:
                    		btnEventSelect(1,&menu);
                     break;
 
-					case SDL_SCANCODE_RETURN:{
+					case SDLK_RETURN:{
 			        	if(menu.btn_selected!=-1){
 			        		*state=menu.btnMenu[menu.btn_selected].value;
 			        	}
 			        	break;
 					}
-                    case SDL_SCANCODE_1:
+                    case SDLK_1:
                     	*state=STATE_LOADED_GAME;
                     break;
 
-                    case SDL_SCANCODE_2:
+                    case SDLK_2:
                     	*state=STATE_PERSO_GAME;
                     break;
  
@@ -332,12 +338,7 @@ void loadRandomGameSDL(void)
 	jeu.data->tuileJoue.id = -1;
 	jeu.data->tuileJoue.pos.x=-1;
 	jeu.data->tuileJoue.pos.y=-1;
-	jeu.started=1;
-	jeu.fileTuiles=NULL;
-	jeu.filePartie=NULL;
 
-	jeu.ville = alloc_int_array(jeu.data->taille, jeu.data->taille);
-	initPlateau(jeu.ville,jeu.data->taille,-1);
 	// Création du plateau de jeu de taille n*n
 	jeu.data->plateau = alloc_int_array(jeu.data->taille, jeu.data->taille);
 	initPlateau(jeu.data->plateau,jeu.data->taille,0);
@@ -353,10 +354,17 @@ void loadRandomGameSDL(void)
 	// Plateau de copie
 	jeu.data->previousIDmax = alloc_int_array(jeu.data->taille, jeu.data->taille);
 	initPlateau(jeu.data->previousIDmax,jeu.data->taille,-1);
-
+	// PreivousNbCases
 	jeu.data->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
 
-	//Placement de la premiere tuile
+	// Gestion des élements de jeu SDL
+	jeu.started=1;
+	jeu.fileTuiles=NULL;
+	jeu.filePartie=NULL;
+	jeu.ville = alloc_int_array(jeu.data->taille, jeu.data->taille);
+	initPlateau(jeu.ville,jeu.data->taille,-1);
+
+	//Placement de la premiere tuile et gestion du score
 	initPlacementTuileRandom(jeu.data);
 	jeu.data->score = getScore(jeu.data,jeu.ville,0);
 	
@@ -388,9 +396,7 @@ void loadGameSDL(void)
 	strcat(tuiles,jeu.fileTuiles);
 	strcat(partie,jeu.filePartie);
 	LoadGame(partie,tuiles,jeu.data);
-	jeu.data->tuileJoue.id = -1;
-	jeu.data->tuileJoue.pos.x=-1;
-	jeu.data->tuileJoue.pos.y=-1;
+
 	jeu.started=1;
 
 	// Gestion score
@@ -531,7 +537,7 @@ void drawTextGame(char * message,int x, int y)
 	int texH = 0;
 
 	SDL_Color color = { 0, 0, 0 , 0 };
-	SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(jeu.font, message, color,jeu.leftPanel.w);
+	SDL_Surface * surface = TTF_RenderUTF8_Blended_Wrapped(jeu.font, message, color,jeu.leftPanel.w);
 	jeu.txt_title = SDL_CreateTextureFromSurface(renderer, surface);
 	
 	SDL_QueryTexture(jeu.txt_title, NULL, NULL, &texW, &texH);
@@ -545,11 +551,11 @@ void drawGame(void)
 {
 	char test[1024]="";
 	if (jeu.data->nbTuilesPose==jeu.data->nbTuiles)
-		sprintf(test,"PARTIE TERMINEE \nLE SCORE FINAL EST DE: %d \n ECHAP POUR QUITTER",jeu.data->score);
+		sprintf(test,"Partie Terminée \n\nScore final: %d \n\nEchap pour quitter",jeu.data->score);
 	else if(jeu.data->tuileJoue.id == -1)
-		sprintf(test,"Score: %d \n",jeu.data->score);
+		sprintf(test,"Score: %d \nTuiles restantes: %d\n",jeu.data->score,(jeu.data->nbTuiles - jeu.data->nbTuilesPose));
 	else if (jeu.data->tuileJoue.id >=0 && jeu.data->tuileJoue.id < jeu.data->nbTuiles)
-		sprintf(test,"Score: %d \n\nInformation: \nNumero tuile: %d/%d \nPos X/Y : %d/%d \nOrientation tuile: %c \n",jeu.data->score,jeu.data->tuileJoue.id,jeu.data->nbTuiles-1,jeu.data->tuileJoue.pos.x,jeu.data->tuileJoue.pos.y,jeu.data->tuileJoue.orientation);
+		sprintf(test,"Score: %d \nTuiles restantes: %d\n\nInformation: \nNumero tuile: %d/%d \nPos X/Y : %d/%d \nOrientation tuile: %c \n",jeu.data->score,(jeu.data->nbTuiles - jeu.data->nbTuilesPose),jeu.data->tuileJoue.id,jeu.data->nbTuiles-1,jeu.data->tuileJoue.pos.x,jeu.data->tuileJoue.pos.y,jeu.data->tuileJoue.orientation);
 
 	
 	/* AFFICHAGE CONTOUR */
@@ -616,13 +622,13 @@ void getInputsGame(Input *input,int* state)
             break;
  
             case SDL_KEYDOWN:
-                switch (event.key.keysym.scancode)
+                switch (event.key.keysym.sym)
                 {
-                    case SDL_SCANCODE_ESCAPE: {
+                    case SDLK_ESCAPE: {
 						*state = STATE_MENU;
 						break;
 					}
-					case SDL_SCANCODE_1: {
+					case SDLK_1: {
 						if (jeu.data->tuileJoue.id == -1 && jeu.data->nbTuilesPose < jeu.data->nbTuiles) {
 							initTuileJoue(jeu.data);
 							placeTuileJoue(jeu.data);
@@ -633,19 +639,19 @@ void getInputsGame(Input *input,int* state)
 						}
 						break;
 					}
-					case SDL_SCANCODE_A:{
+					case SDLK_a:{
 						if (jeu.data->tuileJoue.id != -1 && jeu.data->nbTuilesPose < jeu.data->nbTuiles) {
 							nextTuileAvailable(jeu.data);
 							placeTuileJoue(jeu.data);
 						}
 						break;
 					}
-					case SDL_SCANCODE_O:{
+					case SDLK_o:{
 						changeOrientationTuileJoue(jeu.data);
 						placeTuileJoue(jeu.data);
 						break;
 					}
-					case SDL_SCANCODE_RETURN:{
+					case SDLK_RETURN:{
 						if (jeu.data->tuileJoue.id != -1 && jeu.data->nbTuilesPose < jeu.data->nbTuiles) {
 							jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
 						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x,0)){
@@ -663,19 +669,19 @@ void getInputsGame(Input *input,int* state)
 			        	break;
 					}
 
-					case SDL_SCANCODE_RIGHT: {
+					case SDLK_RIGHT: {
                         moveTuileJoue(jeu.data,1,0);
 						break;
 					}
-					case SDL_SCANCODE_LEFT: {
+					case SDLK_LEFT: {
 						moveTuileJoue(jeu.data,-1,0);
 						break;
 					}
-					case SDL_SCANCODE_UP: {
+					case SDLK_UP: {
                         moveTuileJoue(jeu.data,0,-1);
 						break;
 					}
-					case SDL_SCANCODE_DOWN: {
+					case SDLK_DOWN: {
                         moveTuileJoue(jeu.data,0,1);
 						break;
 					}
@@ -756,7 +762,8 @@ void createBtnMenuCfg(char* optionTxtContain){
      	menuCfg.btnMenu[i].rect.y = i * (menuCfg.btnMenu[i].rect.h);
      	menuCfg.btnMenu[i].value=i;
 
-		SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(menuCfg.font,menuCfg.btnMenu[i].txt, menuCfg.btnMenu[i].color ,menuCfg.btnMenu[i].rect.w);
+
+		SDL_Surface * surface = TTF_RenderUTF8_Blended_Wrapped(menuCfg.font,menuCfg.btnMenu[i].txt, menuCfg.btnMenu[i].color ,menuCfg.btnMenu[i].rect.w);
 		menuCfg.btnMenu[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
 		SDL_FreeSurface(surface);
     }
@@ -778,13 +785,13 @@ void getInputsMenuCfg(Input *input,int* state)
             break;
  
             case SDL_KEYDOWN:
-                switch (event.key.keysym.scancode)
+                switch (event.key.keysym.sym)
                 {
-                    case SDL_SCANCODE_ESCAPE: {
+                    case SDLK_ESCAPE: {
 						*state = STATE_MENU;
 						break;
 					}
-					case SDL_SCANCODE_RETURN:{
+					case SDLK_RETURN:{
 						if(menuCfg.btn_selected!=-1){
 							if (jeu.filePartie==NULL){
 								jeu.filePartie=menuCfg.btnMenu[menuCfg.btn_selected].txt;	
@@ -795,11 +802,11 @@ void getInputsMenuCfg(Input *input,int* state)
 						}
 			        	break;
 					}
-                    case SDL_SCANCODE_UP:
+                    case SDLK_UP:
                    		btnEventSelect(-1,&menuCfg);
                     break;
 
-                    case SDL_SCANCODE_DOWN:
+                    case SDLK_DOWN:
                    		btnEventSelect(1,&menuCfg);
                     break;
 
@@ -833,13 +840,10 @@ void drawMenuCfg(void)
 
     // Affichage du plateau
     for (int i=0;i< menuCfg.nb_btn;i++){
-	    //Affichage en noir
-	    SDL_SetRenderDrawColor( getrenderer(), 52, 23, 234, 234);
-    	// Ajout du fond noir
-    	SDL_RenderFillRect( renderer, &menuCfg.btnMenu[i].rect);
-		
-		SDL_QueryTexture(menuCfg.btnMenu[i].texture, NULL, NULL, &texW, &texH);
-		SDL_Rect dstrect = { (SCREEN_WIDTH+menuCfg.btnMenu[i].rect.x - texW)/2, menuCfg.btnMenu[i].rect.y, texW, texH };
+    	SDL_Rect btnRect = menuCfg.btnMenu[i].rect;
+    	drawTile(src.tilesetBtn, btnRect.x + (btnRect.x / 6) ,btnRect.y ,btnRect.w-((btnRect.x/6)*2) ,btnRect.h ,0,0,1300,500);
+    	SDL_QueryTexture(menuCfg.btnMenu[i].texture, NULL, NULL, &texW, &texH);
+		SDL_Rect dstrect = { (SCREEN_WIDTH+btnRect.x - texW)/2, (btnRect.y+btnRect.y + texH)/2, texW, texH };
 		SDL_RenderCopy(renderer, menuCfg.btnMenu[i].texture, NULL, &dstrect);
     }
 	
@@ -866,7 +870,7 @@ void cleanMenuCfg(void)
 
 Button updateTextButton(Button btn,char* text,SDL_Color color,TTF_Font *font){
 	btn.color = color;
-	SDL_Surface * surface = TTF_RenderText_Blended_Wrapped(font, text, color,btn.rect.w);
+	SDL_Surface * surface = TTF_RenderUTF8_Blended_Wrapped(font, text, color,btn.rect.w);
 	btn.texture = SDL_CreateTextureFromSurface(getrenderer(), surface);
 	SDL_FreeSurface(surface);
 	return btn;
@@ -901,6 +905,29 @@ void btnEventSelect(int direction,Menu* me){
 		}
 	}
 
+}
+
+
+void drawTile(SDL_Texture *image, int destx, int desty, int destw, int desth ,int srcx, int srcy,int tileWSize, int tileHSize)
+{
+	/* Rectangle de destination à dessiner */
+	SDL_Rect dest;
+
+	dest.x = destx;
+	dest.y = desty;
+	dest.w = destw;
+	dest.h = desth;
+
+	/* Rectangle source */
+	SDL_Rect src;
+
+	src.x = srcx;
+	src.y = srcy;
+	src.w = tileWSize;
+	src.h = tileHSize;
+
+	/* Dessine la tile choisie sur l'écran aux coordonnées x et y */
+	SDL_RenderCopy(getrenderer(), image, &src, &dest);
 }
 
 
@@ -970,7 +997,7 @@ void runTextInput(SDL_Renderer* renderer,char* rep)
 
 		//Si une saisie a été effectué.
 		if(has_type){
-		   	surface = TTF_RenderText_Solid(font,rep,color);
+		   	surface = TTF_RenderUTF8_Solid(font,rep,color);
 		    texture = SDL_CreateTextureFromSurface(renderer, surface);
 		    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
 		    dstrect.x= 0;
