@@ -43,7 +43,6 @@ int* IdsTuilesDisponibles(Tuile gameTuiles[MAXTUILES],int nbTuiles);
 * \param game un Game (Game*)
 * \param resu le Game qui contiendra le resultat (Game*)
 * \param ville un tableau pour pouvoir calculer le score (int**)
-*
 */
 int maxScore(Game* game,Game* resu,int** ville);
 

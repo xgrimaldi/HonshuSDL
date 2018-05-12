@@ -29,6 +29,7 @@ void copieGame2(Game* partie,Game* copie){
 	for(i=0;i<copie->nbTuiles;i++){
 		copie->tuiles[i]=partie->tuiles[i];
 	}
+	copie->variante = partie -> variante;
 }
 /*
 Game copieGame(Game partie){
@@ -90,8 +91,8 @@ int maxScore(Game* game,Game* resu,int** ville){
 	if (game->taille==-1){
 		return 1;	
 	} 
-
-	if(getScore(game,ville,1)>getScore(resu,ville,1)){
+	int villageMax = 0;
+	if(getScore(game,ville,1, &villageMax)>getScore(resu,ville,1, &villageMax)){
 		copieGame2(game,resu);
 		return 1;	
 	}
@@ -156,7 +157,6 @@ int solveurNaif(Game partie, Game* resultat, int i, int** ville){
 	p=0;
 	
 
-
 	Game copiePartie;
 
 	copiePartie.plateau = alloc_int_array(size, size);
@@ -167,7 +167,6 @@ int solveurNaif(Game partie, Game* resultat, int i, int** ville){
 	copiePartie.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
 
 	copieGame2(&partie,&copiePartie);
-
 
 	while(id_Tuile != -1){
 
@@ -217,8 +216,6 @@ int iterSolvNaif(Game partie, Game* resultat, int n, int** ville){
 		solveurNaif(partie,resultat,n,ville);
 		copieGame2(resultat,&partie);
 		i=i+n+1;
-//		printf("plop %d\n", i);
-//		printPlateau(resultat->plateau,10);
 	}
 
 

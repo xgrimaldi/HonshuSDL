@@ -57,6 +57,10 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 		game->tuileJoue.pos.x=-1;
 		game->tuileJoue.pos.y=-1;
 
+		fscanf(fichier, "%s", word);
+		game->variante=atoi(word);
+
+
 		// Copie des tuiles
  		for(int nbImport=0;nbImport<nbTuiles;nbImport++){
  			fscanf(fichier,"%s",word);
@@ -121,15 +125,15 @@ int startGame(int typeGame){
 	char y = '^',previousy='^', orientation = 'N';
 	int accepte = 0 ,dep = 0;
 	char orientation_selected='N';
-	int tuile_selected=-1;
-	
+	int tuile_selected=-1;	
 
 	//**********************************
 	// Chargement des paramètres de partie
 	//**********************************
 	switch(typeGame){
 
-		case 1:{	
+		case 1:{
+			game->variante = randomMinMax(0, 5);	
 			// Initialisation des tuiles
 			while (nb_tuiles==0){
 				LOG_BOLDRED("\t\t\t\tParamètrage des tuiles \n");
@@ -207,10 +211,10 @@ int startGame(int typeGame){
 				printf("Fichier non existant");
 				return EXIT_FAILURE;
 			}
-			if( EXIT_FAILURE==LoadGame(filepath,filepathTuile,game)){
+			if(EXIT_FAILURE==LoadGame(filepath,filepathTuile,game)){
 				return EXIT_FAILURE;
 			}
-			break;
+			break;	
 		}
 	}
 	
@@ -237,10 +241,10 @@ int startGame(int typeGame){
 
 	gameInitial.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
 
-	//copieGame2(game,&gameInitial);
+	copieGame2(game,&gameInitial);
 
 	while(stop == 0){
-		printRules();
+		printRules(game->variante);
 		choix=0;
 		printf("\nQue voulez-vous faire ?\n");
 	 	printf("1 - Voir les tuiles paramétrées\n");
@@ -274,7 +278,9 @@ int startGame(int typeGame){
 				if(game->nbTuiles > 0){
 					printTuilesNonDisponibles(game->tuiles,game->nbTuiles);
 					printTuiles(game->tuiles,game->nbTuiles);
-					printf("\nLE SCORE EST DE %d points\n.",getScore(game,ville,0));
+					int villageMax = 0;
+					printf("\nLE SCORE EST DE %d points.\n",getScore(game, ville, 0, &villageMax));
+				
 				}else
 					LOG_BOLDRED("Aucune tuile: Vérifier le paramètrage ! \n");
 				break;
@@ -387,11 +393,11 @@ int startGame(int typeGame){
 			    char y;
 			    Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
 
-				printf("Qu'elle est ordonné  de la ville choisie ? \n");
+				printf("Qu'elle est abscisse de la ville choisie ? \n");
 			    scanf("%d",&x);
 			    purger();
 
-				printf("Qu'elle est abscisse de la ville choisie ? \n");
+				printf("Qu'elle est ordonné de la ville choisie ? \n");
 			    scanf(" %c",&y);
 			    purger();
 
@@ -410,18 +416,17 @@ int startGame(int typeGame){
 					LOG_BOLDRED("Ceci n'est pas une ville\n");
 				else {
 					nbVille = Add_Case_And_Check_Around(game,'V',x, y,posChecked,&nbPos,ville,0,1);
-					ville [0][0]= x;
-					ville [0][1]= y;
 					if (nbVille== 1) 
 						printf("cette ville n'est associé à aucun village");
-					else 
-						printVillage(ville,nbVille);
+					else{ 
+						ville[0][1] = x;
+						ville[0][2] = (int) y;
+						printVillage(ville, nbVille);
+					}
 				}
 				free(posChecked);
 				break;
 		    }
-
-
 		  
 		    case 7:{
 
@@ -471,7 +476,8 @@ int startGame(int typeGame){
 					    	printf("\n");
 			    			printPlateau(Solvgame.plateau,game->taille);
 
-			    			printf("Et son SCORE est: %d\n",getScore(&Solvgame,ville,1));
+			    			int villageMax = 0;
+			    			printf("Et son SCORE est: %d\n",getScore(&Solvgame, ville , 1, &villageMax));
 
 			    			freeGame(&Solvgame,1);
 			    			freeGame(&copieGame,1);
@@ -506,7 +512,8 @@ int startGame(int typeGame){
 					    	printf("\n");
 			    			printPlateau(Solvgame.plateau,game->taille);
 
-			    			printf("Et son SCORE est: %d\n",getScore(&Solvgame,ville,1));
+			    			int villageMax = 0;
+			    			printf("Et son SCORE est: %d\n",getScore(&Solvgame,ville,1, &villageMax));
 
 			    			freeGame(&copieGame,1);
 			    			freeGame(&Solvgame,1);
@@ -554,7 +561,8 @@ int startGame(int typeGame){
 			case 8:{
 			  if (game->nbTuilesPose==game->nbTuiles){
 			    clearScreen();
-			    printf("Vous avez marqué %d points !",getScore(game,ville,0));
+			    int villageMax = 0;
+			    printf("Vous avez marqué %d points !",getScore(game, ville, 0, &villageMax));
 			  
 			    //Comptage des points à faire
 			    stop=1;
@@ -684,3 +692,4 @@ void clearScreen() {
         system("cls");
     #endif
 }
+
