@@ -1,4 +1,6 @@
 #FICHIERS A NE PAS PRENDRE EN COMPTE
-*/bin/honshu
-*/bin/test
+bin/honshu
+bin/test
+bin/honshuSDL
+# Ne prends pas en compte les fichiers OBJ
 obj/*
