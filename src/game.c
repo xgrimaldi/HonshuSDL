@@ -249,48 +249,26 @@ int startGame(int typeGame){
 	copieGame2(game,&gameInitial);
 
 	while(stop == 0){
+		printData(game,ville);
+
 		printRules(game->variante);
+
 		choix=0;
 		printf("\nQue voulez-vous faire ?\n");
-	 	printf("1 - Voir les tuiles paramétrées\n");
-	 	printf("2 - Voir le plateau de jeu\n");
-	 	printf("3 - Poser une tuile\n");
-	 	printf("4 - Annuler l'action précédente\n");
-	 	printf("5 - Changer l'orientation d'une tuile\n");
-	 	printf("6 - Envoyer le village associé à une case\n");
-	 	printf("7 - Utiliser le solveur\n");
+	 	printf("1 - Poser une tuile\n");
+	 	printf("2 - Annuler l'action précédente\n");
+	 	printf("3 - Changer l'orientation d'une tuile\n");
+	 	printf("4 - Envoyer le village associé à une case\n");
+	 	printf("5 - Utiliser le solveur\n");
 		if (game->nbTuilesPose == game->nbTuiles){
-		  printf("8 - Terminer la partie\n");
+		  printf("6 - Terminer la partie\n");
 		}
-		printf("0 - Quitter la partie\n");
-
-		
+		printf("0 - Quitter la partie\n");		
 		scanf("%d",&choix);
+
+
 		switch(choix){
-			case 1:{
-				// Affichage des tuiles disponibles 
-				if(game->nbTuiles > 0)
-					printTuiles(game->tuiles,game->nbTuiles);
-				else
-					printf("Aucune tuile: Vérifier le paramètrage ! \n");
-				break;
-			}
-			case 2:{
-				clearScreen();
-				// Affichage du plateau
-				printPlateau(game->plateau,game->taille);
-				// Affichage des tuiles disponibles et non disponibles
-				if(game->nbTuiles > 0){
-					printTuilesNonDisponibles(game->tuiles,game->nbTuiles);
-					printTuiles(game->tuiles,game->nbTuiles);
-					int villageMax = 0;
-					printf("\nLE SCORE EST DE %d points.\n",getScore(game, ville, 0, &villageMax));
-				
-				}else
-					LOG_BOLDRED("Aucune tuile: Vérifier le paramètrage ! \n");
-				break;
-			}
-			case 3:{ 
+			case 1:{ 
 			  	printf("Quelle tuile voulez vous placer ? : ");
 				scanf("%d", &id_Tuile);
 				purger();
@@ -362,7 +340,7 @@ int startGame(int typeGame){
 				break;
 			}
 
-			case 4:{
+			case 2:{
 				if (matchEmpty(game)){
 					if (dep==1) {
 					  getPrevious(game,id_Tuile_prec,previousx,previousy);
@@ -378,7 +356,7 @@ int startGame(int typeGame){
 				break;
 			}
 
-		    case 5:{
+		    case 3:{
 		    	tuile_selected=-1;
 		    	printf("Quelle tuile voulez-vous changer d'orientation ? \n");
 		    	scanf("%d",&tuile_selected);
@@ -393,7 +371,7 @@ int startGame(int typeGame){
 				break;
 		    }
 
-		    case 6:{
+		    case 4:{
 			    int x,nbVille,nbPos=0;
 			    char y;
 			    Position* posChecked = malloc((MAXTUILES * 6)*sizeof(Position));
@@ -433,7 +411,7 @@ int startGame(int typeGame){
 				break;
 		    }
 		  
-		    case 7:{
+		    case 5:{
 
 		    	stopsolveur = 0;
 		    	clearScreen();
@@ -562,7 +540,7 @@ int startGame(int typeGame){
 		    }
 
 
-			case 8:{
+			case 6:{
 			  if (game->nbTuilesPose==game->nbTuiles){
 			    clearScreen();
 			    int villageMax = 0;

@@ -51,6 +51,24 @@ char printCase(Game game, int x, int y){
 	return (char)game.plateau[x][y];
 }
 
+void printData(Game* game,int** ville){
+
+  clearScreen();
+
+  // Affichage du plateau
+  printPlateau(game->plateau,game->taille);
+  // Affichage des tuiles disponibles et non disponibles
+  if(game->nbTuiles > 0){
+    printTuilesNonDisponibles(game->tuiles,game->nbTuiles);
+    printTuiles(game->tuiles,game->nbTuiles);
+    int villageMax = 0;
+    printf("\nLE SCORE EST DE %d points.\n",getScore(game, ville, 0, &villageMax));
+  
+  }else
+    LOG_BOLDRED("Aucune tuile: Vérifier le paramètrage ! \n");
+}
+
+
 // ######################################
 //	PARTIE INITIALISATION
 // ######################################

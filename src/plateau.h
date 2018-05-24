@@ -7,6 +7,8 @@
 * - \b initPlacementTuileRandom initialise les tuiles de facon aléatoire
 * - \b initPlacementTuile initialise le placement d'une tuile
 * - \b printPlateau affiche le plateau de jeu
+* - \b printCase return une case du plateau
+* - \b printData affiche plateau et tuiles paramétrées
 * - \b copieNBCasesRec gestion des copies de cases
 * - \b retablishNBCasesRec rétabli les anciennes valeurs
 * - \b testRecouvrementTotal test qui permet de vérifier si une tuile est recouverte totalement
@@ -31,6 +33,7 @@
 * \return Un int **
 */
 int **alloc_int_array(int x, int y);
+
 
 
 /**
@@ -59,7 +62,6 @@ void initPlacementTuileRandom(Game* partie);
 */
 void initPlacementTuile(Game* partie,int numTuile);
 
-
 /**
 * \brief Affiche le plateau de jeu \a g
 * \attention Au début du programme, un plateau vide est crée (composé que de "0")
@@ -67,6 +69,22 @@ void initPlacementTuile(Game* partie,int numTuile);
 * \param taille la taille du plateau (taille*taille).
 */
 void printPlateau(int** plateau,int taille);
+
+/**
+* \brief donne une case du plateau
+* \param game représente la structure de jeu (Game)
+* \param x l'abcisse de la position de la case (int)
+* \param y l'ordonnée de la position de la case (int)
+*/
+char printCase(Game game, int x, int y);
+
+/**
+* \brief affiche le plateau et les tuiles paramétrées.
+* \param game représente la structure de jeu (Game)
+* \param ville un plateau permettant de calculer la plus grande ville (int**)
+*/
+void printData(Game* game,int** ville);
+
 
 /**
 * \brief copie les nombres de cases recouvertes des tuiles qui vont être recouvertes par la tuile d'id \a id posée en \a x \a y.

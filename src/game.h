@@ -25,7 +25,6 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game);
 * \param solv = 1 si c'est le solveur qui utilise la fonction 0 sinon
 */
 void freeGame(Game* game,int solv);
-void freeGame(Game* game,int solv);
 
 
 /**

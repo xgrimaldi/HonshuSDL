@@ -274,46 +274,44 @@ void printVillage (int** ville, int n){
 } 
 
 void printRules (int variante){
-	printf("\nVariante des règles : %d\n", variante);
+	printf("\nVariante des règles (version %d): \n", variante);
 	printf("Afin de maximiser vos points vous pouvez :\n");
 	if(variante==3){
-		printf("1 augmenter la taille de votre plus grand village et réaliser à l'interieur de celui-ci des carrés.\n");
-		printf("	Le nombre de ville dans celui-ci représente le nombre de points obtenue, et chaque\n");
-		printf("	carré de 4 villages augmente le score de 4.\n");
+		printf("1/ Augmenter la taille de votre plus grand village et réaliser à l'interieur de celui-ci \n");
+		printf("   des carrés. Le nombre de ville dans celui-ci représente le nombre de points obtenue, \n");
+		printf("   et chaque carré de 4 villages augmente le score de 4.\n");
 	}
 	else{
-		printf("1 augmenter la taille de votre plus grand village,\n");
-		printf("	Le nombre de ville dans celui-ci représente le nombre de points obtenue.\n");
+		printf("1/ Augmenter la taille de votre plus grand village,\n");
+		printf("   le nombre de ville dans celui-ci représente le nombre de points obtenue.\n");
 	}
 	if(variante==4){
-		printf("2 Augmenter le nombre de Forets.\n");
-		printf("	Pour chaque forêt, la première case vaut 1, la seconde 2, la troisième 3, etc...\n");
-		printf("	jusqu'à 5.\n");
+		printf("2/ Augmenter le nombre de Forets.\n");
+		printf("   Pour chaque forêt, la première case vaut 1, la seconde 2, la troisième 3, etc... ");
+		printf("   jusqu'à 5.\n");
 	}
 	else{
-		printf("2 Augmenter le nombre de Forets. Le nombre d’abres compte double dans le score.\n");
+		printf("2/ Augmenter le nombre de Forets. Le nombre d’abres compte double dans le score.\n");
 	}
 	if(variante==0){
-		printf("3 Augmenter le nombre de lacs. Le nombre de lacs compte double dans le score.\n");
+		printf("3/ Augmenter le nombre de lacs. Le nombre de lacs compte double dans le score.\n");
 	}
 	else{
-		printf("3 Augmenter le nombre de lacs.Le nombre de lacs compte triple dans le score.\n");
+		printf("3/ Augmenter le nombre de lacs.Le nombre de lacs compte triple dans le score.\n");
 	}
 	if(variante==2){
-		printf("4 Compter les Ressources. On alloue deux Ressource par Usine tant qu’il reste \n");
-		printf("	des cases Ressource et des cases Usine. Chaque Ressource alloué à une Usine \n");
-		printf("	rapporte 4 points. Une Usine ne peut traiter que deux Ressource et une Ressource\n");
-		printf("	ne  peut être allouée qu’à une Usine.\n");
-		printf("	Une Usine peut traiter une ressource d’une case qui ne lui est pas contigue\n");
+		printf("4/ Compter les Ressources. On alloue deux Ressource par Usine tant qu’il reste \n");
+		printf("   des cases Ressource et des cases Usine. Chaque Ressource allouée à une Usine rapporte 4 points. \n");
+		printf("   Une Usine ne peut traiter que deux Ressources et une Ressource ne peut être allouée qu’à une Usine.\n");
+		printf("   Une Usine peut traiter une ressource d’une case qui ne lui est pas contigue\n");
 	}
 	else{
-		printf("4 Compter les Ressources. On alloue une Ressource par Usine tant qu’il reste \n");
-		printf("	des cases Ressource et des cases Usine. Chaque Ressource alloué à une Usine \n");
-		printf("	rapporte 4 points. Une Usine ne peut traiter qu’une Ressource et une Ressource\n");
-		printf("	ne  peut être allouée qu’à une Usine.\n");
-		printf("	Une Usine peut traiter une ressource d’une case qui ne lui est pas contigue.\n");
+		printf("4/ Compter les Ressources. On alloue une Ressource par Usine tant qu’il reste \n");
+		printf("   des cases Ressource et des cases Usine. Chaque Ressource alloué à une Usine rapporte 4 points. \n");
+		printf("   Une Usine ne peut traiter qu’une Ressource et une Ressource ne peut être allouée qu’à une Usine.\n");
+		printf("   Une Usine peut traiter une ressource d’une case qui ne lui est pas contigue.\n");
 	}
 	if(variante==1){
-		printf("5 Augmenter le nombre de quadio de plaines. Une plaine de 4 cases vaut 4 points.\n");
+		printf("5/ Augmenter le nombre de quadio de plaines. Une plaine de 4 cases vaut 4 points.\n");
 	}
 }
