@@ -87,19 +87,18 @@ int LoadGame(char* filepath,char* filepathTuile,Game* game){
 void freeGame(Game* game,int solv){
 	for(int i=0;i<game->taille;i++){
 		free(game->plateau[i]);
-		if (!solv) free(game->plateauBis[i]);
 		free(game->plateauIDmax[i]);
+		if (!solv) free(game->plateauBis[i]);
 		if (!solv) free(game->previous[i]);
 		if (!solv) free(game->previousIDmax[i]);
 	}
 	if (!solv) free(game->previous);
-	if (!solv) free(game->previousIDmax);
+	if (!solv) free(game->previousIDmax);	
+	if (!solv) free(game->plateauBis);
+
 	
 	free(game->previousNBCasesRec);
 	free(game->plateau);
-	
-	if (!solv) free(game->plateauBis);
-	
 	free(game->plateauIDmax);
 	free(game->tuiles);
 	
@@ -147,7 +146,6 @@ int startGame(int typeGame){
 				}
 				else{
 					clearScreen();
-					game->tuiles = malloc(MAXTUILES * sizeof(Tuile));
 					game->tuiles = randomTuile(nb_tuiles);
 					game->nbTuiles = nb_tuiles;
 					game->nbTuilesPose=1;
@@ -554,9 +552,9 @@ int startGame(int typeGame){
 
 			/*QUITTER LE PROGRAMME*/
 			case 0:{
-				freeGame(game,1);
+				freeGame(game,0);
 				freeGame(&gameInitial,1);
-				for(int i=0;i<game->taille;i++){
+				for(int i=0;i<MAXTUILES*6;i++){
 					free(ville[i]);
 				}
 				free(ville);

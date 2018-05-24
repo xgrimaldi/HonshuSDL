@@ -63,12 +63,11 @@ typedef struct PopUp{
 typedef struct GameSDL{
 	SDL_Texture **img;
 	SDL_Texture *txt_title;
-	SDL_Texture *txt_idSelected;
 	SDL_Texture *backgroundImage;
 	SDL_Texture *leftBorder;
 	SDL_Rect leftPanel;
 	SDL_Rect background;
-	Button rules;
+	Button* btn;
 	TTF_Font *font;
 	Case **casePlateau;
 	Game* data;
@@ -163,5 +162,6 @@ void btnHoveredSelect(Menu* me,int btnNum);
 Position caseHover(int x,int y);
 
 PopUp createPopUp(SDL_Color color,TTF_Font* font,char* message,SDL_Rect rect);
-
+Button createBtnImage(char* path,int x, int y, int w, int h,int value);
+bool btnHovered(Button btn,int mousx,int mousy);
 #endif

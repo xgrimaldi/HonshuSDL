@@ -470,8 +470,27 @@ void loadRandomGameSDL(void)
 	strcat(cmd,"[CLIC DROIT] : Changer l'orientation de la tuile \n [CLIC GAUCHE] : Placer la tuile en jeu\n ");
 	jeu.cmd = createPopUp(color2,cmdFont,cmd,jeu.background);
 
+	jeu.btn=malloc(2*sizeof(Button));
+    jeu.btn[0]=createBtnImage("../images/rules.png",42+(jeu.leftPanel.w*0.3),SCREEN_HEIGHT-42-30,42,42,1);
+	jeu.btn[1]=createBtnImage("../images/cmd.png",42+(jeu.leftPanel.w*0.6),SCREEN_HEIGHT-42-30,42,42,1);
+
 	TTF_CloseFont(popFont);
 	TTF_CloseFont(cmdFont);
+}
+
+Button createBtnImage(char* path,int x, int y, int w, int h,int value){
+	Button btn;
+	SDL_Color colorBtn = { 255, 255, 255 , 255 };
+ 	strcpy(btn.txt,"");
+ 	btn.color= colorBtn;
+ 	btn.rect.w = w;
+ 	btn.rect.h = h;
+ 	btn.rect.x = x;
+ 	btn.rect.y = y;
+ 	btn.value=value;
+	btn.texture=malloc(sizeof(SDL_Texture*));
+	btn.texture = IMG_LoadTexture(renderer,path);
+ 	return btn;
 }
 
 void loadGameSDL(void)
@@ -564,6 +583,10 @@ void loadGameSDL(void)
 	strcat(cmd,"[CLIC DROIT] : Changer l'orientation de la tuile \n [CLIC GAUCHE] : Placer la tuile en jeu\n ");
 	jeu.cmd = createPopUp(color,cmdFont,cmd,jeu.background);
 
+	jeu.btn=malloc(2*sizeof(Button));
+    jeu.btn[0]=createBtnImage("../images/rules.png",42+(jeu.leftPanel.w*0.3),SCREEN_HEIGHT-42-30,42,42,1);
+	jeu.btn[1]=createBtnImage("../images/cmd.png",42+(jeu.leftPanel.w*0.6),SCREEN_HEIGHT-42-30,42,42,1);
+
 	TTF_CloseFont(popFont);
 	TTF_CloseFont(cmdFont);
 }
@@ -574,16 +597,14 @@ void initGameSDL(void)
 	jeu.data = malloc(sizeof(Game));
  	// Charge l'image du fond (background)
 	jeu.img  = malloc(6 * sizeof(SDL_Texture*));
+	jeu.btn = malloc(2*sizeof(Button));
+	jeu.btn[0].texture=malloc(sizeof(SDL_Texture*));
+	jeu.btn[1].texture=malloc(sizeof(SDL_Texture*));
 	// Chargement du font
 	jeu.font = TTF_OpenFont("../font/Raleway-Bold.ttf", 23);
 	jeu.backgroundImage = IMG_LoadTexture(getrenderer(), "../images/bg1.jpg");
 	jeu.leftBorder=IMG_LoadTexture(getrenderer(), "../images/overlay1.png");
- 	jeu.rules.rect.w = 42;
- 	jeu.rules.rect.h = 42;
- 	jeu.rules.rect.x = (jeu.leftPanel.w/0.3)+jeu.rules.rect.w;
- 	jeu.rules.rect.y = SCREEN_HEIGHT-jeu.rules.rect.h-30;
- 	jeu.rules.value=1;
- 	jeu.rules.texture=IMG_LoadTexture(getrenderer(), "../images/rules.png");
+
 	//Attribut data(Game)
 	jeu.data->tuileJoue.id = -1;
 	jeu.data->tuileJoue.pos.x=-1;
@@ -614,7 +635,6 @@ void initGameSDL(void)
 	jeu.img[3] = IMG_LoadTexture(getrenderer(), "../images/village.png");
 	jeu.img[4] = IMG_LoadTexture(getrenderer(), "../images/plaine.png");
 	jeu.img[5] = IMG_LoadTexture(getrenderer(), "../images/usine.png");
-
 }
 
 void drawPlateau(void)
@@ -749,8 +769,8 @@ void drawGame(void)
 	SDL_RenderCopy(getrenderer(), jeu.leftBorder, NULL, &jeu.leftPanel);
 
 	/* RULES_BTN IMAGE */
-	SDL_RenderCopy(getrenderer(), jeu.rules.texture, NULL, &jeu.rules.rect);
-
+	SDL_RenderCopy(getrenderer(), jeu.btn[0].texture, NULL, &jeu.btn[0].rect);
+	SDL_RenderCopy(getrenderer(), jeu.btn[1].texture, NULL, &jeu.btn[1].rect);
 	// Draw text
 	drawTextGame(test,color, 10,5);
 
@@ -797,7 +817,6 @@ void cleanGame(void)
 {
 	if(jeu.started==1){
 		SDL_DestroyTexture(jeu.txt_title);
-		SDL_DestroyTexture(jeu.txt_idSelected);
 		for (int i=0; i<jeu.data->taille; i++){
 		    free(jeu.casePlateau[i]);
 			free(jeu.ville[i]);
@@ -807,6 +826,9 @@ void cleanGame(void)
 		freeGame(jeu.data,0);
 		SDL_DestroyTexture(jeu.cmd.txt);
 		SDL_DestroyTexture(jeu.pop.txt);
+		SDL_DestroyTexture(jeu.btn[0].texture);
+		SDL_DestroyTexture(jeu.btn[1].texture);
+		free(jeu.btn);
 	}
 	else{
 		free(jeu.data);
@@ -864,7 +886,6 @@ void getInputsGame(Input *input,int* state)
             	switch(event.button.button){
 		            case SDL_BUTTON_LEFT:{
 		            	Position caseHovered = caseHover(event.button.x,event.button.y);
-	            		SDL_Rect rc = jeu.rules.rect;
 		            	int x = event.button.x;
 		            	int y = event.button.y;
 		            	if(caseHovered.x != -1 && caseHovered.y != -1){
@@ -885,7 +906,15 @@ void getInputsGame(Input *input,int* state)
 							}
 
 		            	}
-		            	else if( (x>rc.x && x < (rc.x + rc.w ))	&& (y > rc.y && y < (rc.y + rc.h))){
+		            	else if(btnHovered(jeu.btn[0],x,y)){
+							if(jeu.showRules)
+								jeu.showRules=false;
+							else{
+								jeu.showRules=true;
+								jeu.showCmd=false;
+							}
+						}
+		            	else if( btnHovered(jeu.btn[1],x,y) ){
 							if(jeu.showCmd)
 								jeu.showCmd=false;
 							else{
@@ -1222,6 +1251,13 @@ Button updateTextButton(Button btn,char* text,SDL_Color color,TTF_Font *font){
 	return btn;
 }
 
+bool btnHovered(Button btn,int mousx,int mousy){
+	SDL_Rect rc = btn.rect;
+	if((mousx>rc.x && mousx < (rc.x + rc.w ))	&& (mousy > rc.y && mousy < (rc.y + rc.h) ))
+		return true;
+	else 
+		return false;
+}
 
 void btnHoveredSelect(Menu* me,int btnNum){
    	SDL_Color colorUnselected = {255,255,255,255};
