@@ -203,10 +203,15 @@ void initRessources(void){
 		 printf( "Impossible de lancer la musique ! SDL_mixer Error: %s\n", Mix_GetError() ); 
 		 exit(0);
 	}
+	gameRes.wave = Mix_LoadWAV("../sound/wav2.wav");
+	if (gameRes.wave == NULL)
+		exit(0);
+	Mix_VolumeChunk(gameRes.wave, MIX_MAX_VOLUME);
 }
 
 void cleanRessources(void){
 	Mix_FreeMusic( gameRes.musicGame );
+	Mix_FreeChunk( gameRes.wave );
 }
 
 /* =======================================
@@ -323,6 +328,7 @@ void getInputsMenu(Input *input,int* state)
 					}
                     case SDLK_1:
                     	*state=STATE_PERSO_GAME;
+
                     break;
 
                     case SDLK_2:
@@ -355,13 +361,12 @@ void cleanMenu(void)
 /* =======================================
 * 			JEU
 * ========================================*/
-void loadRandomGameSDL(void)
+void loadRandomGameSDL(int size)
 {
 	//Attribut data(Game)
-	jeu.data->taille=10;
+	jeu.data->taille=size;
 	jeu.data->nbTuiles = 10;
 	jeu.data->nbTuilesPose=1;
-	jeu.data->tuiles = malloc(MAXTUILES * sizeof(Tuile));
 	jeu.data->tuiles = randomTuile(jeu.data->nbTuiles);
 	jeu.data->tuileJoue.id = -1;
 	jeu.data->tuileJoue.pos.x=-1;
@@ -471,8 +476,8 @@ void loadRandomGameSDL(void)
 	jeu.cmd = createPopUp(color2,cmdFont,cmd,jeu.background);
 
 	jeu.btn=malloc(2*sizeof(Button));
-    jeu.btn[0]=createBtnImage("../images/rules.png",42+(jeu.leftPanel.w*0.3),SCREEN_HEIGHT-42-30,42,42,1);
-	jeu.btn[1]=createBtnImage("../images/cmd.png",42+(jeu.leftPanel.w*0.6),SCREEN_HEIGHT-42-30,42,42,1);
+    jeu.btn[0]=createBtnImage("../images/rules.png",42+(jeu.leftPanel.w*0.1),SCREEN_HEIGHT-42-30,42,42,1);
+	jeu.btn[1]=createBtnImage("../images/cmd.png",42+(jeu.leftPanel.w*0.3),SCREEN_HEIGHT-42-30,42,42,1);
 
 	TTF_CloseFont(popFont);
 	TTF_CloseFont(cmdFont);
@@ -826,9 +831,6 @@ void cleanGame(void)
 		freeGame(jeu.data,0);
 		SDL_DestroyTexture(jeu.cmd.txt);
 		SDL_DestroyTexture(jeu.pop.txt);
-		SDL_DestroyTexture(jeu.btn[0].texture);
-		SDL_DestroyTexture(jeu.btn[1].texture);
-		free(jeu.btn);
 	}
 	else{
 		free(jeu.data);
@@ -893,6 +895,7 @@ void getInputsGame(Input *input,int* state)
 								jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
 							  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x,0)){
 							    	printf("Placement réalisé\n");
+						    		Mix_PlayChannel(-1, gameRes.wave, 0);									
 							    	jeu.data->nbTuilesPose++;
 							    	int villageMax=0;
 							    	jeu.data->score = getScore(jeu.data,jeu.ville,1,&villageMax);
@@ -926,8 +929,10 @@ void getInputsGame(Input *input,int* state)
 		            }
 
 		            case SDL_BUTTON_RIGHT:{
-        				changeOrientationTuileJoue(jeu.data);
-						placeTuileJoue(jeu.data);
+						if(jeu.data->tuileJoue.id != -1){
+							changeOrientationTuileJoue(jeu.data);
+							placeTuileJoue(jeu.data);
+						}
 						break;
 					}
             	}
@@ -980,8 +985,10 @@ void getInputsGame(Input *input,int* state)
 						break;
 					}
 					case SDLK_o:{
-						changeOrientationTuileJoue(jeu.data);
-						placeTuileJoue(jeu.data);
+						if(jeu.data->tuileJoue.id != -1){
+							changeOrientationTuileJoue(jeu.data);
+							placeTuileJoue(jeu.data);
+						}
 						break;
 					}
 					case SDLK_s:{
@@ -1007,6 +1014,7 @@ void getInputsGame(Input *input,int* state)
 							jeu.data->tuiles[jeu.data->tuileJoue.id].orientation=jeu.data->tuileJoue.orientation;
 						  	if(!placeTuile(jeu.data, jeu.data->tuileJoue.id, jeu.data->tuileJoue.pos.y, jeu.data->tuileJoue.pos.x,0)){
 						    	printf("Placement réalisé\n");
+						    	Mix_PlayChannel(-1, gameRes.wave, 0);	
 						    	jeu.data->nbTuilesPose++;
 						    	int villageMax=0;
 						    	jeu.data->score = getScore(jeu.data,jeu.ville,1,&villageMax);
@@ -1369,23 +1377,46 @@ PopUp createPopUp(SDL_Color color,TTF_Font *font,char* message,SDL_Rect rect){
 * DIVERS / UTILS
 ###############################*/
 // Fonction de saisie d'un texte à l'écran 
-void runTextInput(SDL_Renderer* renderer,char* rep)
+int runTextInput()
 {
+
 	/* Initialisation du TextInput */
 	SDL_StartTextInput();
-
+	char rep[1000]="";
+	char instruction[100]="Saisir la taille du plateau souhaitée\nEntrer pour valider";
+	char erreur[100] = "Veuillez rentrer une taille correct (entre 7 et 30)";
 	/* Déclaration des variables */
 	size_t len = 0;
-	size_t LEN_MAX=30;
+	size_t LEN_MAX=2;
+	bool err=false;
+	int result=7;
 	SDL_Event event;
 	SDL_bool quit = SDL_FALSE;
     TTF_Font *font = TTF_OpenFont("../font/Raleway-Bold.ttf", 25);
-    SDL_Color color = { 0, 5, 234 , 0 };
+    SDL_Color color = { 255, 255, 255 , 0 };
+    SDL_Color color2 = { 255, 0, 0 , 0 };
     SDL_Surface *surface;
     SDL_Texture *texture;
+    SDL_Texture *back=IMG_LoadTexture(renderer,"../images/honshuPlate.jpg");
+
     SDL_Rect dstrect;
     int texW = 0;
     int texH = 0;
+
+	SDL_RenderCopy(renderer,back,NULL,&jeu.background);
+
+   	surface = TTF_RenderUTF8_Blended_Wrapped(font,instruction,color,jeu.leftPanel.w);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+    dstrect.x= 0;
+    dstrect.y= 0;
+    dstrect.w=texW;
+    dstrect.h=texH;
+
+    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+    SDL_RenderPresent(renderer);
+    SDL_Delay(1);
+    SDL_RenderClear(renderer);
 
     /* Boucle d'écriture */ 
 	while(!quit)
@@ -1405,7 +1436,15 @@ void runTextInput(SDL_Renderer* renderer,char* rep)
 				has_type = SDL_TRUE;
 			}
 			if(event.key.keysym.sym == SDLK_RETURN){
-				quit = SDL_TRUE;
+				int i = (int) strtol(rep, (char **)NULL, 10);
+				if (i>0 && i<30){
+					quit = SDL_TRUE;
+					result = i;
+				}
+				else{
+					err=true;
+					has_type=SDL_TRUE;
+				}
 			}
 			if(event.key.keysym.sym == SDLK_v && (SDL_GetModState() & KMOD_CTRL) && SDL_HasClipboardText())
 			{
@@ -1422,6 +1461,9 @@ void runTextInput(SDL_Renderer* renderer,char* rep)
 		}
 		else if(event.type == SDL_TEXTINPUT)
 		{
+			if(err){
+				err=false;
+			}
 			size_t l = strlen(event.text.text);
 			size_t l_copy = len + l < LEN_MAX ? l : LEN_MAX - len;
 			strncpy(rep + len, event.text.text, l_copy);
@@ -1431,17 +1473,45 @@ void runTextInput(SDL_Renderer* renderer,char* rep)
 
 		//Si une saisie a été effectué.
 		if(has_type){
-		   	surface = TTF_RenderUTF8_Solid(font,rep,color);
+			int hauteurMin=0;
+			SDL_RenderCopy(renderer,back,NULL,&jeu.background);
+
+		   	surface = TTF_RenderUTF8_Blended_Wrapped(font,instruction,color,jeu.leftPanel.w);
 		    texture = SDL_CreateTextureFromSurface(renderer, surface);
 		    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
 		    dstrect.x= 0;
 		    dstrect.y= 0;
 		    dstrect.w=texW;
 		    dstrect.h=texH;
-	        SDL_RenderCopy(renderer, texture, NULL, &dstrect);
-	        SDL_RenderPresent(renderer);
-	        SDL_Delay(1);
-	        SDL_RenderClear(renderer);
+		    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+		    
+		    if(err){
+			    hauteurMin = hauteurMin + texH;
+			   	surface = TTF_RenderUTF8_Blended_Wrapped(font,erreur,color2,jeu.leftPanel.w);
+			    texture = SDL_CreateTextureFromSurface(renderer, surface);
+			    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+			    dstrect.x= 0;
+			    dstrect.y= hauteurMin;
+			    dstrect.w=texW;
+			    dstrect.h=texH;
+			    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+			}
+
+		    hauteurMin = hauteurMin + texH;
+		   	surface = TTF_RenderUTF8_Blended_Wrapped(font,rep,color2,jeu.leftPanel.w);
+		    texture = SDL_CreateTextureFromSurface(renderer, surface);
+		    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+		    dstrect.x= 0;
+		    dstrect.y= hauteurMin;
+		    dstrect.w=texW;
+		    dstrect.h=texH;
+		    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+
+
+
+		    SDL_RenderPresent(renderer);
+		    SDL_Delay(1);
+		    SDL_RenderClear(renderer);
 	    }
 	}
 
@@ -1450,4 +1520,6 @@ void runTextInput(SDL_Renderer* renderer,char* rep)
     SDL_FreeSurface(surface);
     TTF_CloseFont(font);
 	SDL_StopTextInput();
+
+	return result;
 }

@@ -59,7 +59,9 @@ int main(int argc, char *argv[]) {
 			// STATE_PERSO_GAME
 			else if(state==STATE_PERSO_GAME){
 				if(!jeu.started){
-					loadRandomGameSDL();
+					int size = runTextInput();
+					if(size>=7 && size<=30)
+						loadRandomGameSDL(size);
 				}
 				else{
 					getInputsGame(&input,&state);

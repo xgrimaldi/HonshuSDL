@@ -83,6 +83,7 @@ typedef struct GameSDL{
 
 typedef struct GameRessource{
 	Mix_Music *musicGame;
+	Mix_Chunk *wave;
 	SDL_Texture *tilesetBtn;
 } GameRessource;
 
@@ -120,7 +121,7 @@ void initMenu(void);
 
 /* CHARGEMENT */
 void loadMenuCfg();
-void loadRandomGameSDL();
+void loadRandomGameSDL(int size);
 void loadGameSDL();
 void loadMenu(void);
 
@@ -164,4 +165,5 @@ Position caseHover(int x,int y);
 PopUp createPopUp(SDL_Color color,TTF_Font* font,char* message,SDL_Rect rect);
 Button createBtnImage(char* path,int x, int y, int w, int h,int value);
 bool btnHovered(Button btn,int mousx,int mousy);
+int runTextInput();
 #endif
