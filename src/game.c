@@ -224,8 +224,13 @@ int startGame(int typeGame){
 	int stop = 0;
 	int stopsolveur;
 
-	int** ville = alloc_int_array(game->taille, game->taille);
-	initPlateau(ville,game->taille,-1);
+	//Création de la variable ville
+	int **ville = (int **)malloc((MAXTUILES*6)* sizeof(int *));
+	for (int i=0; i<(MAXTUILES*6); i++){
+	     ville[i] = (int *)malloc(2 * sizeof(int));
+	     ville[i][0] = -1;
+	     ville[i][1] = -1;
+	}
 
 	game->nivSolv=1;
 
@@ -501,7 +506,6 @@ int startGame(int typeGame){
 							copieGame.plateauIDmax = alloc_int_array(game->taille,game->taille);
 							copieGame.previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
 							copieGame.tuiles = (Tuile*)malloc(MAXTUILES*sizeof(Tuile));
-
 
 							copieGame2(game,&copieGame);
 

@@ -482,6 +482,7 @@ void nextTuileAvailable(Game* game){
 				i=0;
 			if(game->tuiles[i].pos.x == -1 && game->tuiles[i].pos.y == -1){
 				game->tuileJoue.id=i;
+				game->tuiles[i].orientation = game->tuileJoue.orientation;
 				break;
 			}
 		}
@@ -498,6 +499,7 @@ void changeOrientationTuileJoue(Game* game){
 		game->tuileJoue.orientation='W';
 	else if(o=='W' && game->tuileJoue.pos.y < game->taille-2)
 		game->tuileJoue.orientation='N';
+	game->tuiles[game->tuileJoue.id].orientation=game->tuileJoue.orientation;
 }
 
 int placeTuileJoue(Game* game){ //Les coordonées de la position sont celles de la case la plus en haut à gauche en tenant compte de l'orientation
@@ -593,4 +595,28 @@ void moveTuileJoue(Game* game,int x,int y){
         }
         placeTuileJoue(game);
     }
+}
+
+void moveTuileJoueToPos(Game* game,int x,int y){
+    if (game->tuileJoue.id != -1 && game->tuileJoue.pos.x >= 0 && game->tuileJoue.pos.y >=0) {
+		Tuile tuileJoue = game->tuileJoue;
+        //GESTION DU X
+        if (x >= 0 && y >= 0){
+            if((tuileJoue.orientation=='N' || tuileJoue.orientation=='S') && ((x) <= (game->taille-2))) {
+                game->tuileJoue.pos.x = x;
+            }
+            else if((tuileJoue.orientation=='W' || tuileJoue.orientation=='E') && ((x) <= (game->taille-3))) {
+                game->tuileJoue.pos.x = x;
+            }
+
+
+            if((tuileJoue.orientation=='N' || tuileJoue.orientation=='S') && ((y) <= (game->taille-3))) {
+            	game->tuileJoue.pos.y = y;
+            }
+            else if ((tuileJoue.orientation == 'W' || tuileJoue.orientation == 'E') && ((y) <= (game->taille - 2))) {
+                game->tuileJoue.pos.y = y;
+            }
+        	placeTuileJoue(game);
+		}        
+	}
 }

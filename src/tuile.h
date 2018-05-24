@@ -140,4 +140,6 @@ int placeTuileJoue(Game* game);
 */
 void moveTuileJoue(Game* game,int x,int y);
 
+void moveTuileJoueToPos(Game* game,int x,int y);
+
 #endif

@@ -17,11 +17,19 @@
 
 int main(int argc, char *argv[]) {
 	if(argc>=1){
-		int state=1;
+		//Initialisation du srand
+		srand(time(NULL)); 
+		// Initialisation de la variable d'état du jeu
+		int state=STATE_MENU;
+		// Initialisation de la variable de gestion FPS
 		unsigned int frameLimit = SDL_GetTicks() + 16;
+		// Redirection du dossier d'éxécution 
 		chdirToExecutable(argv[0]);
 
-		 // Initialisation de la SDL
+		// Appelle la fonction cleanup à la fin du programme
+		atexit(cleanup);
+
+		// Initialisation de la SDL
 		initHonshu("Honshu");
 		 
 		// Chargement des ressources (graphismes, sons)
@@ -30,50 +38,52 @@ int main(int argc, char *argv[]) {
 		initRessources();
 		loadMenu();
 		loadMenuCfg();
-
-		// Appelle la fonction cleanup à la fin du programme
-		atexit(cleanup);
 		 
  		//If there is no music playing 
 		if( Mix_PlayingMusic() == 0 ) { 
 			//Play the music
- 		 	Mix_PlayMusic( menu.gMusic, -1 );
+ 		 	Mix_PlayMusic( gameRes.musicGame, -1 );
  		}
+
 		// Boucle infinie, principale, du jeu
 		while (state != STATE_EXIT)
 		{	 	
 			//STATE_MENU
-		 	if(state==1){
+		 	if(state==STATE_MENU){
 				//Gestion des inputs clavier
 				getInputsMenu(&input,&state);
 				//On dessine tout
 				drawMenu();
 			}
 			
-			// STATE_LOADED_GAME
-			else if(state==2){
+			// STATE_PERSO_GAME
+			else if(state==STATE_PERSO_GAME){
 				if(!jeu.started){
 					loadRandomGameSDL();
 				}
 				else{
 					getInputsGame(&input,&state);
-					drawGame();
+					if(state == STATE_PERSO_GAME) 
+						drawGame();
 				}
 			}
 
-			// STATE_PERSO_GAME
-			else if(state==3){
+			// STATE_LOADED_GAME
+			else if(state==STATE_LOADED_GAME){
 				if(!jeu.started)
 				{
 					if(selectCfgGame(&state)== EXIT_FAILURE){
 						state=STATE_MENU;
 					}
-					loadGameSDL();
+					else{
+						loadGameSDL();
+					}
 				}
 				else
 				{
 					getInputsGame(&input,&state);
-					drawGame();
+					if(state == STATE_LOADED_GAME) 
+						drawGame();
 				}
 			}
 

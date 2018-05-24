@@ -11,7 +11,7 @@ int getScore(Game* game, int** ville, int solv, int* villageMax){
 	Position* posCheckedPlains = malloc((MAXTUILES * 6)*sizeof(Position));
 	int nbPosVillage=0;
 	int nbPosPlaine=0;
-		int nbForet=0,nbLac=0,nbRessource=0,nbUsine=0,score=0, nbQuadrioPlaine=0;
+	int nbForet=0,nbLac=0,nbRessource=0,nbUsine=0,score=0, nbQuadrioPlaine=0;
 	int** plateau = game->plateau;
 	*villageMax = 0;
 
@@ -77,6 +77,7 @@ int getScore(Game* game, int** ville, int solv, int* villageMax){
 				score+=4;
 			}
 			score += *villageMax + (nbForet*2); //VILLAGE & FORET
+			break;
 
 
 		case 1:
@@ -90,7 +91,7 @@ int getScore(Game* game, int** ville, int solv, int* villageMax){
 			}
 			score += 4*nbQuadrioPlaine; //PLAINE
 			score += *villageMax + (nbForet*2); //VILLAGE & FORET
-
+			break;
 
 		case 2:
 			if(nbLac>1){ //LAC
@@ -103,6 +104,7 @@ int getScore(Game* game, int** ville, int solv, int* villageMax){
 				score+=4;
 			}
 			score += *villageMax + (nbForet*2); //VILLAGE & FORET
+			break;
 
 		case 3:
 			if(nbLac>1){ //LAC
