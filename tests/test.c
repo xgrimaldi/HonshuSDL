@@ -35,7 +35,7 @@ int clean_suite(void)
 void test_LoadGame(void){
 	Game* partie = malloc(sizeof(Game));
 	partie->tuiles= malloc(MAXTUILES * sizeof(Tuile));
-	CU_ASSERT_NOT_EQUAL(LoadGame("../bin/Partie1","../bin/Tuiles",partie), EXIT_FAILURE);
+	CU_ASSERT_NOT_EQUAL(LoadGame("../files/Partie1","../files/Tuiles",partie), EXIT_FAILURE);
 	free(partie->plateau);
 	free(partie->tuiles);
 	free(partie);
@@ -48,7 +48,7 @@ void test_LoadGame(void){
 void test_Load_Tuiles(void)
 {
   Tuile gameTuiles[MAXTUILES];
-  CU_ASSERT_EQUAL(LoadTuiles("../bin/Tuiles",gameTuiles), 21);
+  CU_ASSERT_EQUAL(LoadTuiles("../files/Tuiles",gameTuiles), 21);
 }
 
 
@@ -116,7 +116,9 @@ void test_placeTuile(void){
 	partie->plateauIDmax = alloc_int_array(20,20);
 	partie->previous = alloc_int_array(20,20);
 	partie->previousIDmax = alloc_int_array(20,20);
-	partie->previousNBCasesRec = (int*)malloc(6*sizeof(int)); 
+	partie->previousNBCasesRec = (int*)malloc(6*sizeof(int));
+	partie->plateauBis = alloc_int_array(20,20);
+	initPlateau(partie->plateauBis,20,0);
 	initPlateau(partie->plateau,20,0);
 	initPlateau(partie->plateauIDmax,20,-1);
 	initPlateau(partie->previous,20,0);
@@ -141,6 +143,8 @@ void test_canPlaceTuile(){
 	partie->previous = alloc_int_array(20,20);
 	partie->previousIDmax = alloc_int_array(20,20);
 	partie->previousNBCasesRec = (int*)malloc(6*sizeof(int));
+	partie->plateauBis = alloc_int_array(20,20);
+	initPlateau(partie->plateauBis,20,0);
 	initPlateau(partie->plateau,20,0);
 	initPlateau(partie->plateauIDmax,20,-1);
 	initPlateau(partie->previous,20,0);
@@ -192,10 +196,13 @@ void test_initPlacementTuileRandom (void){
 	partie->plateauIDmax = alloc_int_array(20,20);
 	partie->previous = alloc_int_array(20,20);
 	partie->previousIDmax = alloc_int_array(20,20);
+	partie->plateauBis = alloc_int_array(20,20);
+	initPlateau(partie->plateauBis,20,0);
 	initPlateau(partie->plateau,20,0);
 	initPlateau(partie->plateauIDmax,20,-1);
 	initPlateau(partie->previous,20,0);
 	initPlateau(partie->previousIDmax,20,-1);
+
 	partie->previousNBCasesRec = (int*)malloc(6*sizeof(int));
 	initPlacementTuileRandom(partie);
 	for (int i=9; i<9+2 ;i++){
@@ -247,6 +254,8 @@ void test_saveGame(void){
 	partie->previous = alloc_int_array(20,20);
 	partie->previousIDmax = alloc_int_array(20,20);
 	partie->previousNBCasesRec = (int*)malloc(6*sizeof(int));
+	partie->plateauBis = alloc_int_array(20,20);
+	initPlateau(partie->plateauBis,20,0);
 	initPlateau(partie->plateau,20,0);
 	initPlateau(partie->plateauIDmax,20,-1);
 	initPlateau(partie->previous,20,0);
@@ -274,6 +283,8 @@ void test_getPrevious (void){
 	partie->previous = alloc_int_array(20,20);
 	partie->previousIDmax = alloc_int_array(20,20);
 	partie->previousNBCasesRec = (int*)malloc(6*sizeof(int));
+	partie->plateauBis = alloc_int_array(20,20);
+	initPlateau(partie->plateauBis,20,0);
 	initPlateau(partie->plateau,20,0);
 	initPlateau(partie->plateauIDmax,20,-1);
 	initPlateau(partie->previous,20,0);
@@ -302,6 +313,8 @@ void test_matchEmpty (void){
 	partie->previous = alloc_int_array(20,20);
 	partie->previousIDmax = alloc_int_array(20,20);
 	partie->previousNBCasesRec = (int*)malloc(6*sizeof(int));
+	partie->plateauBis = alloc_int_array(20,20);
+	initPlateau(partie->plateauBis,20,0);
 	initPlateau(partie->plateau,20,0);
 	initPlateau(partie->plateauIDmax,20,-1);
 	initPlateau(partie->previous,20,0);

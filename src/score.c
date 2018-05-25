@@ -274,6 +274,7 @@ void printVillage (int** ville, int n){
 } 
 
 void printRules (int variante){
+	clearScreen();
 	printf("\nVariante des règles (version %d): \n", variante);
 	printf("Afin de maximiser vos points vous pouvez :\n");
 	if(variante==3){

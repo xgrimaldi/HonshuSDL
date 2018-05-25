@@ -475,9 +475,10 @@ void loadRandomGameSDL(int size)
 	strcat(cmd,"[CLIC DROIT] : Changer l'orientation de la tuile \n [CLIC GAUCHE] : Placer la tuile en jeu\n ");
 	jeu.cmd = createPopUp(color2,cmdFont,cmd,jeu.background);
 
-	jeu.btn=malloc(2*sizeof(Button));
+	jeu.btn=malloc(3*sizeof(Button));
     jeu.btn[0]=createBtnImage("../images/rules.png",42+(jeu.leftPanel.w*0.1),SCREEN_HEIGHT-42-30,42,42,1);
 	jeu.btn[1]=createBtnImage("../images/cmd.png",42+(jeu.leftPanel.w*0.3),SCREEN_HEIGHT-42-30,42,42,1);
+	jeu.btn[2]=createBtnImage("../images/soundOn.png",42+(jeu.leftPanel.w*0.5),SCREEN_HEIGHT-42-30,42,42,1);
 
 	TTF_CloseFont(popFont);
 	TTF_CloseFont(cmdFont);
@@ -588,9 +589,10 @@ void loadGameSDL(void)
 	strcat(cmd,"[CLIC DROIT] : Changer l'orientation de la tuile \n [CLIC GAUCHE] : Placer la tuile en jeu\n ");
 	jeu.cmd = createPopUp(color,cmdFont,cmd,jeu.background);
 
-	jeu.btn=malloc(2*sizeof(Button));
-    jeu.btn[0]=createBtnImage("../images/rules.png",42+(jeu.leftPanel.w*0.3),SCREEN_HEIGHT-42-30,42,42,1);
-	jeu.btn[1]=createBtnImage("../images/cmd.png",42+(jeu.leftPanel.w*0.6),SCREEN_HEIGHT-42-30,42,42,1);
+	jeu.btn=malloc(3*sizeof(Button));
+    jeu.btn[0]=createBtnImage("../images/rules.png",42+(jeu.leftPanel.w*0.1),SCREEN_HEIGHT-42-30,42,42,1);
+	jeu.btn[1]=createBtnImage("../images/cmd.png",42+(jeu.leftPanel.w*0.3),SCREEN_HEIGHT-42-30,42,42,1);
+	jeu.btn[2]=createBtnImage("../images/soundOn.png",42+(jeu.leftPanel.w*0.5),SCREEN_HEIGHT-42-30,42,42,1);
 
 	TTF_CloseFont(popFont);
 	TTF_CloseFont(cmdFont);
@@ -776,6 +778,8 @@ void drawGame(void)
 	/* RULES_BTN IMAGE */
 	SDL_RenderCopy(getrenderer(), jeu.btn[0].texture, NULL, &jeu.btn[0].rect);
 	SDL_RenderCopy(getrenderer(), jeu.btn[1].texture, NULL, &jeu.btn[1].rect);
+	SDL_RenderCopy(getrenderer(), jeu.btn[2].texture, NULL, &jeu.btn[2].rect);
+
 	// Draw text
 	drawTextGame(test,color, 10,5);
 
@@ -924,6 +928,16 @@ void getInputsGame(Input *input,int* state)
 								jeu.showCmd=true;
 								jeu.showRules=false;
 							}
+						}
+		            	else if( btnHovered(jeu.btn[2],x,y) ){
+					 		//If there is no music playing 
+							if( Mix_PausedMusic()) { 
+								//Play the music
+					 		 	Mix_ResumeMusic();
+					 		}
+					 		else{
+					 			Mix_PauseMusic();
+					 		}
 						}
 			        	break;
 		            }
@@ -1383,13 +1397,13 @@ int runTextInput()
 	/* Initialisation du TextInput */
 	SDL_StartTextInput();
 	char rep[1000]="";
-	char instruction[100]="Saisir la taille du plateau souhaitée\nEntrer pour valider";
+	char instruction[100]="Saisir la taille du plateau souhaitée.\nEntrer pour valider:";
 	char erreur[100] = "Veuillez rentrer une taille correct (entre 7 et 30)";
 	/* Déclaration des variables */
 	size_t len = 0;
 	size_t LEN_MAX=2;
 	bool err=false;
-	int result=7;
+	int result=0;
 	SDL_Event event;
 	SDL_bool quit = SDL_FALSE;
     TTF_Font *font = TTF_OpenFont("../font/Raleway-Bold.ttf", 25);
@@ -1397,7 +1411,7 @@ int runTextInput()
     SDL_Color color2 = { 255, 0, 0 , 0 };
     SDL_Surface *surface;
     SDL_Texture *texture;
-    SDL_Texture *back=IMG_LoadTexture(renderer,"../images/honshuPlate.jpg");
+    SDL_Texture *back=IMG_LoadTexture(renderer,"../images/honshu.jpg");
 
     SDL_Rect dstrect;
     int texW = 0;
@@ -1425,8 +1439,9 @@ int runTextInput()
 		SDL_WaitEvent(&event); /* Attente d'un nouvel événement */
 		
 		// Vérification des événements
-		if(event.type == SDL_QUIT)
+		if(event.type == SDL_QUIT){
 			quit = SDL_TRUE;
+		}
 		else if( event.type == SDL_KEYDOWN)
 		{
 			if(event.key.keysym.sym == SDLK_BACKSPACE && len)
@@ -1434,6 +1449,9 @@ int runTextInput()
 				rep[len - 1] = 0;
 				len--;
 				has_type = SDL_TRUE;
+			}
+			if(event.key.keysym.sym == SDLK_ESCAPE){
+				quit = SDL_TRUE;
 			}
 			if(event.key.keysym.sym == SDLK_RETURN){
 				int i = (int) strtol(rep, (char **)NULL, 10);

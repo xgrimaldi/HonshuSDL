@@ -62,6 +62,8 @@ int main(int argc, char *argv[]) {
 					int size = runTextInput();
 					if(size>=7 && size<=30)
 						loadRandomGameSDL(size);
+					else
+						state=STATE_MENU;
 				}
 				else{
 					getInputsGame(&input,&state);

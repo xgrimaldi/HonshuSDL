@@ -53,8 +53,6 @@ char printCase(Game game, int x, int y){
 
 void printData(Game* game,int** ville){
 
-  clearScreen();
-
   // Affichage du plateau
   printPlateau(game->plateau,game->taille);
   // Affichage des tuiles disponibles et non disponibles

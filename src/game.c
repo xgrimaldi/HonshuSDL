@@ -247,9 +247,9 @@ int startGame(int typeGame){
 	copieGame2(game,&gameInitial);
 
 	while(stop == 0){
-		printData(game,ville);
 
 		printRules(game->variante);
+		printData(game,ville);
 
 		choix=0;
 		printf("\nQue voulez-vous faire ?\n");
@@ -400,8 +400,8 @@ int startGame(int typeGame){
 					if (nbVille== 1) 
 						printf("cette ville n'est associé à aucun village");
 					else{ 
-						ville[0][1] = x;
-						ville[0][2] = (int) y;
+						ville[0][0] = x;
+						ville[0][1] = (int) y;
 						printVillage(ville, nbVille);
 					}
 				}
